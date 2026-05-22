@@ -20,6 +20,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppPerfilRouteImport } from './routes/app.perfil'
 import { Route as AppCursosRouteImport } from './routes/app.cursos'
+import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes'
 import { Route as AppBlogRouteImport } from './routes/app.blog'
 import { Route as AppCursoSlugRouteImport } from './routes/app.curso.$slug'
 
@@ -78,6 +79,11 @@ const AppCursosRoute = AppCursosRouteImport.update({
   path: '/cursos',
   getParentRoute: () => AppRoute,
 } as any)
+const AppConfiguracoesRoute = AppConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppBlogRoute = AppBlogRouteImport.update({
   id: '/blog',
   path: '/blog',
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/app/blog': typeof AppBlogRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/perfil': typeof AppPerfilRoute
   '/app/': typeof AppIndexRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/app/blog': typeof AppBlogRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/perfil': typeof AppPerfilRoute
   '/app': typeof AppIndexRoute
@@ -129,6 +137,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/app/blog': typeof AppBlogRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/perfil': typeof AppPerfilRoute
   '/app/': typeof AppIndexRoute
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/app/blog'
+    | '/app/configuracoes'
     | '/app/cursos'
     | '/app/perfil'
     | '/app/'
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/app/blog'
+    | '/app/configuracoes'
     | '/app/cursos'
     | '/app/perfil'
     | '/app'
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/app/blog'
+    | '/app/configuracoes'
     | '/app/cursos'
     | '/app/perfil'
     | '/app/'
@@ -271,6 +283,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCursosRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/configuracoes': {
+      id: '/app/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/app/configuracoes'
+      preLoaderRoute: typeof AppConfiguracoesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/blog': {
       id: '/app/blog'
       path: '/blog'
@@ -290,6 +309,7 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppBlogRoute: typeof AppBlogRoute
+  AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppCursosRoute: typeof AppCursosRoute
   AppPerfilRoute: typeof AppPerfilRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -298,6 +318,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppBlogRoute: AppBlogRoute,
+  AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppCursosRoute: AppCursosRoute,
   AppPerfilRoute: AppPerfilRoute,
   AppIndexRoute: AppIndexRoute,
