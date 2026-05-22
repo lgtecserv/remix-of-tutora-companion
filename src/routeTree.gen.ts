@@ -23,6 +23,7 @@ import { Route as AppPerfilRouteImport } from './routes/app.perfil'
 import { Route as AppCursosRouteImport } from './routes/app.cursos'
 import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes'
 import { Route as AppBlogRouteImport } from './routes/app.blog'
+import { Route as AdminPagamentosRouteImport } from './routes/admin.pagamentos'
 import { Route as AdminCursosRouteImport } from './routes/admin.cursos'
 import { Route as AdminComentariosRouteImport } from './routes/admin.comentarios'
 import { Route as AdminBlogRouteImport } from './routes/admin.blog'
@@ -100,6 +101,11 @@ const AppBlogRoute = AppBlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => AppRoute,
 } as any)
+const AdminPagamentosRoute = AdminPagamentosRouteImport.update({
+  id: '/pagamentos',
+  path: '/pagamentos',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCursosRoute = AdminCursosRouteImport.update({
   id: '/cursos',
   path: '/cursos',
@@ -144,6 +150,7 @@ export interface FileRoutesByFullPath {
   '/admin/blog': typeof AdminBlogRoute
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/cursos': typeof AdminCursosRouteWithChildren
+  '/admin/pagamentos': typeof AdminPagamentosRoute
   '/app/blog': typeof AppBlogRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
@@ -164,6 +171,7 @@ export interface FileRoutesByTo {
   '/admin/blog': typeof AdminBlogRoute
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/cursos': typeof AdminCursosRouteWithChildren
+  '/admin/pagamentos': typeof AdminPagamentosRoute
   '/app/blog': typeof AppBlogRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
@@ -187,6 +195,7 @@ export interface FileRoutesById {
   '/admin/blog': typeof AdminBlogRoute
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/cursos': typeof AdminCursosRouteWithChildren
+  '/admin/pagamentos': typeof AdminPagamentosRoute
   '/app/blog': typeof AppBlogRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
@@ -211,6 +220,7 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/comentarios'
     | '/admin/cursos'
+    | '/admin/pagamentos'
     | '/app/blog'
     | '/app/configuracoes'
     | '/app/cursos'
@@ -231,6 +241,7 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/comentarios'
     | '/admin/cursos'
+    | '/admin/pagamentos'
     | '/app/blog'
     | '/app/configuracoes'
     | '/app/cursos'
@@ -253,6 +264,7 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/comentarios'
     | '/admin/cursos'
+    | '/admin/pagamentos'
     | '/app/blog'
     | '/app/configuracoes'
     | '/app/cursos'
@@ -374,6 +386,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBlogRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/pagamentos': {
+      id: '/admin/pagamentos'
+      path: '/pagamentos'
+      fullPath: '/admin/pagamentos'
+      preLoaderRoute: typeof AdminPagamentosRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/cursos': {
       id: '/admin/cursos'
       path: '/cursos'
@@ -436,6 +455,7 @@ interface AdminRouteChildren {
   AdminBlogRoute: typeof AdminBlogRoute
   AdminComentariosRoute: typeof AdminComentariosRoute
   AdminCursosRoute: typeof AdminCursosRouteWithChildren
+  AdminPagamentosRoute: typeof AdminPagamentosRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -444,6 +464,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminBlogRoute: AdminBlogRoute,
   AdminComentariosRoute: AdminComentariosRoute,
   AdminCursosRoute: AdminCursosRouteWithChildren,
+  AdminPagamentosRoute: AdminPagamentosRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
