@@ -19,6 +19,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppCursosRouteImport } from './routes/app.cursos'
+import { Route as AppBlogRouteImport } from './routes/app.blog'
 import { Route as AppCursoSlugRouteImport } from './routes/app.curso.$slug'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -71,6 +72,11 @@ const AppCursosRoute = AppCursosRouteImport.update({
   path: '/cursos',
   getParentRoute: () => AppRoute,
 } as any)
+const AppBlogRoute = AppBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCursoSlugRoute = AppCursoSlugRouteImport.update({
   id: '/curso/$slug',
   path: '/curso/$slug',
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/app/blog': typeof AppBlogRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/': typeof AppIndexRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/app/blog': typeof AppBlogRoute
   '/app/cursos': typeof AppCursosRoute
   '/app': typeof AppIndexRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/app/blog': typeof AppBlogRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/': typeof AppIndexRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/registo'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/app/blog'
     | '/app/cursos'
     | '/app/'
     | '/app/curso/$slug'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/registo'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/app/blog'
     | '/app/cursos'
     | '/app'
     | '/app/curso/$slug'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/registo'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/app/blog'
     | '/app/cursos'
     | '/app/'
     | '/app/curso/$slug'
@@ -240,6 +252,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCursosRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/blog': {
+      id: '/app/blog'
+      path: '/blog'
+      fullPath: '/app/blog'
+      preLoaderRoute: typeof AppBlogRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/curso/$slug': {
       id: '/app/curso/$slug'
       path: '/curso/$slug'
@@ -251,12 +270,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppBlogRoute: typeof AppBlogRoute
   AppCursosRoute: typeof AppCursosRoute
   AppIndexRoute: typeof AppIndexRoute
   AppCursoSlugRoute: typeof AppCursoSlugRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppBlogRoute: AppBlogRoute,
   AppCursosRoute: AppCursosRoute,
   AppIndexRoute: AppIndexRoute,
   AppCursoSlugRoute: AppCursoSlugRoute,
