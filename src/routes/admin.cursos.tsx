@@ -5,7 +5,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Plus, Copy, Trash2, Eye, EyeOff, Pencil } from "lucide-react";
 import { toast } from "sonner";
@@ -23,15 +22,16 @@ function AdminCourses() {
     queryFn: async () => (await supabase.from("courses").select("*").order("created_at", { ascending: false })).data ?? [],
   });
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ title: "", description: "", cover_url: "", category: "", instructor: "", level: "Iniciante", duration_minutes: 0, price_mzn: 0 });
+  const [title, setTitle] = useState("");
 
   async function create() {
-    if (!form.title.trim()) return toast.error("Título obrigatório");
-    const slug = slugify(form.title);
-    const { error } = await supabase.from("courses").insert({ ...form, slug });
+    if (!title.trim()) return toast.error("Título obrigatório");
+    const { data: created, error } = await supabase.from("courses").insert({ title: title.trim(), slug: slugify(title) }).select().single();
     if (error) return toast.error(error.message);
-    toast.success("Curso criado"); setOpen(false); setForm({ title: "", description: "", cover_url: "", category: "", instructor: "", level: "Iniciante", duration_minutes: 0, price_mzn: 0 });
+    toast.success("Curso criado — complete os detalhes");
+    setOpen(false); setTitle("");
     qc.invalidateQueries({ queryKey: ["admin-courses"] });
+    window.location.href = `/admin/cursos/${created.id}`;
   }
 
   async function togglePublish(c: any) {
@@ -58,21 +58,11 @@ function AdminCourses() {
         <h1 className="text-3xl font-bold text-secondary">Cursos</h1>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild><Button><Plus className="h-4 w-4" />Novo curso</Button></DialogTrigger>
-          <DialogContent className="max-w-lg">
+          <DialogContent>
             <DialogHeader><DialogTitle>Criar curso</DialogTitle></DialogHeader>
-            <div className="space-y-3">
-              <div><Label>Título *</Label><Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} /></div>
-              <div><Label>Descrição</Label><Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
-              <div className="grid grid-cols-2 gap-3">
-                <div><Label>Categoria</Label><Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} /></div>
-                <div><Label>Professor</Label><Input value={form.instructor} onChange={(e) => setForm({ ...form, instructor: e.target.value })} /></div>
-                <div><Label>Nível</Label><Input value={form.level} onChange={(e) => setForm({ ...form, level: e.target.value })} /></div>
-                <div><Label>Duração (min)</Label><Input type="number" value={form.duration_minutes} onChange={(e) => setForm({ ...form, duration_minutes: Number(e.target.value) })} /></div>
-                <div className="col-span-2"><Label>Preço (MZN)</Label><Input type="number" value={form.price_mzn} onChange={(e) => setForm({ ...form, price_mzn: Number(e.target.value) })} /></div>
-                <div className="col-span-2"><Label>URL da capa</Label><Input value={form.cover_url} onChange={(e) => setForm({ ...form, cover_url: e.target.value })} placeholder="https://..." /></div>
-              </div>
-            </div>
-            <DialogFooter><Button onClick={create}>Criar</Button></DialogFooter>
+            <div><Label>Título do curso *</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex.: Marketing Digital para Iniciantes" /></div>
+            <p className="text-xs text-muted-foreground">Vais completar os detalhes (capa, preço, currículo) no próximo ecrã.</p>
+            <DialogFooter><Button onClick={create}>Criar e continuar</Button></DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
@@ -89,7 +79,7 @@ function AdminCourses() {
               <tr key={c.id} className="border-t border-border">
                 <td className="px-4 py-3 font-medium text-secondary">{c.title}</td>
                 <td className="px-4 py-3 text-muted-foreground">{c.category ?? "—"}</td>
-                <td className="px-4 py-3">{Number(c.price_mzn).toLocaleString("pt-PT")} MT</td>
+                <td className="px-4 py-3">{c.is_free ? <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs text-emerald-700">Grátis</span> : `${Number(c.price_mzn).toLocaleString("pt-PT")} MT`}</td>
                 <td className="px-4 py-3">{c.is_published ? <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">Publicado</span> : <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">Rascunho</span>}</td>
                 <td className="px-4 py-3"><div className="flex gap-1">
                   <Button variant="ghost" size="icon" asChild><Link to="/admin/cursos/$id" params={{ id: c.id }}><Pencil className="h-4 w-4" /></Link></Button>

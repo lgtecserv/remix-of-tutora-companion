@@ -6,9 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Trash2, Lock, Unlock, ChevronUp, ChevronDown, Save } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus, Trash2, Lock, Unlock, ChevronUp, ChevronDown, Save, Pencil } from "lucide-react";
 import { toast } from "sonner";
-import { extractYouTubeId } from "@/lib/youtube";
+import { extractYouTubeId, youTubeThumb } from "@/lib/youtube";
+import { ImageUpload } from "@/components/image-upload";
+import { TagInput } from "@/components/tag-input";
+import { StringList } from "@/components/string-list";
 
 export const Route = createFileRoute("/admin/cursos/$id")({ component: EditCourse });
 
@@ -33,8 +40,18 @@ function EditCourse() {
 
   async function saveCourse() {
     const { id: _, created_at, updated_at, ...rest } = form;
+    if (!rest.title?.trim()) return toast.error("Título obrigatório");
+    if (!rest.slug?.trim()) rest.slug = rest.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    if (rest.is_free) rest.price_mzn = 0;
     const { error } = await supabase.from("courses").update(rest).eq("id", id);
-    if (error) toast.error(error.message); else { toast.success("Salvo"); qc.invalidateQueries({ queryKey: ["admin-course", id] }); }
+    if (error) toast.error(error.message); else { toast.success("Salvo"); qc.invalidateQueries({ queryKey: ["admin-course", id] }); qc.invalidateQueries({ queryKey: ["admin-courses"] }); }
+  }
+
+  async function togglePublish() {
+    const next = !form.is_published;
+    setForm({ ...form, is_published: next });
+    const { error } = await supabase.from("courses").update({ is_published: next }).eq("id", id);
+    if (error) toast.error(error.message); else { toast.success(next ? "Publicado" : "Despublicado"); qc.invalidateQueries({ queryKey: ["admin-course", id] }); }
   }
 
   async function addModule() {
@@ -43,20 +60,17 @@ function EditCourse() {
     const { error } = await supabase.from("modules").insert({ course_id: id, title, position: pos });
     if (error) toast.error(error.message); else qc.invalidateQueries({ queryKey: ["admin-course", id] });
   }
-
   async function renameModule(m: any) {
     const title = prompt("Renomear módulo:", m.title); if (!title) return;
     await supabase.from("modules").update({ title }).eq("id", m.id);
     qc.invalidateQueries({ queryKey: ["admin-course", id] });
   }
-
   async function deleteModule(m: any) {
     if (!confirm(`Excluir módulo "${m.title}" e todas suas aulas?`)) return;
     await supabase.from("lessons").delete().in("id", (data?.lessons ?? []).filter((l) => l.module_id === m.id).map((l) => l.id));
     await supabase.from("modules").delete().eq("id", m.id);
     qc.invalidateQueries({ queryKey: ["admin-course", id] });
   }
-
   async function moveModule(m: any, dir: -1 | 1) {
     const sorted = [...(data?.modules ?? [])].sort((a, b) => a.position - b.position);
     const i = sorted.findIndex((x) => x.id === m.id);
@@ -73,61 +87,122 @@ function EditCourse() {
   return (
     <div className="space-y-6">
       <Link to="/admin/cursos" className="text-sm text-muted-foreground hover:text-primary">← Voltar para cursos</Link>
-      <h1 className="text-3xl font-bold text-secondary">{form.title}</h1>
-
-      <section className="rounded-2xl border border-border bg-card p-6 space-y-3">
-        <h2 className="font-semibold text-secondary">Detalhes do curso</h2>
-        <div className="grid gap-3 md:grid-cols-2">
-          <div className="md:col-span-2"><Label>Título</Label><Input value={form.title ?? ""} onChange={(e) => setForm({ ...form, title: e.target.value })} /></div>
-          <div className="md:col-span-2"><Label>Descrição</Label><Textarea value={form.description ?? ""} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
-          <div><Label>Categoria</Label><Input value={form.category ?? ""} onChange={(e) => setForm({ ...form, category: e.target.value })} /></div>
-          <div><Label>Professor</Label><Input value={form.instructor ?? ""} onChange={(e) => setForm({ ...form, instructor: e.target.value })} /></div>
-          <div><Label>Nível</Label><Input value={form.level ?? ""} onChange={(e) => setForm({ ...form, level: e.target.value })} /></div>
-          <div><Label>Duração (min)</Label><Input type="number" value={form.duration_minutes ?? 0} onChange={(e) => setForm({ ...form, duration_minutes: Number(e.target.value) })} /></div>
-          <div><Label>Preço (MZN)</Label><Input type="number" value={form.price_mzn ?? 0} onChange={(e) => setForm({ ...form, price_mzn: Number(e.target.value) })} /></div>
-          <div><Label>URL da capa</Label><Input value={form.cover_url ?? ""} onChange={(e) => setForm({ ...form, cover_url: e.target.value })} /></div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-3xl font-bold text-secondary">{form.title}</h1>
+        <div className="flex items-center gap-3">
+          <label className="flex items-center gap-2 text-sm text-secondary"><Switch checked={!!form.is_published} onCheckedChange={togglePublish} />{form.is_published ? "Publicado" : "Rascunho"}</label>
         </div>
-        <Button onClick={saveCourse}><Save className="h-4 w-4" />Salvar detalhes</Button>
-      </section>
+      </div>
 
-      <section className="rounded-2xl border border-border bg-card p-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="font-semibold text-secondary">Módulos e aulas</h2>
-          <Button onClick={addModule}><Plus className="h-4 w-4" />Novo módulo</Button>
-        </div>
-        {(data?.modules ?? []).map((m) => (
-          <ModuleBlock key={m.id} module={m} lessons={(data?.lessons ?? []).filter((l) => l.module_id === m.id)}
-            onRename={() => renameModule(m)} onDelete={() => deleteModule(m)}
-            onMoveUp={() => moveModule(m, -1)} onMoveDown={() => moveModule(m, 1)}
-            onReload={() => qc.invalidateQueries({ queryKey: ["admin-course", id] })} />
-        ))}
-        {(data?.modules ?? []).length === 0 && <div className="rounded-lg border border-dashed border-border p-6 text-center text-muted-foreground">Nenhum módulo. Adicione o primeiro.</div>}
-      </section>
+      <Tabs defaultValue="details">
+        <TabsList>
+          <TabsTrigger value="details">Detalhes</TabsTrigger>
+          <TabsTrigger value="curriculum">Currículo</TabsTrigger>
+          <TabsTrigger value="seo">SEO</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="details" className="space-y-6">
+          <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+            <section className="space-y-4 rounded-2xl border border-border bg-card p-6">
+              <h2 className="font-semibold text-secondary">Informações do curso</h2>
+              <div className="grid gap-3">
+                <div><Label>Título *</Label><Input value={form.title ?? ""} onChange={(e) => setForm({ ...form, title: e.target.value })} /></div>
+                <div><Label>Slug (URL)</Label><Input value={form.slug ?? ""} onChange={(e) => setForm({ ...form, slug: e.target.value })} /></div>
+                <div><Label>Subtítulo</Label><Input value={form.short_description ?? ""} onChange={(e) => setForm({ ...form, short_description: e.target.value })} placeholder="Frase curta apresentando o curso" /></div>
+                <div><Label>Descrição completa</Label><Textarea value={form.description ?? ""} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={6} /></div>
+                <div className="grid gap-3 md:grid-cols-2">
+                  <div><Label>Categoria</Label><Input value={form.category ?? ""} onChange={(e) => setForm({ ...form, category: e.target.value })} /></div>
+                  <div><Label>Professor</Label><Input value={form.instructor ?? ""} onChange={(e) => setForm({ ...form, instructor: e.target.value })} /></div>
+                  <div>
+                    <Label>Nível</Label>
+                    <Select value={form.level ?? "Iniciante"} onValueChange={(v) => setForm({ ...form, level: v })}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Iniciante">Iniciante</SelectItem>
+                        <SelectItem value="Intermédio">Intermédio</SelectItem>
+                        <SelectItem value="Avançado">Avançado</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div><Label>Duração estimada (min)</Label><Input type="number" min={0} value={form.duration_minutes ?? 0} onChange={(e) => setForm({ ...form, duration_minutes: Number(e.target.value) })} /></div>
+                </div>
+                <div><Label>Público-alvo</Label><Input value={form.target_audience ?? ""} onChange={(e) => setForm({ ...form, target_audience: e.target.value })} placeholder="Ex.: Empreendedores, criadores de conteúdo..." /></div>
+                <div><Label>Tags</Label><TagInput value={form.tags ?? []} onChange={(tags) => setForm({ ...form, tags })} /></div>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2 pt-2">
+                <div>
+                  <Label className="mb-2 block">O que vais aprender</Label>
+                  <StringList value={form.what_you_learn ?? []} onChange={(v) => setForm({ ...form, what_you_learn: v })} placeholder="Resultado / habilidade" />
+                </div>
+                <div>
+                  <Label className="mb-2 block">Requisitos</Label>
+                  <StringList value={form.requirements ?? []} onChange={(v) => setForm({ ...form, requirements: v })} placeholder="Pré-requisito" />
+                </div>
+              </div>
+            </section>
+
+            <aside className="space-y-4">
+              <div className="space-y-4 rounded-2xl border border-border bg-card p-6">
+                <ImageUpload bucket="course-covers" label="Capa do curso" value={form.cover_url ?? ""} onChange={(url) => setForm({ ...form, cover_url: url })} />
+              </div>
+              <div className="space-y-3 rounded-2xl border border-border bg-card p-6">
+                <h3 className="text-sm font-semibold text-secondary">Preço</h3>
+                <label className="flex items-center justify-between text-sm">
+                  <span>Curso gratuito</span>
+                  <Switch checked={!!form.is_free} onCheckedChange={(v) => setForm({ ...form, is_free: v, price_mzn: v ? 0 : form.price_mzn })} />
+                </label>
+                {!form.is_free && (
+                  <div>
+                    <Label>Preço (MZN)</Label>
+                    <Input type="number" min={0} value={form.price_mzn ?? 0} onChange={(e) => setForm({ ...form, price_mzn: Number(e.target.value) })} />
+                  </div>
+                )}
+                <p className="text-xs text-muted-foreground">Cursos gratuitos publicados ficam acessíveis a qualquer aluno com 1 clique.</p>
+              </div>
+              <Button onClick={saveCourse} className="w-full"><Save className="h-4 w-4" />Salvar curso</Button>
+            </aside>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="curriculum" className="space-y-4">
+          <section className="rounded-2xl border border-border bg-card p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="font-semibold text-secondary">Módulos e aulas</h2>
+              <Button onClick={addModule}><Plus className="h-4 w-4" />Novo módulo</Button>
+            </div>
+            {(data?.modules ?? []).map((m) => (
+              <ModuleBlock key={m.id} module={m} lessons={(data?.lessons ?? []).filter((l) => l.module_id === m.id)}
+                onRename={() => renameModule(m)} onDelete={() => deleteModule(m)}
+                onMoveUp={() => moveModule(m, -1)} onMoveDown={() => moveModule(m, 1)}
+                onReload={() => qc.invalidateQueries({ queryKey: ["admin-course", id] })} />
+            ))}
+            {(data?.modules ?? []).length === 0 && <div className="rounded-lg border border-dashed border-border p-6 text-center text-muted-foreground">Nenhum módulo. Adicione o primeiro.</div>}
+          </section>
+        </TabsContent>
+
+        <TabsContent value="seo" className="space-y-4">
+          <section className="rounded-2xl border border-border bg-card p-6 space-y-3 max-w-2xl">
+            <h2 className="font-semibold text-secondary">SEO</h2>
+            <p className="text-xs text-muted-foreground">A capa será usada como imagem de partilha automaticamente.</p>
+            <div><Label>Slug</Label><Input value={form.slug ?? ""} onChange={(e) => setForm({ ...form, slug: e.target.value })} /></div>
+            <Button onClick={saveCourse}><Save className="h-4 w-4" />Salvar</Button>
+          </section>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
 
 function ModuleBlock({ module: m, lessons, onRename, onDelete, onMoveUp, onMoveDown, onReload }: any) {
-  async function addLesson() {
-    const title = prompt("Título da aula:"); if (!title) return;
-    const youtube_url = prompt("URL do YouTube (cole o link completo):") ?? "";
-    const pos = lessons.length;
-    const { error } = await supabase.from("lessons").insert({ module_id: m.id, title, youtube_url, position: pos });
-    if (error) toast.error(error.message); else onReload();
-  }
+  const [editing, setEditing] = useState<any>(null);
+
   async function deleteLesson(l: any) {
     if (!confirm(`Excluir aula "${l.title}"?`)) return;
     await supabase.from("lessons").delete().eq("id", l.id); onReload();
   }
   async function toggleLock(l: any) {
     await supabase.from("lessons").update({ is_locked: !l.is_locked }).eq("id", l.id); onReload();
-  }
-  async function editLesson(l: any) {
-    const title = prompt("Título:", l.title) ?? l.title;
-    const youtube_url = prompt("YouTube URL:", l.youtube_url ?? "") ?? l.youtube_url;
-    const description = prompt("Descrição:", l.description ?? "") ?? l.description;
-    const attachment_url = prompt("URL do material (opcional):", l.attachment_url ?? "") ?? l.attachment_url;
-    await supabase.from("lessons").update({ title, youtube_url, description, attachment_url }).eq("id", l.id); onReload();
   }
   async function moveLesson(l: any, dir: -1 | 1) {
     const sorted = [...lessons].sort((a: any, b: any) => a.position - b.position);
@@ -159,13 +234,61 @@ function ModuleBlock({ module: m, lessons, onRename, onDelete, onMoveUp, onMoveD
               <Button variant="ghost" size="icon" onClick={() => moveLesson(l, -1)}><ChevronUp className="h-4 w-4" /></Button>
               <Button variant="ghost" size="icon" onClick={() => moveLesson(l, 1)}><ChevronDown className="h-4 w-4" /></Button>
               <Button variant="ghost" size="icon" onClick={() => toggleLock(l)} title={l.is_locked ? "Desbloquear" : "Bloquear"}>{l.is_locked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}</Button>
-              <Button variant="ghost" size="sm" onClick={() => editLesson(l)}>Editar</Button>
+              <Button variant="ghost" size="icon" onClick={() => setEditing(l)}><Pencil className="h-4 w-4" /></Button>
               <Button variant="ghost" size="icon" onClick={() => deleteLesson(l)}><Trash2 className="h-4 w-4" /></Button>
             </div>
           );
         })}
-        <Button variant="outline" size="sm" onClick={addLesson} className="w-full"><Plus className="h-4 w-4" />Adicionar aula</Button>
+        <Button variant="outline" size="sm" onClick={() => setEditing({ module_id: m.id, title: "", youtube_url: "", description: "", attachment_url: "", is_locked: false, position: lessons.length })} className="w-full"><Plus className="h-4 w-4" />Adicionar aula</Button>
       </div>
+      {editing && <LessonDialog lesson={editing} onClose={() => setEditing(null)} onSaved={onReload} />}
     </div>
+  );
+}
+
+function LessonDialog({ lesson, onClose, onSaved }: { lesson: any; onClose: () => void; onSaved: () => void }) {
+  const [f, setF] = useState<any>(lesson);
+  const yt = extractYouTubeId(f.youtube_url);
+  const thumb = youTubeThumb(f.youtube_url);
+
+  async function save() {
+    if (!f.title?.trim()) return toast.error("Título obrigatório");
+    if (!yt) return toast.error("URL do YouTube inválido");
+    const payload: any = { title: f.title.trim(), youtube_url: f.youtube_url, description: f.description ?? "", attachment_url: f.attachment_url ?? "", is_locked: !!f.is_locked, module_id: f.module_id, position: f.position ?? 0 };
+    let error;
+    if (f.id) ({ error } = await supabase.from("lessons").update(payload).eq("id", f.id));
+    else ({ error } = await supabase.from("lessons").insert(payload));
+    if (error) return toast.error(error.message);
+    toast.success("Aula salva"); onSaved(); onClose();
+  }
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader><DialogTitle>{f.id ? "Editar aula" : "Nova aula"}</DialogTitle></DialogHeader>
+        <div className="space-y-3">
+          <div><Label>Título *</Label><Input value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} /></div>
+          <div>
+            <Label>URL do YouTube *</Label>
+            <Input value={f.youtube_url ?? ""} onChange={(e) => setF({ ...f, youtube_url: e.target.value })} placeholder="https://www.youtube.com/watch?v=..." />
+            {f.youtube_url && (
+              yt
+                ? <div className="mt-2 flex items-center gap-3 rounded-lg border border-border p-2">
+                    {thumb && <img src={thumb} alt="" className="h-16 w-28 rounded object-cover" />}
+                    <div className="text-xs"><div className="text-emerald-600 font-medium">✓ Vídeo detectado</div><div className="text-muted-foreground">ID: {yt}</div></div>
+                  </div>
+                : <p className="mt-1 text-xs text-destructive">URL inválido. Aceita formatos: youtube.com/watch?v=, youtu.be/, embed/, shorts/.</p>
+            )}
+          </div>
+          <div><Label>Descrição</Label><Textarea value={f.description ?? ""} onChange={(e) => setF({ ...f, description: e.target.value })} rows={3} /></div>
+          <div><Label>Material complementar (URL)</Label><Input value={f.attachment_url ?? ""} onChange={(e) => setF({ ...f, attachment_url: e.target.value })} placeholder="PDF, link..." /></div>
+          <label className="flex items-center gap-2 text-sm"><Switch checked={!!f.is_locked} onCheckedChange={(v) => setF({ ...f, is_locked: v })} />Aula bloqueada (só liberada após concluir a anterior)</label>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancelar</Button>
+          <Button onClick={save}>Salvar aula</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
