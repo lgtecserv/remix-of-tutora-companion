@@ -91,11 +91,24 @@ function CoursePlayer() {
   if (isLoading) return <div className="text-muted-foreground">A carregar curso...</div>;
   if (!data?.course) return <div className="text-muted-foreground">Curso não encontrado.</div>;
   if (!data.enrolled) {
+    if (data.course.is_free) {
+      return (
+        <div className="rounded-2xl border border-border bg-card p-8 text-center">
+          <h2 className="text-xl font-semibold text-secondary">{data.course.title}</h2>
+          <p className="mt-2 text-muted-foreground">Este curso é gratuito. Inscreva-se para começar.</p>
+          <Button className="mt-4" onClick={async () => {
+            const { error } = await supabase.from("enrollments").insert({ user_id: user!.id, course_id: data.course.id });
+            if (error && !error.message.includes("duplicate")) return toast.error(error.message);
+            toast.success("Inscrito!"); qc.invalidateQueries({ queryKey: ["course-player", slug] });
+          }}>Inscrever-me gratuitamente</Button>
+        </div>
+      );
+    }
     return (
       <div className="rounded-2xl border border-border bg-card p-8 text-center">
         <h2 className="text-xl font-semibold text-secondary">Você ainda não tem acesso a este curso</h2>
         <p className="mt-2 text-muted-foreground">Adquira o curso para começar a assistir as aulas.</p>
-        <Button asChild className="mt-4"><Link to="/app/cursos">Ver meus cursos</Link></Button>
+        <Button asChild className="mt-4"><Link to="/app/catalogo">Ver catálogo</Link></Button>
       </div>
     );
   }
@@ -136,7 +149,16 @@ function CoursePlayer() {
 
         {current && (
           <div className="rounded-2xl border border-border bg-card p-6">
-            <h2 className="font-semibold text-secondary">{current.title}</h2>
+            <div className="flex items-start justify-between gap-3">
+              <h2 className="font-semibold text-secondary">{current.title}</h2>
+              {!progressMap.get(current.id)?.is_completed && (
+                <Button size="sm" variant="outline" onClick={async () => {
+                  await supabase.from("lesson_progress").upsert({ user_id: user!.id, lesson_id: current.id, percent: 100, is_completed: true, updated_at: new Date().toISOString() }, { onConflict: "user_id,lesson_id" } as any);
+                  qc.invalidateQueries({ queryKey: ["course-player", slug] });
+                  toast.success("Aula marcada como concluída");
+                }}><CheckCircle2 className="h-4 w-4" />Marcar concluída</Button>
+              )}
+            </div>
             {current.description && <p className="mt-2 text-sm text-muted-foreground whitespace-pre-wrap">{current.description}</p>}
             {current.attachment_url && (
               <a href={current.attachment_url} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-2 text-sm text-primary hover:underline">

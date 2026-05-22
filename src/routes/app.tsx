@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tan
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import logoImg from "@/assets/logo-imersao.png";
-import { Home, BookOpen, Newspaper, User, Settings, LogOut, Shield } from "lucide-react";
+import { Home, BookOpen, Newspaper, User, Settings, LogOut, Shield, Compass } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app")({
@@ -25,6 +25,7 @@ function AppLayout() {
 
   const nav: { to: string; label: string; icon: typeof Home; exact?: boolean }[] = [
     { to: "/app", label: "Início", icon: Home, exact: true },
+    { to: "/app/catalogo", label: "Catálogo", icon: Compass },
     { to: "/app/cursos", label: "Meus Cursos", icon: BookOpen },
     { to: "/app/blog", label: "Blog", icon: Newspaper },
     { to: "/app/perfil", label: "Perfil", icon: User },
