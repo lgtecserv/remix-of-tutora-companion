@@ -149,7 +149,16 @@ function CoursePlayer() {
 
         {current && (
           <div className="rounded-2xl border border-border bg-card p-6">
-            <h2 className="font-semibold text-secondary">{current.title}</h2>
+            <div className="flex items-start justify-between gap-3">
+              <h2 className="font-semibold text-secondary">{current.title}</h2>
+              {!progressMap.get(current.id)?.is_completed && (
+                <Button size="sm" variant="outline" onClick={async () => {
+                  await supabase.from("lesson_progress").upsert({ user_id: user!.id, lesson_id: current.id, percent: 100, is_completed: true, updated_at: new Date().toISOString() }, { onConflict: "user_id,lesson_id" } as any);
+                  qc.invalidateQueries({ queryKey: ["course-player", slug] });
+                  toast.success("Aula marcada como concluída");
+                }}><CheckCircle2 className="h-4 w-4" />Marcar concluída</Button>
+              )}
+            </div>
             {current.description && <p className="mt-2 text-sm text-muted-foreground whitespace-pre-wrap">{current.description}</p>}
             {current.attachment_url && (
               <a href={current.attachment_url} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-2 text-sm text-primary hover:underline">
