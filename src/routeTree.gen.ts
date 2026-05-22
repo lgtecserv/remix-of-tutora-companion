@@ -18,6 +18,7 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppPerfilRouteImport } from './routes/app.perfil'
 import { Route as AppCursosRouteImport } from './routes/app.cursos'
 import { Route as AppBlogRouteImport } from './routes/app.blog'
 import { Route as AppCursoSlugRouteImport } from './routes/app.curso.$slug'
@@ -67,6 +68,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPerfilRoute = AppPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCursosRoute = AppCursosRouteImport.update({
   id: '/cursos',
   path: '/cursos',
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/app/blog': typeof AppBlogRoute
   '/app/cursos': typeof AppCursosRoute
+  '/app/perfil': typeof AppPerfilRoute
   '/app/': typeof AppIndexRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
 }
@@ -107,6 +114,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/app/blog': typeof AppBlogRoute
   '/app/cursos': typeof AppCursosRoute
+  '/app/perfil': typeof AppPerfilRoute
   '/app': typeof AppIndexRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
 }
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/app/blog': typeof AppBlogRoute
   '/app/cursos': typeof AppCursosRoute
+  '/app/perfil': typeof AppPerfilRoute
   '/app/': typeof AppIndexRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
 }
@@ -138,6 +147,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/app/blog'
     | '/app/cursos'
+    | '/app/perfil'
     | '/app/'
     | '/app/curso/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/app/blog'
     | '/app/cursos'
+    | '/app/perfil'
     | '/app'
     | '/app/curso/$slug'
   id:
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/app/blog'
     | '/app/cursos'
+    | '/app/perfil'
     | '/app/'
     | '/app/curso/$slug'
   fileRoutesById: FileRoutesById
@@ -245,6 +257,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/perfil': {
+      id: '/app/perfil'
+      path: '/perfil'
+      fullPath: '/app/perfil'
+      preLoaderRoute: typeof AppPerfilRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/cursos': {
       id: '/app/cursos'
       path: '/cursos'
@@ -272,6 +291,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppBlogRoute: typeof AppBlogRoute
   AppCursosRoute: typeof AppCursosRoute
+  AppPerfilRoute: typeof AppPerfilRoute
   AppIndexRoute: typeof AppIndexRoute
   AppCursoSlugRoute: typeof AppCursoSlugRoute
 }
@@ -279,6 +299,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppBlogRoute: AppBlogRoute,
   AppCursosRoute: AppCursosRoute,
+  AppPerfilRoute: AppPerfilRoute,
   AppIndexRoute: AppIndexRoute,
   AppCursoSlugRoute: AppCursoSlugRoute,
 }
@@ -298,3 +319,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
