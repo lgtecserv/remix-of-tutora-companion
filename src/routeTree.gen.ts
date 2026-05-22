@@ -25,6 +25,7 @@ import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes
 import { Route as AppBlogRouteImport } from './routes/app.blog'
 import { Route as AdminPagamentosRouteImport } from './routes/admin.pagamentos'
 import { Route as AdminCursosRouteImport } from './routes/admin.cursos'
+import { Route as AdminConfiguracoesRouteImport } from './routes/admin.configuracoes'
 import { Route as AdminComentariosRouteImport } from './routes/admin.comentarios'
 import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 import { Route as AdminAlunosRouteImport } from './routes/admin.alunos'
@@ -111,6 +112,11 @@ const AdminCursosRoute = AdminCursosRouteImport.update({
   path: '/cursos',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminConfiguracoesRoute = AdminConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminComentariosRoute = AdminComentariosRouteImport.update({
   id: '/comentarios',
   path: '/comentarios',
@@ -149,6 +155,7 @@ export interface FileRoutesByFullPath {
   '/admin/alunos': typeof AdminAlunosRoute
   '/admin/blog': typeof AdminBlogRoute
   '/admin/comentarios': typeof AdminComentariosRoute
+  '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/cursos': typeof AdminCursosRouteWithChildren
   '/admin/pagamentos': typeof AdminPagamentosRoute
   '/app/blog': typeof AppBlogRoute
@@ -170,6 +177,7 @@ export interface FileRoutesByTo {
   '/admin/alunos': typeof AdminAlunosRoute
   '/admin/blog': typeof AdminBlogRoute
   '/admin/comentarios': typeof AdminComentariosRoute
+  '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/cursos': typeof AdminCursosRouteWithChildren
   '/admin/pagamentos': typeof AdminPagamentosRoute
   '/app/blog': typeof AppBlogRoute
@@ -194,6 +202,7 @@ export interface FileRoutesById {
   '/admin/alunos': typeof AdminAlunosRoute
   '/admin/blog': typeof AdminBlogRoute
   '/admin/comentarios': typeof AdminComentariosRoute
+  '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/cursos': typeof AdminCursosRouteWithChildren
   '/admin/pagamentos': typeof AdminPagamentosRoute
   '/app/blog': typeof AppBlogRoute
@@ -219,6 +228,7 @@ export interface FileRouteTypes {
     | '/admin/alunos'
     | '/admin/blog'
     | '/admin/comentarios'
+    | '/admin/configuracoes'
     | '/admin/cursos'
     | '/admin/pagamentos'
     | '/app/blog'
@@ -240,6 +250,7 @@ export interface FileRouteTypes {
     | '/admin/alunos'
     | '/admin/blog'
     | '/admin/comentarios'
+    | '/admin/configuracoes'
     | '/admin/cursos'
     | '/admin/pagamentos'
     | '/app/blog'
@@ -263,6 +274,7 @@ export interface FileRouteTypes {
     | '/admin/alunos'
     | '/admin/blog'
     | '/admin/comentarios'
+    | '/admin/configuracoes'
     | '/admin/cursos'
     | '/admin/pagamentos'
     | '/app/blog'
@@ -400,6 +412,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCursosRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/configuracoes': {
+      id: '/admin/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/admin/configuracoes'
+      preLoaderRoute: typeof AdminConfiguracoesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/comentarios': {
       id: '/admin/comentarios'
       path: '/comentarios'
@@ -454,6 +473,7 @@ interface AdminRouteChildren {
   AdminAlunosRoute: typeof AdminAlunosRoute
   AdminBlogRoute: typeof AdminBlogRoute
   AdminComentariosRoute: typeof AdminComentariosRoute
+  AdminConfiguracoesRoute: typeof AdminConfiguracoesRoute
   AdminCursosRoute: typeof AdminCursosRouteWithChildren
   AdminPagamentosRoute: typeof AdminPagamentosRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -463,6 +483,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAlunosRoute: AdminAlunosRoute,
   AdminBlogRoute: AdminBlogRoute,
   AdminComentariosRoute: AdminComentariosRoute,
+  AdminConfiguracoesRoute: AdminConfiguracoesRoute,
   AdminCursosRoute: AdminCursosRouteWithChildren,
   AdminPagamentosRoute: AdminPagamentosRoute,
   AdminIndexRoute: AdminIndexRoute,
