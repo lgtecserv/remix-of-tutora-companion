@@ -91,11 +91,24 @@ function CoursePlayer() {
   if (isLoading) return <div className="text-muted-foreground">A carregar curso...</div>;
   if (!data?.course) return <div className="text-muted-foreground">Curso não encontrado.</div>;
   if (!data.enrolled) {
+    if (data.course.is_free) {
+      return (
+        <div className="rounded-2xl border border-border bg-card p-8 text-center">
+          <h2 className="text-xl font-semibold text-secondary">{data.course.title}</h2>
+          <p className="mt-2 text-muted-foreground">Este curso é gratuito. Inscreva-se para começar.</p>
+          <Button className="mt-4" onClick={async () => {
+            const { error } = await supabase.from("enrollments").insert({ user_id: user!.id, course_id: data.course.id });
+            if (error && !error.message.includes("duplicate")) return toast.error(error.message);
+            toast.success("Inscrito!"); qc.invalidateQueries({ queryKey: ["course-player", slug] });
+          }}>Inscrever-me gratuitamente</Button>
+        </div>
+      );
+    }
     return (
       <div className="rounded-2xl border border-border bg-card p-8 text-center">
         <h2 className="text-xl font-semibold text-secondary">Você ainda não tem acesso a este curso</h2>
         <p className="mt-2 text-muted-foreground">Adquira o curso para começar a assistir as aulas.</p>
-        <Button asChild className="mt-4"><Link to="/app/cursos">Ver meus cursos</Link></Button>
+        <Button asChild className="mt-4"><Link to="/app/catalogo">Ver catálogo</Link></Button>
       </div>
     );
   }

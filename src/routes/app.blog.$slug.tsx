@@ -33,7 +33,7 @@ function Article() {
         </div>
       )}
       {isHtml
-        ? <div className="prose prose-base mt-8 max-w-none" dangerouslySetInnerHTML={{ __html: data.content }} />
+        ? <div className="prose prose-base mt-8 max-w-none" dangerouslySetInnerHTML={{ __html: data.content ?? "" }} />
         : <div className="mt-8 whitespace-pre-wrap text-secondary">{data.content}</div>}
     </article>
   );
