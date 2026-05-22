@@ -31,6 +31,7 @@ import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 import { Route as AdminAlunosRouteImport } from './routes/admin.alunos'
 import { Route as AppCursoSlugRouteImport } from './routes/app.curso.$slug'
 import { Route as AdminCursosIdRouteImport } from './routes/admin.cursos.$id'
+import { Route as AdminBlogIdRouteImport } from './routes/admin.blog.$id'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -142,6 +143,11 @@ const AdminCursosIdRoute = AdminCursosIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AdminCursosRoute,
 } as any)
+const AdminBlogIdRoute = AdminBlogIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminBlogRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -153,7 +159,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/alunos': typeof AdminAlunosRoute
-  '/admin/blog': typeof AdminBlogRoute
+  '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/cursos': typeof AdminCursosRouteWithChildren
@@ -164,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/app/perfil': typeof AppPerfilRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/cursos/$id': typeof AdminCursosIdRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
 }
@@ -175,7 +182,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/alunos': typeof AdminAlunosRoute
-  '/admin/blog': typeof AdminBlogRoute
+  '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/cursos': typeof AdminCursosRouteWithChildren
@@ -186,6 +193,7 @@ export interface FileRoutesByTo {
   '/app/perfil': typeof AppPerfilRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
+  '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/cursos/$id': typeof AdminCursosIdRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
 }
@@ -200,7 +208,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/alunos': typeof AdminAlunosRoute
-  '/admin/blog': typeof AdminBlogRoute
+  '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/cursos': typeof AdminCursosRouteWithChildren
@@ -211,6 +219,7 @@ export interface FileRoutesById {
   '/app/perfil': typeof AppPerfilRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/cursos/$id': typeof AdminCursosIdRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
 }
@@ -237,6 +246,7 @@ export interface FileRouteTypes {
     | '/app/perfil'
     | '/admin/'
     | '/app/'
+    | '/admin/blog/$id'
     | '/admin/cursos/$id'
     | '/app/curso/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -259,6 +269,7 @@ export interface FileRouteTypes {
     | '/app/perfil'
     | '/admin'
     | '/app'
+    | '/admin/blog/$id'
     | '/admin/cursos/$id'
     | '/app/curso/$slug'
   id:
@@ -283,6 +294,7 @@ export interface FileRouteTypes {
     | '/app/perfil'
     | '/admin/'
     | '/app/'
+    | '/admin/blog/$id'
     | '/admin/cursos/$id'
     | '/app/curso/$slug'
   fileRoutesById: FileRoutesById
@@ -454,8 +466,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCursosIdRouteImport
       parentRoute: typeof AdminCursosRoute
     }
+    '/admin/blog/$id': {
+      id: '/admin/blog/$id'
+      path: '/$id'
+      fullPath: '/admin/blog/$id'
+      preLoaderRoute: typeof AdminBlogIdRouteImport
+      parentRoute: typeof AdminBlogRoute
+    }
   }
 }
+
+interface AdminBlogRouteChildren {
+  AdminBlogIdRoute: typeof AdminBlogIdRoute
+}
+
+const AdminBlogRouteChildren: AdminBlogRouteChildren = {
+  AdminBlogIdRoute: AdminBlogIdRoute,
+}
+
+const AdminBlogRouteWithChildren = AdminBlogRoute._addFileChildren(
+  AdminBlogRouteChildren,
+)
 
 interface AdminCursosRouteChildren {
   AdminCursosIdRoute: typeof AdminCursosIdRoute
@@ -471,7 +502,7 @@ const AdminCursosRouteWithChildren = AdminCursosRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminAlunosRoute: typeof AdminAlunosRoute
-  AdminBlogRoute: typeof AdminBlogRoute
+  AdminBlogRoute: typeof AdminBlogRouteWithChildren
   AdminComentariosRoute: typeof AdminComentariosRoute
   AdminConfiguracoesRoute: typeof AdminConfiguracoesRoute
   AdminCursosRoute: typeof AdminCursosRouteWithChildren
@@ -481,7 +512,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAlunosRoute: AdminAlunosRoute,
-  AdminBlogRoute: AdminBlogRoute,
+  AdminBlogRoute: AdminBlogRouteWithChildren,
   AdminComentariosRoute: AdminComentariosRoute,
   AdminConfiguracoesRoute: AdminConfiguracoesRoute,
   AdminCursosRoute: AdminCursosRouteWithChildren,
