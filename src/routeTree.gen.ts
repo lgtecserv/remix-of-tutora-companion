@@ -19,6 +19,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppCursosRouteImport } from './routes/app.cursos'
+import { Route as AppCursoSlugRouteImport } from './routes/app.curso.$slug'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -70,6 +71,11 @@ const AppCursosRoute = AppCursosRouteImport.update({
   path: '/cursos',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCursoSlugRoute = AppCursoSlugRouteImport.update({
+  id: '/curso/$slug',
+  path: '/curso/$slug',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/': typeof AppIndexRoute
+  '/app/curso/$slug': typeof AppCursoSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/app/cursos': typeof AppCursosRoute
   '/app': typeof AppIndexRoute
+  '/app/curso/$slug': typeof AppCursoSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/': typeof AppIndexRoute
+  '/app/curso/$slug': typeof AppCursoSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/app/cursos'
     | '/app/'
+    | '/app/curso/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/app/cursos'
     | '/app'
+    | '/app/curso/$slug'
   id:
     | '__root__'
     | '/'
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/app/cursos'
     | '/app/'
+    | '/app/curso/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -228,17 +240,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCursosRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/curso/$slug': {
+      id: '/app/curso/$slug'
+      path: '/curso/$slug'
+      fullPath: '/app/curso/$slug'
+      preLoaderRoute: typeof AppCursoSlugRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppCursosRoute: typeof AppCursosRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppCursoSlugRoute: typeof AppCursoSlugRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppCursosRoute: AppCursosRoute,
   AppIndexRoute: AppIndexRoute,
+  AppCursoSlugRoute: AppCursoSlugRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
