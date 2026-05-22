@@ -1,17 +1,19 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth";
-import { BookOpen, Users, MessageSquare, Newspaper, DollarSign, LayoutDashboard, Settings } from "lucide-react";
+import { BookOpen, Users, MessageSquare, Newspaper, DollarSign, LayoutDashboard, Settings, LogOut, GraduationCap } from "lucide-react";
 import logoImg from "@/assets/logo-imersao.png";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — Imersão Completa" }, { name: "robots", content: "noindex" }] }),
-  component: AdminPage,
+  component: AdminLayout,
 });
 
-function AdminPage() {
-  const { user, isAdmin, loading } = useAuth();
+function AdminLayout() {
+  const { user, isAdmin, loading, signOut } = useAuth();
   const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -22,37 +24,44 @@ function AdminPage() {
     return <div className="flex min-h-screen items-center justify-center text-muted-foreground">A verificar permissões...</div>;
   }
 
-  const cards = [
-    { icon: BookOpen, label: "Cursos", desc: "Criar, editar, publicar" },
-    { icon: LayoutDashboard, label: "Aulas", desc: "Vídeos, ordem, módulos" },
-    { icon: Users, label: "Alunos", desc: "Gestão de utilizadores" },
-    { icon: MessageSquare, label: "Comentários", desc: "Moderação" },
-    { icon: Newspaper, label: "Blog", desc: "Artigos e SEO" },
-    { icon: DollarSign, label: "Pagamentos", desc: "Aprovar M-Pesa / e-Mola" },
-    { icon: Settings, label: "Configurações", desc: "Plataforma" },
+  const nav: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
+    { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
+    { to: "/admin/cursos", label: "Cursos", icon: BookOpen },
+    { to: "/admin/alunos", label: "Alunos", icon: Users },
+    { to: "/admin/comentarios", label: "Comentários", icon: MessageSquare },
+    { to: "/admin/blog", label: "Blog", icon: Newspaper },
+    { to: "/admin/pagamentos", label: "Pagamentos", icon: DollarSign },
+    { to: "/admin/configuracoes", label: "Configurações", icon: Settings },
   ];
 
   return (
-    <div className="min-h-screen bg-muted">
-      <header className="border-b border-border bg-card px-6 py-4">
-        <div className="flex items-center justify-between">
-          <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-9" /></Link>
-          <Link to="/app" className="text-sm text-primary hover:underline">Voltar ao app</Link>
+    <div className="flex min-h-screen bg-muted">
+      <aside className="hidden w-64 flex-col border-r border-border bg-secondary text-secondary-foreground md:flex">
+        <div className="border-b border-border/20 p-5">
+          <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-10 brightness-0 invert" /></Link>
+          <div className="mt-2 text-xs font-medium uppercase tracking-wider text-primary">Painel Admin</div>
         </div>
-      </header>
-      <main className="container mx-auto px-6 py-10">
-        <h1 className="text-3xl font-bold text-secondary">Painel Administrativo</h1>
-        <p className="mt-1 text-muted-foreground">Em construção — fase 3 do roadmap.</p>
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {cards.map((c) => (
-            <div key={c.label} className="rounded-2xl border border-border bg-card p-6 transition hover:border-primary/40 hover:shadow-[var(--shadow-card)]">
-              <c.icon className="h-7 w-7 text-primary" />
-              <h3 className="mt-3 font-semibold text-secondary">{c.label}</h3>
-              <p className="text-sm text-muted-foreground">{c.desc}</p>
-            </div>
-          ))}
-        </div>
-      </main>
+        <nav className="flex-1 space-y-1 p-3">
+          {nav.map((n) => {
+            const active = n.exact ? pathname === n.to : pathname.startsWith(n.to);
+            return (
+              <Link key={n.label} to={n.to as string} className={cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
+                active ? "bg-primary text-primary-foreground" : "text-secondary-foreground/70 hover:bg-white/5 hover:text-secondary-foreground"
+              )}>
+                <n.icon className="h-4 w-4" />{n.label}
+              </Link>
+            );
+          })}
+          <Link to="/app" className="mt-4 flex items-center gap-3 rounded-lg bg-white/5 px-3 py-2 text-sm font-semibold text-secondary-foreground transition hover:bg-white/10">
+            <GraduationCap className="h-4 w-4" />Ver como Aluno
+          </Link>
+        </nav>
+        <button onClick={() => signOut().then(() => navigate({ to: "/" }))} className="m-3 flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-secondary-foreground/70 hover:bg-white/5 hover:text-secondary-foreground">
+          <LogOut className="h-4 w-4" />Sair
+        </button>
+      </aside>
+      <main className="flex-1 overflow-x-hidden p-6 md:p-10"><Outlet /></main>
     </div>
   );
 }

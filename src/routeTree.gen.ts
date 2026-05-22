@@ -18,6 +18,19 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AppPerfilRouteImport } from './routes/app.perfil'
+import { Route as AppCursosRouteImport } from './routes/app.cursos'
+import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes'
+import { Route as AppBlogRouteImport } from './routes/app.blog'
+import { Route as AdminPagamentosRouteImport } from './routes/admin.pagamentos'
+import { Route as AdminCursosRouteImport } from './routes/admin.cursos'
+import { Route as AdminConfiguracoesRouteImport } from './routes/admin.configuracoes'
+import { Route as AdminComentariosRouteImport } from './routes/admin.comentarios'
+import { Route as AdminBlogRouteImport } from './routes/admin.blog'
+import { Route as AdminAlunosRouteImport } from './routes/admin.alunos'
+import { Route as AppCursoSlugRouteImport } from './routes/app.curso.$slug'
+import { Route as AdminCursosIdRouteImport } from './routes/admin.cursos.$id'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -64,39 +77,142 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AppPerfilRoute = AppPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCursosRoute = AppCursosRouteImport.update({
+  id: '/cursos',
+  path: '/cursos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConfiguracoesRoute = AppConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBlogRoute = AppBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => AppRoute,
+} as any)
+const AdminPagamentosRoute = AdminPagamentosRouteImport.update({
+  id: '/pagamentos',
+  path: '/pagamentos',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCursosRoute = AdminCursosRouteImport.update({
+  id: '/cursos',
+  path: '/cursos',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminConfiguracoesRoute = AdminConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminComentariosRoute = AdminComentariosRouteImport.update({
+  id: '/comentarios',
+  path: '/comentarios',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBlogRoute = AdminBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAlunosRoute = AdminAlunosRouteImport.update({
+  id: '/alunos',
+  path: '/alunos',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AppCursoSlugRoute = AppCursoSlugRouteImport.update({
+  id: '/curso/$slug',
+  path: '/curso/$slug',
+  getParentRoute: () => AppRoute,
+} as any)
+const AdminCursosIdRoute = AdminCursosIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminCursosRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/alunos': typeof AdminAlunosRoute
+  '/admin/blog': typeof AdminBlogRoute
+  '/admin/comentarios': typeof AdminComentariosRoute
+  '/admin/configuracoes': typeof AdminConfiguracoesRoute
+  '/admin/cursos': typeof AdminCursosRouteWithChildren
+  '/admin/pagamentos': typeof AdminPagamentosRoute
+  '/app/blog': typeof AppBlogRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
+  '/app/cursos': typeof AppCursosRoute
+  '/app/perfil': typeof AppPerfilRoute
+  '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/admin/cursos/$id': typeof AdminCursosIdRoute
+  '/app/curso/$slug': typeof AppCursoSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
   '/login': typeof LoginRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/alunos': typeof AdminAlunosRoute
+  '/admin/blog': typeof AdminBlogRoute
+  '/admin/comentarios': typeof AdminComentariosRoute
+  '/admin/configuracoes': typeof AdminConfiguracoesRoute
+  '/admin/cursos': typeof AdminCursosRouteWithChildren
+  '/admin/pagamentos': typeof AdminPagamentosRoute
+  '/app/blog': typeof AppBlogRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
+  '/app/cursos': typeof AppCursosRoute
+  '/app/perfil': typeof AppPerfilRoute
+  '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
+  '/admin/cursos/$id': typeof AdminCursosIdRoute
+  '/app/curso/$slug': typeof AppCursoSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/alunos': typeof AdminAlunosRoute
+  '/admin/blog': typeof AdminBlogRoute
+  '/admin/comentarios': typeof AdminComentariosRoute
+  '/admin/configuracoes': typeof AdminConfiguracoesRoute
+  '/admin/cursos': typeof AdminCursosRouteWithChildren
+  '/admin/pagamentos': typeof AdminPagamentosRoute
+  '/app/blog': typeof AppBlogRoute
+  '/app/configuracoes': typeof AppConfiguracoesRoute
+  '/app/cursos': typeof AppCursosRoute
+  '/app/perfil': typeof AppPerfilRoute
+  '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/admin/cursos/$id': typeof AdminCursosIdRoute
+  '/app/curso/$slug': typeof AppCursoSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -109,17 +225,42 @@ export interface FileRouteTypes {
     | '/registo'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/admin/alunos'
+    | '/admin/blog'
+    | '/admin/comentarios'
+    | '/admin/configuracoes'
+    | '/admin/cursos'
+    | '/admin/pagamentos'
+    | '/app/blog'
+    | '/app/configuracoes'
+    | '/app/cursos'
+    | '/app/perfil'
+    | '/admin/'
     | '/app/'
+    | '/admin/cursos/$id'
+    | '/app/curso/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
     | '/login'
     | '/recuperar-senha'
     | '/registo'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/admin/alunos'
+    | '/admin/blog'
+    | '/admin/comentarios'
+    | '/admin/configuracoes'
+    | '/admin/cursos'
+    | '/admin/pagamentos'
+    | '/app/blog'
+    | '/app/configuracoes'
+    | '/app/cursos'
+    | '/app/perfil'
+    | '/admin'
     | '/app'
+    | '/admin/cursos/$id'
+    | '/app/curso/$slug'
   id:
     | '__root__'
     | '/'
@@ -130,12 +271,25 @@ export interface FileRouteTypes {
     | '/registo'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/admin/alunos'
+    | '/admin/blog'
+    | '/admin/comentarios'
+    | '/admin/configuracoes'
+    | '/admin/cursos'
+    | '/admin/pagamentos'
+    | '/app/blog'
+    | '/app/configuracoes'
+    | '/app/cursos'
+    | '/app/perfil'
+    | '/admin/'
     | '/app/'
+    | '/admin/cursos/$id'
+    | '/app/curso/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
@@ -209,22 +363,157 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/app/perfil': {
+      id: '/app/perfil'
+      path: '/perfil'
+      fullPath: '/app/perfil'
+      preLoaderRoute: typeof AppPerfilRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/cursos': {
+      id: '/app/cursos'
+      path: '/cursos'
+      fullPath: '/app/cursos'
+      preLoaderRoute: typeof AppCursosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/configuracoes': {
+      id: '/app/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/app/configuracoes'
+      preLoaderRoute: typeof AppConfiguracoesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/blog': {
+      id: '/app/blog'
+      path: '/blog'
+      fullPath: '/app/blog'
+      preLoaderRoute: typeof AppBlogRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/admin/pagamentos': {
+      id: '/admin/pagamentos'
+      path: '/pagamentos'
+      fullPath: '/admin/pagamentos'
+      preLoaderRoute: typeof AdminPagamentosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/cursos': {
+      id: '/admin/cursos'
+      path: '/cursos'
+      fullPath: '/admin/cursos'
+      preLoaderRoute: typeof AdminCursosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/configuracoes': {
+      id: '/admin/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/admin/configuracoes'
+      preLoaderRoute: typeof AdminConfiguracoesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/comentarios': {
+      id: '/admin/comentarios'
+      path: '/comentarios'
+      fullPath: '/admin/comentarios'
+      preLoaderRoute: typeof AdminComentariosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/blog': {
+      id: '/admin/blog'
+      path: '/blog'
+      fullPath: '/admin/blog'
+      preLoaderRoute: typeof AdminBlogRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/alunos': {
+      id: '/admin/alunos'
+      path: '/alunos'
+      fullPath: '/admin/alunos'
+      preLoaderRoute: typeof AdminAlunosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/app/curso/$slug': {
+      id: '/app/curso/$slug'
+      path: '/curso/$slug'
+      fullPath: '/app/curso/$slug'
+      preLoaderRoute: typeof AppCursoSlugRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/admin/cursos/$id': {
+      id: '/admin/cursos/$id'
+      path: '/$id'
+      fullPath: '/admin/cursos/$id'
+      preLoaderRoute: typeof AdminCursosIdRouteImport
+      parentRoute: typeof AdminCursosRoute
+    }
   }
 }
 
+interface AdminCursosRouteChildren {
+  AdminCursosIdRoute: typeof AdminCursosIdRoute
+}
+
+const AdminCursosRouteChildren: AdminCursosRouteChildren = {
+  AdminCursosIdRoute: AdminCursosIdRoute,
+}
+
+const AdminCursosRouteWithChildren = AdminCursosRoute._addFileChildren(
+  AdminCursosRouteChildren,
+)
+
+interface AdminRouteChildren {
+  AdminAlunosRoute: typeof AdminAlunosRoute
+  AdminBlogRoute: typeof AdminBlogRoute
+  AdminComentariosRoute: typeof AdminComentariosRoute
+  AdminConfiguracoesRoute: typeof AdminConfiguracoesRoute
+  AdminCursosRoute: typeof AdminCursosRouteWithChildren
+  AdminPagamentosRoute: typeof AdminPagamentosRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAlunosRoute: AdminAlunosRoute,
+  AdminBlogRoute: AdminBlogRoute,
+  AdminComentariosRoute: AdminComentariosRoute,
+  AdminConfiguracoesRoute: AdminConfiguracoesRoute,
+  AdminCursosRoute: AdminCursosRouteWithChildren,
+  AdminPagamentosRoute: AdminPagamentosRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 interface AppRouteChildren {
+  AppBlogRoute: typeof AppBlogRoute
+  AppConfiguracoesRoute: typeof AppConfiguracoesRoute
+  AppCursosRoute: typeof AppCursosRoute
+  AppPerfilRoute: typeof AppPerfilRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppCursoSlugRoute: typeof AppCursoSlugRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppBlogRoute: AppBlogRoute,
+  AppConfiguracoesRoute: AppConfiguracoesRoute,
+  AppCursosRoute: AppCursosRoute,
+  AppPerfilRoute: AppPerfilRoute,
   AppIndexRoute: AppIndexRoute,
+  AppCursoSlugRoute: AppCursoSlugRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
@@ -235,13 +524,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
