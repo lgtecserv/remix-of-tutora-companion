@@ -23,13 +23,13 @@ function AppLayout() {
     return <div className="flex min-h-screen items-center justify-center text-muted-foreground">A carregar...</div>;
   }
 
-  const nav = [
+  const nav: { to: string; label: string; icon: typeof Home; exact?: boolean }[] = [
     { to: "/app", label: "Início", icon: Home, exact: true },
     { to: "/app/cursos", label: "Meus Cursos", icon: BookOpen },
     { to: "/app/blog", label: "Blog", icon: Newspaper },
     { to: "/app/perfil", label: "Perfil", icon: User },
     { to: "/app/configuracoes", label: "Configurações", icon: Settings },
-  ] as const;
+  ];
 
   return (
     <div className="flex min-h-screen bg-muted">
@@ -42,7 +42,7 @@ function AppLayout() {
           {nav.map((n) => {
             const active = n.exact ? pathname === n.to : pathname.startsWith(n.to);
             return (
-              <Link key={n.label} to={n.to} className={cn(
+              <Link key={n.label} to={n.to as string} className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
                 active ? "bg-primary text-primary-foreground" : "text-secondary/80 hover:bg-muted hover:text-primary"
               )}>
