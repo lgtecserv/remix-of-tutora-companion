@@ -25,9 +25,12 @@ export type Database = {
           id: string
           is_published: boolean
           published_at: string | null
+          reading_minutes: number
+          scheduled_at: string | null
           seo_description: string | null
           seo_title: string | null
           slug: string
+          tags: string[]
           title: string
           updated_at: string
         }
@@ -41,9 +44,12 @@ export type Database = {
           id?: string
           is_published?: boolean
           published_at?: string | null
+          reading_minutes?: number
+          scheduled_at?: string | null
           seo_description?: string | null
           seo_title?: string | null
           slug: string
+          tags?: string[]
           title: string
           updated_at?: string
         }
@@ -57,9 +63,12 @@ export type Database = {
           id?: string
           is_published?: boolean
           published_at?: string | null
+          reading_minutes?: number
+          scheduled_at?: string | null
           seo_description?: string | null
           seo_title?: string | null
           slug?: string
+          tags?: string[]
           title?: string
           updated_at?: string
         }
@@ -109,12 +118,18 @@ export type Database = {
           duration_minutes: number | null
           id: string
           instructor: string | null
+          is_free: boolean
           is_published: boolean
           level: string | null
           price_mzn: number | null
+          requirements: string[]
+          short_description: string | null
           slug: string
+          tags: string[]
+          target_audience: string | null
           title: string
           updated_at: string
+          what_you_learn: string[]
         }
         Insert: {
           category?: string | null
@@ -124,12 +139,18 @@ export type Database = {
           duration_minutes?: number | null
           id?: string
           instructor?: string | null
+          is_free?: boolean
           is_published?: boolean
           level?: string | null
           price_mzn?: number | null
+          requirements?: string[]
+          short_description?: string | null
           slug: string
+          tags?: string[]
+          target_audience?: string | null
           title: string
           updated_at?: string
+          what_you_learn?: string[]
         }
         Update: {
           category?: string | null
@@ -139,12 +160,18 @@ export type Database = {
           duration_minutes?: number | null
           id?: string
           instructor?: string | null
+          is_free?: boolean
           is_published?: boolean
           level?: string | null
           price_mzn?: number | null
+          requirements?: string[]
+          short_description?: string | null
           slug?: string
+          tags?: string[]
+          target_audience?: string | null
           title?: string
           updated_at?: string
+          what_you_learn?: string[]
         }
         Relationships: []
       }
