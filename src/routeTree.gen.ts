@@ -24,6 +24,7 @@ import { Route as AppCursosRouteImport } from './routes/app.cursos'
 import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes'
 import { Route as AppBlogRouteImport } from './routes/app.blog'
 import { Route as AdminCursosRouteImport } from './routes/admin.cursos'
+import { Route as AdminAlunosRouteImport } from './routes/admin.alunos'
 import { Route as AppCursoSlugRouteImport } from './routes/app.curso.$slug'
 import { Route as AdminCursosIdRouteImport } from './routes/admin.cursos.$id'
 
@@ -102,6 +103,11 @@ const AdminCursosRoute = AdminCursosRouteImport.update({
   path: '/cursos',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAlunosRoute = AdminAlunosRouteImport.update({
+  id: '/alunos',
+  path: '/alunos',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AppCursoSlugRoute = AppCursoSlugRouteImport.update({
   id: '/curso/$slug',
   path: '/curso/$slug',
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/alunos': typeof AdminAlunosRoute
   '/admin/cursos': typeof AdminCursosRouteWithChildren
   '/app/blog': typeof AppBlogRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
@@ -139,6 +146,7 @@ export interface FileRoutesByTo {
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/alunos': typeof AdminAlunosRoute
   '/admin/cursos': typeof AdminCursosRouteWithChildren
   '/app/blog': typeof AppBlogRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/alunos': typeof AdminAlunosRoute
   '/admin/cursos': typeof AdminCursosRouteWithChildren
   '/app/blog': typeof AppBlogRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
@@ -180,6 +189,7 @@ export interface FileRouteTypes {
     | '/registo'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/admin/alunos'
     | '/admin/cursos'
     | '/app/blog'
     | '/app/configuracoes'
@@ -197,6 +207,7 @@ export interface FileRouteTypes {
     | '/registo'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/admin/alunos'
     | '/admin/cursos'
     | '/app/blog'
     | '/app/configuracoes'
@@ -216,6 +227,7 @@ export interface FileRouteTypes {
     | '/registo'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/admin/alunos'
     | '/admin/cursos'
     | '/app/blog'
     | '/app/configuracoes'
@@ -345,6 +357,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCursosRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/alunos': {
+      id: '/admin/alunos'
+      path: '/alunos'
+      fullPath: '/admin/alunos'
+      preLoaderRoute: typeof AdminAlunosRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/app/curso/$slug': {
       id: '/app/curso/$slug'
       path: '/curso/$slug'
@@ -375,11 +394,13 @@ const AdminCursosRouteWithChildren = AdminCursosRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminAlunosRoute: typeof AdminAlunosRoute
   AdminCursosRoute: typeof AdminCursosRouteWithChildren
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAlunosRoute: AdminAlunosRoute,
   AdminCursosRoute: AdminCursosRouteWithChildren,
   AdminIndexRoute: AdminIndexRoute,
 }
