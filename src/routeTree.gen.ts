@@ -25,6 +25,7 @@ import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes
 import { Route as AppBlogRouteImport } from './routes/app.blog'
 import { Route as AdminCursosRouteImport } from './routes/admin.cursos'
 import { Route as AppCursoSlugRouteImport } from './routes/app.curso.$slug'
+import { Route as AdminCursosIdRouteImport } from './routes/admin.cursos.$id'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -106,6 +107,11 @@ const AppCursoSlugRoute = AppCursoSlugRouteImport.update({
   path: '/curso/$slug',
   getParentRoute: () => AppRoute,
 } as any)
+const AdminCursosIdRoute = AdminCursosIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminCursosRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -116,13 +122,14 @@ export interface FileRoutesByFullPath {
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin/cursos': typeof AdminCursosRoute
+  '/admin/cursos': typeof AdminCursosRouteWithChildren
   '/app/blog': typeof AppBlogRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/perfil': typeof AppPerfilRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/admin/cursos/$id': typeof AdminCursosIdRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
 }
 export interface FileRoutesByTo {
@@ -132,13 +139,14 @@ export interface FileRoutesByTo {
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin/cursos': typeof AdminCursosRoute
+  '/admin/cursos': typeof AdminCursosRouteWithChildren
   '/app/blog': typeof AppBlogRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/perfil': typeof AppPerfilRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
+  '/admin/cursos/$id': typeof AdminCursosIdRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
 }
 export interface FileRoutesById {
@@ -151,13 +159,14 @@ export interface FileRoutesById {
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin/cursos': typeof AdminCursosRoute
+  '/admin/cursos': typeof AdminCursosRouteWithChildren
   '/app/blog': typeof AppBlogRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/perfil': typeof AppPerfilRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/admin/cursos/$id': typeof AdminCursosIdRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
 }
 export interface FileRouteTypes {
@@ -178,6 +187,7 @@ export interface FileRouteTypes {
     | '/app/perfil'
     | '/admin/'
     | '/app/'
+    | '/admin/cursos/$id'
     | '/app/curso/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/app/perfil'
     | '/admin'
     | '/app'
+    | '/admin/cursos/$id'
     | '/app/curso/$slug'
   id:
     | '__root__'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
     | '/app/perfil'
     | '/admin/'
     | '/app/'
+    | '/admin/cursos/$id'
     | '/app/curso/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -340,16 +352,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCursoSlugRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/cursos/$id': {
+      id: '/admin/cursos/$id'
+      path: '/$id'
+      fullPath: '/admin/cursos/$id'
+      preLoaderRoute: typeof AdminCursosIdRouteImport
+      parentRoute: typeof AdminCursosRoute
+    }
   }
 }
 
+interface AdminCursosRouteChildren {
+  AdminCursosIdRoute: typeof AdminCursosIdRoute
+}
+
+const AdminCursosRouteChildren: AdminCursosRouteChildren = {
+  AdminCursosIdRoute: AdminCursosIdRoute,
+}
+
+const AdminCursosRouteWithChildren = AdminCursosRoute._addFileChildren(
+  AdminCursosRouteChildren,
+)
+
 interface AdminRouteChildren {
-  AdminCursosRoute: typeof AdminCursosRoute
+  AdminCursosRoute: typeof AdminCursosRouteWithChildren
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
-  AdminCursosRoute: AdminCursosRoute,
+  AdminCursosRoute: AdminCursosRouteWithChildren,
   AdminIndexRoute: AdminIndexRoute,
 }
 
