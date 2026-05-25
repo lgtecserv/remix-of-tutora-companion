@@ -324,7 +324,7 @@ function LessonDialog({ lesson, onClose, onSaved }: { lesson: any; onClose: () =
     <Dialog open onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-2xl">
         <DialogHeader><DialogTitle>{f.id ? "Editar aula" : "Nova aula"}</DialogTitle></DialogHeader>
-        <div className="space-y-4">
+        <div className="space-y-4 max-h-[65vh] overflow-y-auto px-1 py-2">
           <div><Label>Título *</Label><Input value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} /></div>
           
           <div className="space-y-1.5">
