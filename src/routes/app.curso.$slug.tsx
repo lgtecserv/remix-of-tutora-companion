@@ -1,12 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { createCheckoutSession } from "@/server/functions/checkout";
+import { createCheckoutSession } from "@/actions/checkout";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Play, PlayCircle, Clock, BookOpen, GraduationCap, ChevronDown, CheckCircle2, Circle, Lock, ArrowLeft, Star, Users } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { uploadPaymentReceipt } from "@/server/functions/uploadReceipt";
+import { uploadPaymentReceipt } from "@/actions/uploadReceipt";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";

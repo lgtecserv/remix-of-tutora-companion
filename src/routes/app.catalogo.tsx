@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { createCheckoutSession } from "@/server/functions/checkout";
+import { createCheckoutSession } from "@/actions/checkout";
 
 export const Route = createFileRoute("/app/catalogo")({ component: Catalog });
 
