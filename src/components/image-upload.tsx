@@ -23,12 +23,31 @@ export function ImageUpload({ bucket, value, onChange, label = "Capa", aspect = 
     setBusy(true);
     const ext = file.name.split(".").pop() ?? "jpg";
     const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-    const { error } = await supabase.storage.from(bucket).upload(path, file, { upsert: false });
-    if (error) { toast.error(error.message); setBusy(false); return; }
-    const { data } = supabase.storage.from(bucket).getPublicUrl(path);
-    onChange(data.publicUrl);
-    setBusy(false);
-    toast.success("Imagem enviada");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("bucket", bucket);
+    formData.append("path", path);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const json = await res.json();
+      
+      if (!res.ok || json.error) {
+        toast.error(json.error || "Erro no upload");
+        setBusy(false);
+        return;
+      }
+
+      onChange(json.publicUrl);
+    } catch (err: any) {
+      toast.error(err.message || "Erro de conexão");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (

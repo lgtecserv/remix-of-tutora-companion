@@ -14,7 +14,18 @@ function AdminPayments() {
   });
   async function setStatus(p: any, status: "approved" | "rejected") {
     const { error } = await supabase.from("payments").update({ status }).eq("id", p.id);
-    if (error) toast.error(error.message); else { toast.success(status === "approved" ? "Pagamento aprovado — curso liberado" : "Pagamento rejeitado"); qc.invalidateQueries({ queryKey: ["admin-payments"] }); }
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    
+    if (status === "approved") {
+      // Also enroll the user so they get immediate access
+      await supabase.from("enrollments").insert({ user_id: p.user_id, course_id: p.course_id });
+    }
+    
+    toast.success(status === "approved" ? "Pagamento aprovado — curso liberado" : "Pagamento rejeitado"); 
+    qc.invalidateQueries({ queryKey: ["admin-payments"] });
   }
   return (
     <div className="space-y-6">
@@ -32,7 +43,21 @@ function AdminPayments() {
                 <td className="px-4 py-3">{Number(p.amount_mzn).toLocaleString("pt-PT")} MT</td>
                 <td className="px-4 py-3 text-muted-foreground">{p.reference ?? "—"}</td>
                 <td className="px-4 py-3"><span className={`rounded-full px-2 py-0.5 text-xs ${p.status === "approved" ? "bg-primary/10 text-primary" : p.status === "rejected" ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground"}`}>{p.status}</span></td>
-                <td className="px-4 py-3">{p.status === "pending" && <div className="flex gap-1"><Button size="sm" onClick={() => setStatus(p, "approved")}>Aprovar</Button><Button size="sm" variant="ghost" onClick={() => setStatus(p, "rejected")}>Rejeitar</Button></div>}</td>
+                <td className="px-4 py-3">
+                  <div className="flex flex-wrap gap-2">
+                    {p.receipt_url && (
+                      <Button size="sm" variant="outline" asChild>
+                        <a href={p.receipt_url} target="_blank" rel="noopener noreferrer">📄 Talão</a>
+                      </Button>
+                    )}
+                    {p.status === "pending" && (
+                      <>
+                        <Button size="sm" onClick={() => setStatus(p, "approved")}>Aprovar</Button>
+                        <Button size="sm" variant="ghost" onClick={() => setStatus(p, "rejected")}>Rejeitar</Button>
+                      </>
+                    )}
+                  </div>
+                </td>
               </tr>
             ))}
             {(data?.length ?? 0) === 0 && <tr><td colSpan={7} className="px-4 py-10 text-center text-muted-foreground">Nenhum pagamento ainda.</td></tr>}

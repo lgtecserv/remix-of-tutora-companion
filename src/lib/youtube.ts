@@ -20,3 +20,14 @@ export function youTubeThumb(url: string | null | undefined): string | null {
   const id = extractYouTubeId(url);
   return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null;
 }
+
+export function extractVimeoId(url: string | null | undefined): string | null {
+  if (!url) return null;
+  const match = url.match(/(?:vimeo\.com\/|player\.vimeo\.com\/video\/)([0-9]+)/);
+  return match ? match[1] : null;
+}
+
+export function vimeoEmbedUrl(url: string | null | undefined): string | null {
+  const id = extractVimeoId(url);
+  return id ? `https://player.vimeo.com/video/${id}?title=0&byline=0&portrait=0` : null;
+}

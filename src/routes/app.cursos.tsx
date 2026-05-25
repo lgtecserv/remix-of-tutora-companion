@@ -44,15 +44,15 @@ function MyCourses() {
           Você ainda não está inscrito em nenhum curso.
         </div>
       )}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 md:gap-4 md:grid-cols-2 lg:grid-cols-3">
         {(data ?? []).map((row: any) => row.courses && (
-          <Link key={row.course_id} to="/app/curso/$slug" params={{ slug: row.courses.slug }} className="overflow-hidden rounded-2xl border border-border bg-card transition hover:border-primary/40">
-            {row.courses.cover_url ? <img src={row.courses.cover_url} alt={row.courses.title} className="h-40 w-full object-cover" /> : <div className="h-40 bg-muted" />}
-            <div className="p-5">
-              <div className="text-xs uppercase tracking-wider text-muted-foreground">{row.courses.category ?? "Curso"}</div>
-              <div className="mt-1 font-semibold text-secondary">{row.courses.title}</div>
-              {row.courses.instructor && <div className="text-sm text-muted-foreground">por {row.courses.instructor}</div>}
-              <div className="mt-3">
+          <Link key={row.course_id} to="/app/curso/$slug" params={{ slug: row.courses.slug }} className="overflow-hidden flex flex-col rounded-2xl border border-border bg-card transition hover:border-primary/40">
+            {row.courses.cover_url ? <img src={row.courses.cover_url} alt={row.courses.title} className="h-28 sm:h-40 w-full object-cover" /> : <div className="h-28 sm:h-40 bg-muted" />}
+            <div className="p-3 sm:p-5 flex flex-col flex-1">
+              <div className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground line-clamp-1">{row.courses.category ?? "Curso"}</div>
+              <div className="mt-1 text-sm sm:text-base font-semibold text-secondary line-clamp-2 leading-tight">{row.courses.title}</div>
+              {row.courses.instructor && <div className="text-xs sm:text-sm text-muted-foreground mt-1">por {row.courses.instructor}</div>}
+              <div className="mt-auto pt-3">
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <span>{row.done} de {row.total} aulas</span>
                   <span>{row.percent}%</span>

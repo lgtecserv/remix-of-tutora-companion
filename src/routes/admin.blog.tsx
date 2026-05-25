@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,6 +11,7 @@ export const Route = createFileRoute("/admin/blog")({ component: AdminBlog });
 
 function AdminBlog() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<"all" | "published" | "draft" | "scheduled">("all");
   const { data } = useQuery({ queryKey: ["admin-blog"], queryFn: async () => (await supabase.from("blog_posts").select("*").order("created_at", { ascending: false })).data ?? [] });
@@ -18,7 +19,7 @@ function AdminBlog() {
   async function createNew() {
     const { data: created, error } = await supabase.from("blog_posts").insert({ title: "Novo artigo", slug: "novo-artigo-" + Date.now().toString(36), is_published: false }).select().single();
     if (error) return toast.error(error.message);
-    window.location.href = `/admin/blog/${created.id}`;
+    navigate({ to: "/admin/blog/$id", params: { id: created.id } });
   }
   async function togglePub(p: any) { await supabase.from("blog_posts").update({ is_published: !p.is_published, published_at: !p.is_published ? new Date().toISOString() : null }).eq("id", p.id); qc.invalidateQueries({ queryKey: ["admin-blog"] }); }
   async function remove(p: any) { if (!confirm("Excluir?")) return; await supabase.from("blog_posts").delete().eq("id", p.id); qc.invalidateQueries({ queryKey: ["admin-blog"] }); }

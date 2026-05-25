@@ -65,7 +65,10 @@ function EditPost() {
         <Link to="/admin/blog" className="text-sm text-muted-foreground hover:text-primary">← Voltar para blog</Link>
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={() => setPreview(true)}><Eye className="h-4 w-4" />Pré-visualizar</Button>
-          <label className="flex items-center gap-2 text-sm"><Switch checked={!!f.is_published} onCheckedChange={(v) => setF({ ...f, is_published: v })} />Publicar</label>
+          <div className="flex items-center gap-2 text-sm">
+            <Switch id="is-published-blog-switch" checked={!!f.is_published} onCheckedChange={(v) => setF({ ...f, is_published: v })} />
+            <Label htmlFor="is-published-blog-switch" className="cursor-pointer font-medium">Publicar</Label>
+          </div>
           <Button onClick={save}><Save className="h-4 w-4" />Salvar</Button>
         </div>
       </div>

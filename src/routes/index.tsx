@@ -311,7 +311,7 @@ function Footer() {
 
 function Index() {
   return (
-    <div className="min-h-screen bg-background">
+    <div suppressHydrationWarning className="min-h-screen bg-background">
       <Header />
       <main>
         <Hero />

@@ -22,36 +22,70 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
+    let isMounted = true;
+    let didResolve = false;
+
+    const finish = () => {
+      if (isMounted && !didResolve) {
+        didResolve = true;
+        setLoading(false);
+      }
+    };
+
+    const loadRoles = async (userId: string): Promise<Role[]> => {
+      try {
+        const { data, error } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", userId);
+        if (error) return [];
+        return (data ?? []).map((r) => r.role as Role);
+      } catch {
+        return [];
+      }
+    };
+
+    const handleSession = async (s: Session | null) => {
+      if (!isMounted) return;
       setSession(s);
       setUser(s?.user ?? null);
       if (s?.user) {
-        setTimeout(() => {
-          supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", s.user.id)
-            .then(({ data }) => setRoles((data ?? []).map((r) => r.role as Role)));
-        }, 0);
+        const r = await loadRoles(s.user.id);
+        if (!isMounted) return;
+        setRoles(r);
       } else {
         setRoles([]);
       }
+      finish();
+    };
+
+    // Strategy 1: Use onAuthStateChange (fires INITIAL_SESSION immediately)
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
+      handleSession(s);
     });
 
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setUser(data.session?.user ?? null);
-      setLoading(false);
-      if (data.session?.user) {
-        supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", data.session.user.id)
-          .then(({ data: r }) => setRoles((r ?? []).map((x) => x.role as Role)));
+    // Strategy 2: Fallback — use getSession in case onAuthStateChange doesn't fire
+    setTimeout(() => {
+      if (!didResolve) {
+        supabase.auth.getSession().then(({ data }) => {
+          if (!didResolve) handleSession(data.session);
+        }).catch(() => finish());
       }
-    });
+    }, 500);
 
-    return () => sub.subscription.unsubscribe();
+    // Strategy 3: Hard timeout — force resolve after 3 seconds no matter what
+    const hardTimeout = setTimeout(() => {
+      if (!didResolve) {
+        console.warn("[Auth] Hard timeout — forcing loading=false");
+        finish();
+      }
+    }, 3000);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(hardTimeout);
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
   const value: AuthContextValue = {

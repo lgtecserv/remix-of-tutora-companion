@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Plus, Copy, Trash2, Eye, EyeOff, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/admin/cursos")({ component: AdminCourses });
+export const Route = createFileRoute("/admin/cursos/")({ component: AdminCourses });
 
 function slugify(s: string) {
   return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -17,9 +17,17 @@ function slugify(s: string) {
 
 function AdminCourses() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const { data, isLoading } = useQuery({
     queryKey: ["admin-courses"],
-    queryFn: async () => (await supabase.from("courses").select("*").order("created_at", { ascending: false })).data ?? [],
+    queryFn: async () => {
+      const { data: courses, error } = await supabase.from("courses").select("*").order("created_at", { ascending: false });
+      if (error) throw error;
+      const { data: enrolls } = await supabase.from("enrollments").select("course_id");
+      const map = new Map<string, number>();
+      (enrolls ?? []).forEach(e => map.set(e.course_id, (map.get(e.course_id) || 0) + 1));
+      return (courses ?? []).map(c => ({ ...c, studentCount: map.get(c.id) || 0 }));
+    },
   });
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -31,7 +39,7 @@ function AdminCourses() {
     toast.success("Curso criado — complete os detalhes");
     setOpen(false); setTitle("");
     qc.invalidateQueries({ queryKey: ["admin-courses"] });
-    window.location.href = `/admin/cursos/${created.id}`;
+    navigate({ to: "/admin/cursos/$id", params: { id: created.id } });
   }
 
   async function togglePublish(c: any) {
@@ -72,17 +80,20 @@ function AdminCourses() {
       <div className="overflow-hidden rounded-2xl border border-border bg-card">
         <table className="w-full text-sm">
           <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
-            <tr><th className="px-4 py-3">Título</th><th className="px-4 py-3">Categoria</th><th className="px-4 py-3">Preço</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Ações</th></tr>
+            <tr><th className="px-4 py-3">Título</th><th className="px-4 py-3">Categoria</th><th className="px-4 py-3">Alunos</th><th className="px-4 py-3">Preço</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Ações</th></tr>
           </thead>
           <tbody>
-            {(data ?? []).map((c) => (
+            {(data ?? []).map((c: any) => (
               <tr key={c.id} className="border-t border-border">
                 <td className="px-4 py-3 font-medium text-secondary">{c.title}</td>
                 <td className="px-4 py-3 text-muted-foreground">{c.category ?? "—"}</td>
+                <td className="px-4 py-3 font-semibold text-secondary">{c.studentCount}</td>
                 <td className="px-4 py-3">{c.is_free ? <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs text-emerald-700">Grátis</span> : `${Number(c.price_mzn).toLocaleString("pt-PT")} MT`}</td>
                 <td className="px-4 py-3">{c.is_published ? <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">Publicado</span> : <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">Rascunho</span>}</td>
                 <td className="px-4 py-3"><div className="flex gap-1">
-                  <Button variant="ghost" size="icon" asChild><Link to="/admin/cursos/$id" params={{ id: c.id }}><Pencil className="h-4 w-4" /></Link></Button>
+                  <a href={`/admin/cursos/${c.id}`} className="inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground text-sm font-medium" title="Editar">
+                    <Pencil className="h-4 w-4" />
+                  </a>
                   <Button variant="ghost" size="icon" onClick={() => togglePublish(c)} title={c.is_published ? "Despublicar" : "Publicar"}>{c.is_published ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</Button>
                   <Button variant="ghost" size="icon" onClick={() => duplicate(c)} title="Duplicar"><Copy className="h-4 w-4" /></Button>
                   <Button variant="ghost" size="icon" onClick={() => remove(c)} title="Excluir"><Trash2 className="h-4 w-4" /></Button>

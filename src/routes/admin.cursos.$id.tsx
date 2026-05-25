@@ -12,8 +12,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Trash2, Lock, Unlock, ChevronUp, ChevronDown, Save, Pencil } from "lucide-react";
 import { toast } from "sonner";
-import { extractYouTubeId, youTubeThumb } from "@/lib/youtube";
+import { extractYouTubeId, youTubeThumb, extractVimeoId } from "@/lib/youtube";
 import { ImageUpload } from "@/components/image-upload";
+import { VideoUpload } from "@/components/video-upload";
 import { TagInput } from "@/components/tag-input";
 import { StringList } from "@/components/string-list";
 
@@ -31,7 +32,8 @@ function EditCourse() {
       const { data: lessons } = moduleIds.length
         ? await supabase.from("lessons").select("*").in("module_id", moduleIds).order("position")
         : { data: [] as any[] };
-      return { course, modules: modules ?? [], lessons: lessons ?? [] };
+      const { data: instructors } = await supabase.from("instructors").select("*").order("name");
+      return { course, modules: modules ?? [], lessons: lessons ?? [], instructors: instructors ?? [] };
     },
   });
 
@@ -90,7 +92,10 @@ function EditCourse() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-3xl font-bold text-secondary">{form.title}</h1>
         <div className="flex items-center gap-3">
-          <label className="flex items-center gap-2 text-sm text-secondary"><Switch checked={!!form.is_published} onCheckedChange={togglePublish} />{form.is_published ? "Publicado" : "Rascunho"}</label>
+          <div className="flex items-center gap-2 text-sm text-secondary">
+            <Switch id="is-published-switch" checked={!!form.is_published} onCheckedChange={togglePublish} />
+            <Label htmlFor="is-published-switch" className="cursor-pointer font-medium">{form.is_published ? "Publicado" : "Rascunho"}</Label>
+          </div>
         </div>
       </div>
 
@@ -111,8 +116,22 @@ function EditCourse() {
                 <div><Label>Subtítulo</Label><Input value={form.short_description ?? ""} onChange={(e) => setForm({ ...form, short_description: e.target.value })} placeholder="Frase curta apresentando o curso" /></div>
                 <div><Label>Descrição completa</Label><Textarea value={form.description ?? ""} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={6} /></div>
                 <div className="grid gap-3 md:grid-cols-2">
-                  <div><Label>Categoria</Label><Input value={form.category ?? ""} onChange={(e) => setForm({ ...form, category: e.target.value })} /></div>
-                  <div><Label>Professor</Label><Input value={form.instructor ?? ""} onChange={(e) => setForm({ ...form, instructor: e.target.value })} /></div>
+                  <div>
+                    <Label>Categoria</Label>
+                    <Input value={form.category ?? ""} onChange={(e) => setForm({ ...form, category: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label>Instrutor</Label>
+                    <Select value={form.instructor_id ?? "none"} onValueChange={(v) => setForm({ ...form, instructor_id: v === "none" ? null : v })}>
+                      <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">Nenhum / Padrão</SelectItem>
+                        {(data?.instructors ?? []).map((i: any) => (
+                          <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <div>
                     <Label>Nível</Label>
                     <Select value={form.level ?? "Iniciante"} onValueChange={(v) => setForm({ ...form, level: v })}>
@@ -121,6 +140,17 @@ function EditCourse() {
                         <SelectItem value="Iniciante">Iniciante</SelectItem>
                         <SelectItem value="Intermédio">Intermédio</SelectItem>
                         <SelectItem value="Avançado">Avançado</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>Idioma</Label>
+                    <Select value={form.language ?? "Português"} onValueChange={(v) => setForm({ ...form, language: v })}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Português">Português</SelectItem>
+                        <SelectItem value="Inglês">Inglês</SelectItem>
+                        <SelectItem value="Espanhol">Espanhol</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -148,10 +178,10 @@ function EditCourse() {
               </div>
               <div className="space-y-3 rounded-2xl border border-border bg-card p-6">
                 <h3 className="text-sm font-semibold text-secondary">Preço</h3>
-                <label className="flex items-center justify-between text-sm">
-                  <span>Curso gratuito</span>
-                  <Switch checked={!!form.is_free} onCheckedChange={(v) => setForm({ ...form, is_free: v, price_mzn: v ? 0 : form.price_mzn })} />
-                </label>
+                <div className="flex items-center justify-between text-sm">
+                  <Label htmlFor="is-free-switch" className="cursor-pointer font-medium">Curso gratuito</Label>
+                  <Switch id="is-free-switch" checked={!!form.is_free} onCheckedChange={(v) => setForm({ ...form, is_free: v, price_mzn: v ? 0 : form.price_mzn })} />
+                </div>
                 {!form.is_free && (
                   <div>
                     <Label>Preço (MZN)</Label>
@@ -159,6 +189,10 @@ function EditCourse() {
                   </div>
                 )}
                 <p className="text-xs text-muted-foreground">Cursos gratuitos publicados ficam acessíveis a qualquer aluno com 1 clique.</p>
+                <div className="flex items-center justify-between text-sm mt-2 border-t border-border pt-4">
+                  <Label htmlFor="has-cert-switch" className="cursor-pointer font-medium">Oferece Certificado?</Label>
+                  <Switch id="has-cert-switch" checked={!!form.has_certificate} onCheckedChange={(v) => setForm({ ...form, has_certificate: v })} />
+                </div>
               </div>
               <Button onClick={saveCourse} className="w-full"><Save className="h-4 w-4" />Salvar curso</Button>
             </aside>
@@ -228,9 +262,16 @@ function ModuleBlock({ module: m, lessons, onRename, onDelete, onMoveUp, onMoveD
       <div className="mt-3 space-y-1">
         {lessons.map((l: any) => {
           const yt = extractYouTubeId(l.youtube_url);
+          const vm = extractVimeoId(l.youtube_url);
+          const isLocal = !yt && !vm && l.youtube_url?.startsWith("http");
           return (
             <div key={l.id} className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm">
-              <span className="flex-1 text-secondary">{l.title} {!yt && <span className="text-xs text-destructive">(vídeo inválido)</span>}</span>
+              <span className="flex-1 text-secondary">
+                {l.title}{" "}
+                {!yt && !vm && !isLocal && <span className="text-xs text-destructive">(vídeo inválido)</span>}
+                {vm && <span className="text-xs text-blue-500 font-semibold">(Vimeo)</span>}
+                {isLocal && <span className="text-xs text-emerald-500 font-semibold">(Vídeo Local/Upload)</span>}
+              </span>
               <Button variant="ghost" size="icon" onClick={() => moveLesson(l, -1)}><ChevronUp className="h-4 w-4" /></Button>
               <Button variant="ghost" size="icon" onClick={() => moveLesson(l, 1)}><ChevronDown className="h-4 w-4" /></Button>
               <Button variant="ghost" size="icon" onClick={() => toggleLock(l)} title={l.is_locked ? "Desbloquear" : "Bloquear"}>{l.is_locked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}</Button>
@@ -248,13 +289,30 @@ function ModuleBlock({ module: m, lessons, onRename, onDelete, onMoveUp, onMoveD
 
 function LessonDialog({ lesson, onClose, onSaved }: { lesson: any; onClose: () => void; onSaved: () => void }) {
   const [f, setF] = useState<any>(lesson);
+  const [videoSource, setVideoSource] = useState<"youtube" | "vimeo" | "local">(
+    extractYouTubeId(lesson.youtube_url) ? "youtube" : extractVimeoId(lesson.youtube_url) ? "vimeo" : "local"
+  );
   const yt = extractYouTubeId(f.youtube_url);
+  const vm = extractVimeoId(f.youtube_url);
   const thumb = youTubeThumb(f.youtube_url);
 
   async function save() {
     if (!f.title?.trim()) return toast.error("Título obrigatório");
-    if (!yt) return toast.error("URL do YouTube inválido");
-    const payload: any = { title: f.title.trim(), youtube_url: f.youtube_url, description: f.description ?? "", attachment_url: f.attachment_url ?? "", is_locked: !!f.is_locked, module_id: f.module_id, position: f.position ?? 0 };
+    if (videoSource === "youtube" && !yt) return toast.error("URL do YouTube inválido");
+    if (videoSource === "vimeo" && !vm) return toast.error("URL do Vimeo inválido");
+    if (videoSource === "local" && !f.youtube_url?.trim()) return toast.error("Por favor, faça upload de um vídeo ou insira um link de vídeo");
+    
+    const payload: any = { 
+      title: f.title.trim(), 
+      youtube_url: f.youtube_url ? f.youtube_url.trim() : "", 
+      description: f.description ?? "", 
+      attachment_url: f.attachment_url ?? "", 
+      duration_minutes: f.duration_minutes ?? 0,
+      is_locked: !!f.is_locked, 
+      module_id: f.module_id, 
+      position: f.position ?? 0 
+    };
+    
     let error;
     if (f.id) ({ error } = await supabase.from("lessons").update(payload).eq("id", f.id));
     else ({ error } = await supabase.from("lessons").insert(payload));
@@ -266,23 +324,91 @@ function LessonDialog({ lesson, onClose, onSaved }: { lesson: any; onClose: () =
     <Dialog open onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-2xl">
         <DialogHeader><DialogTitle>{f.id ? "Editar aula" : "Nova aula"}</DialogTitle></DialogHeader>
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div><Label>Título *</Label><Input value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} /></div>
-          <div>
-            <Label>URL do YouTube *</Label>
-            <Input value={f.youtube_url ?? ""} onChange={(e) => setF({ ...f, youtube_url: e.target.value })} placeholder="https://www.youtube.com/watch?v=..." />
-            {f.youtube_url && (
-              yt
-                ? <div className="mt-2 flex items-center gap-3 rounded-lg border border-border p-2">
-                    {thumb && <img src={thumb} alt="" className="h-16 w-28 rounded object-cover" />}
-                    <div className="text-xs"><div className="text-emerald-600 font-medium">✓ Vídeo detectado</div><div className="text-muted-foreground">ID: {yt}</div></div>
-                  </div>
-                : <p className="mt-1 text-xs text-destructive">URL inválido. Aceita formatos: youtube.com/watch?v=, youtu.be/, embed/, shorts/.</p>
-            )}
+          
+          <div className="space-y-1.5">
+            <Label>Origem do Vídeo</Label>
+            <div className="flex gap-2 bg-muted/50 p-1 rounded-lg border border-border">
+              <Button
+                type="button"
+                variant={videoSource === "youtube" ? "default" : "ghost"}
+                size="sm"
+                className="flex-1 transition-all"
+                onClick={() => {
+                  setVideoSource("youtube");
+                  if (!extractYouTubeId(f.youtube_url)) setF({ ...f, youtube_url: "" });
+                }}
+              >
+                YouTube
+              </Button>
+              <Button
+                type="button"
+                variant={videoSource === "vimeo" ? "default" : "ghost"}
+                size="sm"
+                className="flex-1 transition-all"
+                onClick={() => {
+                  setVideoSource("vimeo");
+                  if (!extractVimeoId(f.youtube_url)) setF({ ...f, youtube_url: "" });
+                }}
+              >
+                Vimeo
+              </Button>
+              <Button
+                type="button"
+                variant={videoSource === "local" ? "default" : "ghost"}
+                size="sm"
+                className="flex-1 transition-all"
+                onClick={() => {
+                  setVideoSource("local");
+                  if (extractYouTubeId(f.youtube_url) || extractVimeoId(f.youtube_url)) setF({ ...f, youtube_url: "" });
+                }}
+              >
+                Upload / Vídeo Local
+              </Button>
+            </div>
           </div>
+
+          {videoSource === "youtube" ? (
+            <div>
+              <Label>URL do YouTube *</Label>
+              <Input value={f.youtube_url ?? ""} onChange={(e) => setF({ ...f, youtube_url: e.target.value })} placeholder="https://www.youtube.com/watch?v=..." />
+              {f.youtube_url && (
+                yt
+                  ? <div className="mt-2 flex items-center gap-3 rounded-lg border border-border p-2">
+                      {thumb && <img src={thumb} alt="" className="h-16 w-28 rounded object-cover" />}
+                      <div className="text-xs"><div className="text-emerald-600 font-medium">✓ Vídeo detectado</div><div className="text-muted-foreground">ID: {yt}</div></div>
+                    </div>
+                  : <p className="mt-1 text-xs text-destructive">URL inválido. Aceita formatos: youtube.com/watch?v=, youtu.be/, embed/, shorts/.</p>
+              )}
+            </div>
+          ) : videoSource === "vimeo" ? (
+            <div>
+              <Label>URL do Vimeo *</Label>
+              <Input value={f.youtube_url ?? ""} onChange={(e) => setF({ ...f, youtube_url: e.target.value })} placeholder="https://vimeo.com/..." />
+              {f.youtube_url && (
+                vm
+                  ? <div className="mt-2 text-xs text-emerald-600 font-medium">✓ Vídeo detectado (ID: {vm})</div>
+                  : <p className="mt-1 text-xs text-destructive">URL inválido. Ex: https://vimeo.com/12345678</p>
+              )}
+            </div>
+          ) : (
+            <div>
+              <VideoUpload 
+                value={f.youtube_url ?? ""} 
+                onChange={(url) => setF({ ...url ? f : { ...f, youtube_url: url }, youtube_url: url })} 
+                label="Vídeo Aula (Upload / Link Direto)"
+              />
+            </div>
+          )}
+
           <div><Label>Descrição</Label><Textarea value={f.description ?? ""} onChange={(e) => setF({ ...f, description: e.target.value })} rows={3} /></div>
           <div><Label>Material complementar (URL)</Label><Input value={f.attachment_url ?? ""} onChange={(e) => setF({ ...f, attachment_url: e.target.value })} placeholder="PDF, link..." /></div>
-          <label className="flex items-center gap-2 text-sm"><Switch checked={!!f.is_locked} onCheckedChange={(v) => setF({ ...f, is_locked: v })} />Aula bloqueada (só liberada após concluir a anterior)</label>
+          <div><Label>Duração da Aula (minutos, opcional)</Label><Input type="number" min={0} value={f.duration_minutes ?? 0} onChange={(e) => setF({ ...f, duration_minutes: Number(e.target.value) })} /></div>
+          <div className="flex items-center gap-2 text-sm">
+            <Switch id="is-locked-switch" checked={!!f.is_locked} onCheckedChange={(v) => setF({ ...f, is_locked: v })} />
+            <Label htmlFor="is-locked-switch" className="cursor-pointer font-medium">Aula bloqueada (só liberada após concluir a anterior)</Label>
+          </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>

@@ -35,10 +35,27 @@ export function RichEditor({ value, onChange, placeholder = "Comece a escrever..
   async function uploadImage(file: File) {
     if (file.size > 5 * 1024 * 1024) return toast.error("Máx. 5 MB");
     const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${file.name.split(".").pop()}`;
-    const { error } = await supabase.storage.from("blog-images").upload(path, file);
-    if (error) return toast.error(error.message);
-    const { data } = supabase.storage.from("blog-images").getPublicUrl(path);
-    editor!.chain().focus().setImage({ src: data.publicUrl }).run();
+    
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("bucket", "blog-images");
+    formData.append("path", path);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const json = await res.json();
+      
+      if (!res.ok || json.error) {
+        return toast.error(json.error || "Erro no upload");
+      }
+
+      editor!.chain().focus().setImage({ src: json.publicUrl }).run();
+    } catch (err: any) {
+      toast.error(err.message || "Erro de conexão");
+    }
   }
 
   return (

@@ -2,8 +2,10 @@ import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tan
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import logoImg from "@/assets/logo-imersao.png";
-import { Home, BookOpen, Newspaper, User, Settings, LogOut, Shield, Compass } from "lucide-react";
+import { Home, BookOpen, Newspaper, User, Settings, LogOut, Shield, Compass, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/components/theme-provider";
+import NotificationBell from "@/components/notification-bell";
 
 export const Route = createFileRoute("/app")({
   head: () => ({ meta: [{ title: "Painel do Aluno — Imersão Completa" }, { name: "robots", content: "noindex" }] }),
@@ -14,13 +16,21 @@ function AppLayout() {
   const { user, loading, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
-  }, [loading, user, navigate]);
+    if (!loading && user && isAdmin) navigate({ to: "/admin" });
+  }, [loading, user, isAdmin, navigate]);
 
-  if (loading || !user) {
+  // Still loading auth state
+  if (loading) {
     return <div className="flex min-h-screen items-center justify-center text-muted-foreground">A carregar...</div>;
+  }
+
+  // Not logged in or is admin — will redirect
+  if (!user) {
+    return <div className="flex min-h-screen items-center justify-center text-muted-foreground">A redirecionar...</div>;
   }
 
   const nav: { to: string; label: string; icon: typeof Home; exact?: boolean }[] = [
@@ -33,11 +43,22 @@ function AppLayout() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-muted">
-      <aside className="hidden w-64 flex-col border-r border-border bg-card md:flex">
-        <div className="border-b border-border p-5">
-          <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-10" /></Link>
-          <div className="mt-2 text-xs font-medium uppercase tracking-wider text-primary">Área do Aluno</div>
+    <div className="flex min-h-screen bg-background pb-20 md:pb-0 pt-16 md:pt-0">
+      {/* Mobile Top Bar */}
+      <header className="md:hidden fixed top-0 left-0 right-0 h-16 z-40 flex items-center justify-between border-b border-border bg-card/75 backdrop-blur-xl px-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+        <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-8 w-auto object-contain dark:brightness-0 dark:invert" /></Link>
+        <NotificationBell />
+      </header>
+
+      <aside className="hidden w-64 flex-col border-r border-border bg-card/50 backdrop-blur-xl md:flex z-50">
+        <div className="border-b border-border p-5 flex items-center justify-between gap-3">
+          <div>
+            <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-16 w-auto object-contain dark:brightness-0 dark:invert" /></Link>
+            <div className="mt-2 text-xs font-medium uppercase tracking-wider text-primary">Área do Aluno</div>
+          </div>
+          <div className="flex-shrink-0">
+            <NotificationBell />
+          </div>
         </div>
         <nav className="flex-1 space-y-1 p-3">
           {nav.map((n) => {
@@ -57,11 +78,36 @@ function AppLayout() {
             </Link>
           )}
         </nav>
-        <button onClick={() => signOut().then(() => navigate({ to: "/" }))} className="m-3 flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-secondary">
-          <LogOut className="h-4 w-4" />Sair
-        </button>
+        
+        <div className="mt-auto border-t border-border p-3 space-y-1">
+          <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-secondary">
+            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            <span>Tema {theme === 'dark' ? 'Claro' : 'Escuro'}</span>
+          </button>
+          <button onClick={() => signOut().then(() => navigate({ to: "/" }))} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-secondary">
+            <LogOut className="h-4 w-4" />Sair
+          </button>
+        </div>
       </aside>
-      <main className="flex-1 overflow-x-hidden p-6 md:p-10"><Outlet /></main>
+      <main className="flex-1 overflow-x-hidden p-4 md:p-10 pb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both"><Outlet /></main>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-border bg-card/70 backdrop-blur-2xl px-1 pb-safe pt-2 shadow-[0_-4px_25px_rgba(0,0,0,0.5)]">
+        {nav.filter(n => ["Início", "Catálogo", "Meus Cursos", "Perfil"].includes(n.label)).map((n) => {
+          const active = n.exact ? pathname === n.to : pathname.startsWith(n.to);
+          return (
+            <Link key={n.label} to={n.to as string} className={cn(
+              "flex flex-col items-center justify-center p-2 text-[10px] font-medium transition-all",
+              active ? "text-primary" : "text-muted-foreground hover:text-primary"
+            )}>
+              <div className={cn("p-1.5 rounded-full mb-1 transition-colors", active && "bg-primary/10")}>
+                <n.icon className={cn("h-5 w-5", active ? "text-primary" : "text-muted-foreground")} />
+              </div>
+              <span className="truncate w-full text-center">{n.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
     </div>
   );
 }

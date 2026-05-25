@@ -82,6 +82,10 @@ export type Database = {
           is_hidden: boolean
           lesson_id: string
           user_id: string
+          parent_id: string | null
+          is_pinned: boolean
+          is_instructor: boolean
+          updated_at: string
         }
         Insert: {
           content: string
@@ -90,6 +94,10 @@ export type Database = {
           is_hidden?: boolean
           lesson_id: string
           user_id: string
+          parent_id?: string | null
+          is_pinned?: boolean
+          is_instructor?: boolean
+          updated_at?: string
         }
         Update: {
           content?: string
@@ -98,6 +106,10 @@ export type Database = {
           is_hidden?: boolean
           lesson_id?: string
           user_id?: string
+          parent_id?: string | null
+          is_pinned?: boolean
+          is_instructor?: boolean
+          updated_at?: string
         }
         Relationships: [
           {
@@ -107,6 +119,49 @@ export type Database = {
             referencedRelation: "lessons"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      comment_likes: {
+        Row: {
+          id: string
+          comment_id: string
+          user_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          comment_id: string
+          user_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          comment_id?: string
+          user_id?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comment_likes_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          }
         ]
       }
       courses: {
@@ -116,10 +171,13 @@ export type Database = {
           created_at: string
           description: string | null
           duration_minutes: number | null
+          has_certificate: boolean
           id: string
           instructor: string | null
+          instructor_id: string | null
           is_free: boolean
           is_published: boolean
+          language: string
           level: string | null
           price_mzn: number | null
           requirements: string[]
@@ -137,10 +195,13 @@ export type Database = {
           created_at?: string
           description?: string | null
           duration_minutes?: number | null
+          has_certificate?: boolean
           id?: string
           instructor?: string | null
+          instructor_id?: string | null
           is_free?: boolean
           is_published?: boolean
+          language?: string
           level?: string | null
           price_mzn?: number | null
           requirements?: string[]
@@ -158,10 +219,13 @@ export type Database = {
           created_at?: string
           description?: string | null
           duration_minutes?: number | null
+          has_certificate?: boolean
           id?: string
           instructor?: string | null
+          instructor_id?: string | null
           is_free?: boolean
           is_published?: boolean
+          language?: string
           level?: string | null
           price_mzn?: number | null
           requirements?: string[]
@@ -173,7 +237,15 @@ export type Database = {
           updated_at?: string
           what_you_learn?: string[]
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "courses_instructor_id_fkey"
+            columns: ["instructor_id"]
+            isOneToOne: false
+            referencedRelation: "instructors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       enrollments: {
         Row: {
@@ -244,6 +316,7 @@ export type Database = {
           attachment_url: string | null
           created_at: string
           description: string | null
+          duration_minutes: number
           id: string
           is_locked: boolean
           module_id: string
@@ -255,6 +328,7 @@ export type Database = {
           attachment_url?: string | null
           created_at?: string
           description?: string | null
+          duration_minutes?: number
           id?: string
           is_locked?: boolean
           module_id: string
@@ -266,6 +340,7 @@ export type Database = {
           attachment_url?: string | null
           created_at?: string
           description?: string | null
+          duration_minutes?: number
           id?: string
           is_locked?: boolean
           module_id?: string
@@ -282,6 +357,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      instructors: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
       }
       modules: {
         Row: {
@@ -357,6 +456,57 @@ export type Database = {
             referencedRelation: "courses"
             referencedColumns: ["id"]
           },
+        ]
+      }
+      notifications: {
+        Row: {
+          id: string
+          user_id: string
+          type: string
+          comment_id: string | null
+          actor_id: string | null
+          lesson_id: string | null
+          message: string
+          is_read: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          type: string
+          comment_id?: string | null
+          actor_id?: string | null
+          lesson_id?: string | null
+          message: string
+          is_read?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          type?: string
+          comment_id?: string | null
+          actor_id?: string | null
+          lesson_id?: string | null
+          message?: string
+          is_read?: boolean
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          }
         ]
       }
       profiles: {

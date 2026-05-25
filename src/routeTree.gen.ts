@@ -24,12 +24,14 @@ import { Route as AppCursosRouteImport } from './routes/app.cursos'
 import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes'
 import { Route as AppCatalogoRouteImport } from './routes/app.catalogo'
 import { Route as AppBlogRouteImport } from './routes/app.blog'
+import { Route as ApiUploadRouteImport } from './routes/api.upload'
 import { Route as AdminPagamentosRouteImport } from './routes/admin.pagamentos'
-import { Route as AdminCursosRouteImport } from './routes/admin.cursos'
 import { Route as AdminConfiguracoesRouteImport } from './routes/admin.configuracoes'
 import { Route as AdminComentariosRouteImport } from './routes/admin.comentarios'
 import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 import { Route as AdminAlunosRouteImport } from './routes/admin.alunos'
+import { Route as AdminCursosIndexRouteImport } from './routes/admin.cursos.index'
+import { Route as AppPlayerLessonIdRouteImport } from './routes/app.player.$lessonId'
 import { Route as AppCursoSlugRouteImport } from './routes/app.curso.$slug'
 import { Route as AppBlogSlugRouteImport } from './routes/app.blog.$slug'
 import { Route as AdminCursosIdRouteImport } from './routes/admin.cursos.$id'
@@ -110,14 +112,14 @@ const AppBlogRoute = AppBlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => AppRoute,
 } as any)
+const ApiUploadRoute = ApiUploadRouteImport.update({
+  id: '/api/upload',
+  path: '/api/upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminPagamentosRoute = AdminPagamentosRouteImport.update({
   id: '/pagamentos',
   path: '/pagamentos',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminCursosRoute = AdminCursosRouteImport.update({
-  id: '/cursos',
-  path: '/cursos',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminConfiguracoesRoute = AdminConfiguracoesRouteImport.update({
@@ -140,6 +142,16 @@ const AdminAlunosRoute = AdminAlunosRouteImport.update({
   path: '/alunos',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCursosIndexRoute = AdminCursosIndexRouteImport.update({
+  id: '/cursos/',
+  path: '/cursos/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AppPlayerLessonIdRoute = AppPlayerLessonIdRouteImport.update({
+  id: '/player/$lessonId',
+  path: '/player/$lessonId',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCursoSlugRoute = AppCursoSlugRouteImport.update({
   id: '/curso/$slug',
   path: '/curso/$slug',
@@ -151,9 +163,9 @@ const AppBlogSlugRoute = AppBlogSlugRouteImport.update({
   getParentRoute: () => AppBlogRoute,
 } as any)
 const AdminCursosIdRoute = AdminCursosIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AdminCursosRoute,
+  id: '/cursos/$id',
+  path: '/cursos/$id',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminBlogIdRoute = AdminBlogIdRouteImport.update({
   id: '/$id',
@@ -174,8 +186,8 @@ export interface FileRoutesByFullPath {
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
-  '/admin/cursos': typeof AdminCursosRouteWithChildren
   '/admin/pagamentos': typeof AdminPagamentosRoute
+  '/api/upload': typeof ApiUploadRoute
   '/app/blog': typeof AppBlogRouteWithChildren
   '/app/catalogo': typeof AppCatalogoRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
@@ -187,6 +199,8 @@ export interface FileRoutesByFullPath {
   '/admin/cursos/$id': typeof AdminCursosIdRoute
   '/app/blog/$slug': typeof AppBlogSlugRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
+  '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
+  '/admin/cursos/': typeof AdminCursosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -199,8 +213,8 @@ export interface FileRoutesByTo {
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
-  '/admin/cursos': typeof AdminCursosRouteWithChildren
   '/admin/pagamentos': typeof AdminPagamentosRoute
+  '/api/upload': typeof ApiUploadRoute
   '/app/blog': typeof AppBlogRouteWithChildren
   '/app/catalogo': typeof AppCatalogoRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
@@ -212,6 +226,8 @@ export interface FileRoutesByTo {
   '/admin/cursos/$id': typeof AdminCursosIdRoute
   '/app/blog/$slug': typeof AppBlogSlugRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
+  '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
+  '/admin/cursos': typeof AdminCursosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -227,8 +243,8 @@ export interface FileRoutesById {
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
-  '/admin/cursos': typeof AdminCursosRouteWithChildren
   '/admin/pagamentos': typeof AdminPagamentosRoute
+  '/api/upload': typeof ApiUploadRoute
   '/app/blog': typeof AppBlogRouteWithChildren
   '/app/catalogo': typeof AppCatalogoRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
@@ -240,6 +256,8 @@ export interface FileRoutesById {
   '/admin/cursos/$id': typeof AdminCursosIdRoute
   '/app/blog/$slug': typeof AppBlogSlugRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
+  '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
+  '/admin/cursos/': typeof AdminCursosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -256,8 +274,8 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/comentarios'
     | '/admin/configuracoes'
-    | '/admin/cursos'
     | '/admin/pagamentos'
+    | '/api/upload'
     | '/app/blog'
     | '/app/catalogo'
     | '/app/configuracoes'
@@ -269,6 +287,8 @@ export interface FileRouteTypes {
     | '/admin/cursos/$id'
     | '/app/blog/$slug'
     | '/app/curso/$slug'
+    | '/app/player/$lessonId'
+    | '/admin/cursos/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -281,8 +301,8 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/comentarios'
     | '/admin/configuracoes'
-    | '/admin/cursos'
     | '/admin/pagamentos'
+    | '/api/upload'
     | '/app/blog'
     | '/app/catalogo'
     | '/app/configuracoes'
@@ -294,6 +314,8 @@ export interface FileRouteTypes {
     | '/admin/cursos/$id'
     | '/app/blog/$slug'
     | '/app/curso/$slug'
+    | '/app/player/$lessonId'
+    | '/admin/cursos'
   id:
     | '__root__'
     | '/'
@@ -308,8 +330,8 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/comentarios'
     | '/admin/configuracoes'
-    | '/admin/cursos'
     | '/admin/pagamentos'
+    | '/api/upload'
     | '/app/blog'
     | '/app/catalogo'
     | '/app/configuracoes'
@@ -321,6 +343,8 @@ export interface FileRouteTypes {
     | '/admin/cursos/$id'
     | '/app/blog/$slug'
     | '/app/curso/$slug'
+    | '/app/player/$lessonId'
+    | '/admin/cursos/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -332,6 +356,7 @@ export interface RootRouteChildren {
   RegistoRoute: typeof RegistoRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiUploadRoute: typeof ApiUploadRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -441,18 +466,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBlogRouteImport
       parentRoute: typeof AppRoute
     }
+    '/api/upload': {
+      id: '/api/upload'
+      path: '/api/upload'
+      fullPath: '/api/upload'
+      preLoaderRoute: typeof ApiUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/pagamentos': {
       id: '/admin/pagamentos'
       path: '/pagamentos'
       fullPath: '/admin/pagamentos'
       preLoaderRoute: typeof AdminPagamentosRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/cursos': {
-      id: '/admin/cursos'
-      path: '/cursos'
-      fullPath: '/admin/cursos'
-      preLoaderRoute: typeof AdminCursosRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/configuracoes': {
@@ -483,6 +508,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAlunosRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/cursos/': {
+      id: '/admin/cursos/'
+      path: '/cursos'
+      fullPath: '/admin/cursos/'
+      preLoaderRoute: typeof AdminCursosIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/app/player/$lessonId': {
+      id: '/app/player/$lessonId'
+      path: '/player/$lessonId'
+      fullPath: '/app/player/$lessonId'
+      preLoaderRoute: typeof AppPlayerLessonIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/curso/$slug': {
       id: '/app/curso/$slug'
       path: '/curso/$slug'
@@ -499,10 +538,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/cursos/$id': {
       id: '/admin/cursos/$id'
-      path: '/$id'
+      path: '/cursos/$id'
       fullPath: '/admin/cursos/$id'
       preLoaderRoute: typeof AdminCursosIdRouteImport
-      parentRoute: typeof AdminCursosRoute
+      parentRoute: typeof AdminRoute
     }
     '/admin/blog/$id': {
       id: '/admin/blog/$id'
@@ -526,26 +565,15 @@ const AdminBlogRouteWithChildren = AdminBlogRoute._addFileChildren(
   AdminBlogRouteChildren,
 )
 
-interface AdminCursosRouteChildren {
-  AdminCursosIdRoute: typeof AdminCursosIdRoute
-}
-
-const AdminCursosRouteChildren: AdminCursosRouteChildren = {
-  AdminCursosIdRoute: AdminCursosIdRoute,
-}
-
-const AdminCursosRouteWithChildren = AdminCursosRoute._addFileChildren(
-  AdminCursosRouteChildren,
-)
-
 interface AdminRouteChildren {
   AdminAlunosRoute: typeof AdminAlunosRoute
   AdminBlogRoute: typeof AdminBlogRouteWithChildren
   AdminComentariosRoute: typeof AdminComentariosRoute
   AdminConfiguracoesRoute: typeof AdminConfiguracoesRoute
-  AdminCursosRoute: typeof AdminCursosRouteWithChildren
   AdminPagamentosRoute: typeof AdminPagamentosRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminCursosIdRoute: typeof AdminCursosIdRoute
+  AdminCursosIndexRoute: typeof AdminCursosIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -553,9 +581,10 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminBlogRoute: AdminBlogRouteWithChildren,
   AdminComentariosRoute: AdminComentariosRoute,
   AdminConfiguracoesRoute: AdminConfiguracoesRoute,
-  AdminCursosRoute: AdminCursosRouteWithChildren,
   AdminPagamentosRoute: AdminPagamentosRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminCursosIdRoute: AdminCursosIdRoute,
+  AdminCursosIndexRoute: AdminCursosIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
@@ -579,6 +608,7 @@ interface AppRouteChildren {
   AppPerfilRoute: typeof AppPerfilRoute
   AppIndexRoute: typeof AppIndexRoute
   AppCursoSlugRoute: typeof AppCursoSlugRoute
+  AppPlayerLessonIdRoute: typeof AppPlayerLessonIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -589,6 +619,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppPerfilRoute: AppPerfilRoute,
   AppIndexRoute: AppIndexRoute,
   AppCursoSlugRoute: AppCursoSlugRoute,
+  AppPlayerLessonIdRoute: AppPlayerLessonIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -602,7 +633,18 @@ const rootRouteChildren: RootRouteChildren = {
   RegistoRoute: RegistoRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiUploadRoute: ApiUploadRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
