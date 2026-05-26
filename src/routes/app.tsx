@@ -6,6 +6,7 @@ import { Home, BookOpen, Newspaper, User, Settings, LogOut, Shield, Compass, Sun
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import NotificationBell from "@/components/notification-bell";
+import { RouteErrorBoundary } from "@/components/route-error-boundary";
 
 export const Route = createFileRoute("/app")({
   head: () => ({ meta: [{ title: "Painel do Aluno — Imersão Completa" }, { name: "robots", content: "noindex" }] }),
@@ -89,7 +90,7 @@ function AppLayout() {
           </button>
         </div>
       </aside>
-      <main className="flex-1 overflow-x-hidden p-4 md:p-10 pb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both"><Outlet /></main>
+      <main className="flex-1 overflow-x-hidden p-4 md:p-10 pb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both"><RouteErrorBoundary><Outlet /></RouteErrorBoundary></main>
 
       {/* Mobile Bottom Navigation */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-border bg-card/70 backdrop-blur-2xl px-1 pb-safe pt-2 shadow-[0_-4px_25px_rgba(0,0,0,0.5)]">

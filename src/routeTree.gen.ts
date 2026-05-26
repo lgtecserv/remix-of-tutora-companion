@@ -34,6 +34,7 @@ import { Route as AdminCursosIndexRouteImport } from './routes/admin.cursos.inde
 import { Route as AppPlayerLessonIdRouteImport } from './routes/app.player.$lessonId'
 import { Route as AppCursoSlugRouteImport } from './routes/app.curso.$slug'
 import { Route as AppBlogSlugRouteImport } from './routes/app.blog.$slug'
+import { Route as ApiWebhooksPaysuiteRouteImport } from './routes/api.webhooks.paysuite'
 import { Route as AdminCursosIdRouteImport } from './routes/admin.cursos.$id'
 import { Route as AdminBlogIdRouteImport } from './routes/admin.blog.$id'
 
@@ -162,6 +163,11 @@ const AppBlogSlugRoute = AppBlogSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => AppBlogRoute,
 } as any)
+const ApiWebhooksPaysuiteRoute = ApiWebhooksPaysuiteRouteImport.update({
+  id: '/api/webhooks/paysuite',
+  path: '/api/webhooks/paysuite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminCursosIdRoute = AdminCursosIdRouteImport.update({
   id: '/cursos/$id',
   path: '/cursos/$id',
@@ -197,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/app/': typeof AppIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/cursos/$id': typeof AdminCursosIdRoute
+  '/api/webhooks/paysuite': typeof ApiWebhooksPaysuiteRoute
   '/app/blog/$slug': typeof AppBlogSlugRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
   '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
@@ -224,6 +231,7 @@ export interface FileRoutesByTo {
   '/app': typeof AppIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/cursos/$id': typeof AdminCursosIdRoute
+  '/api/webhooks/paysuite': typeof ApiWebhooksPaysuiteRoute
   '/app/blog/$slug': typeof AppBlogSlugRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
   '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
@@ -254,6 +262,7 @@ export interface FileRoutesById {
   '/app/': typeof AppIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/cursos/$id': typeof AdminCursosIdRoute
+  '/api/webhooks/paysuite': typeof ApiWebhooksPaysuiteRoute
   '/app/blog/$slug': typeof AppBlogSlugRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
   '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
@@ -285,6 +294,7 @@ export interface FileRouteTypes {
     | '/app/'
     | '/admin/blog/$id'
     | '/admin/cursos/$id'
+    | '/api/webhooks/paysuite'
     | '/app/blog/$slug'
     | '/app/curso/$slug'
     | '/app/player/$lessonId'
@@ -312,6 +322,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/admin/blog/$id'
     | '/admin/cursos/$id'
+    | '/api/webhooks/paysuite'
     | '/app/blog/$slug'
     | '/app/curso/$slug'
     | '/app/player/$lessonId'
@@ -341,6 +352,7 @@ export interface FileRouteTypes {
     | '/app/'
     | '/admin/blog/$id'
     | '/admin/cursos/$id'
+    | '/api/webhooks/paysuite'
     | '/app/blog/$slug'
     | '/app/curso/$slug'
     | '/app/player/$lessonId'
@@ -357,6 +369,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiUploadRoute: typeof ApiUploadRoute
+  ApiWebhooksPaysuiteRoute: typeof ApiWebhooksPaysuiteRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -536,6 +549,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBlogSlugRouteImport
       parentRoute: typeof AppBlogRoute
     }
+    '/api/webhooks/paysuite': {
+      id: '/api/webhooks/paysuite'
+      path: '/api/webhooks/paysuite'
+      fullPath: '/api/webhooks/paysuite'
+      preLoaderRoute: typeof ApiWebhooksPaysuiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/cursos/$id': {
       id: '/admin/cursos/$id'
       path: '/cursos/$id'
@@ -634,6 +654,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiUploadRoute: ApiUploadRoute,
+  ApiWebhooksPaysuiteRoute: ApiWebhooksPaysuiteRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

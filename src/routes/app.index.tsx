@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import { unwrapRelation, safeSlug } from "@/lib/supabase-utils";
 import { PlayCircle, BookOpen, Trophy, Sparkles, ArrowRight, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
 
@@ -16,25 +17,33 @@ function StudentDashboard() {
     queryKey: ["student-dashboard", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const [enrolls, progress, recs] = await Promise.all([
-        supabase.from("enrollments").select("course_id, courses(id, slug, title, cover_url, category)").eq("user_id", user!.id),
-        supabase.from("lesson_progress").select("lesson_id, percent, is_completed, updated_at, lessons(id, title, module_id, modules(course_id, courses(slug, title)))").eq("user_id", user!.id).order("updated_at", { ascending: false }),
-        supabase.from("courses").select("id, slug, title, cover_url, category").eq("is_published", true).limit(6),
-      ]);
-      return {
-        enrollments: enrolls.data ?? [],
-        progress: progress.data ?? [],
-        recommendations: recs.data ?? [],
-      };
+      try {
+        const [enrolls, progress, recs] = await Promise.all([
+          supabase.from("enrollments").select("course_id, courses(id, slug, title, cover_url, category)").eq("user_id", user!.id),
+          supabase.from("lesson_progress").select("lesson_id, percent, is_completed, updated_at, lessons(id, title, module_id, modules(course_id, courses(slug, title)))").eq("user_id", user!.id).order("updated_at", { ascending: false }),
+          supabase.from("courses").select("id, slug, title, cover_url, category").eq("is_published", true).limit(6),
+        ]);
+        return {
+          enrollments: enrolls.data ?? [],
+          progress: progress.data ?? [],
+          recommendations: recs.data ?? [],
+        };
+      } catch (err) {
+        console.error("[StudentDashboard] queryFn error:", err);
+        return { enrollments: [], progress: [], recommendations: [] };
+      }
     },
   });
 
-  const lastProgress = data?.progress.find((p) => !p.is_completed) ?? data?.progress[0];
-  const lastLesson = lastProgress?.lessons as any;
-  const lastCourse = lastLesson?.modules?.courses ? (Array.isArray(lastLesson.modules.courses) ? lastLesson.modules.courses[0] : lastLesson.modules.courses) : null;
+  // Safe extraction of "last watched" data
+  const lastProgress = data?.progress?.find((p) => !p.is_completed) ?? data?.progress?.[0];
+  const lastLesson = lastProgress ? unwrapRelation((lastProgress as any)?.lessons) : null;
+  const lastModules = lastLesson ? unwrapRelation((lastLesson as any)?.modules) : null;
+  const lastCourse = lastModules ? unwrapRelation((lastModules as any)?.courses) : null;
+
   const enrolledIds = new Set((data?.enrollments ?? []).map((e) => e.course_id));
-  const inProgress = data?.enrollments.length ?? 0;
-  const completed = data?.progress.filter((p) => p.is_completed).length ?? 0;
+  const inProgress = data?.enrollments?.length ?? 0;
+  const completed = data?.progress?.filter((p) => p.is_completed)?.length ?? 0;
   const recs = (data?.recommendations ?? []).filter((c) => !enrolledIds.has(c.id)).slice(0, 4);
 
   return (
@@ -62,12 +71,12 @@ function StudentDashboard() {
         {/* Continue Watching */}
         <div className="px-5 -mt-8 relative z-20">
           {lastCourse ? (
-            <Link to="/app/curso/$slug" params={{ slug: String(lastCourse.slug || "curso") }} className="block bg-card rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-border">
+            <Link to="/app/curso/$slug" params={{ slug: safeSlug((lastCourse as any)?.slug, "curso") }} className="block bg-card rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-border">
               <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary mb-3">
                 <PlayCircle className="h-4 w-4" /> Continuar assistindo
               </div>
-              <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1 line-clamp-1">{lastCourse.title}</div>
-              <div className="text-sm font-semibold text-secondary leading-tight line-clamp-2">{lastLesson?.title}</div>
+              <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1 line-clamp-1">{(lastCourse as any)?.title ?? "Curso"}</div>
+              <div className="text-sm font-semibold text-secondary leading-tight line-clamp-2">{(lastLesson as any)?.title ?? ""}</div>
               <div className="mt-4 flex items-center gap-3">
                 <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
                   <div className="h-full bg-primary" style={{ width: `${Math.round(Number(lastProgress?.percent || 0))}%` }} />
@@ -108,7 +117,7 @@ function StudentDashboard() {
             </div>
             <div className="flex gap-4 overflow-x-auto px-5 pb-4 hide-scrollbar snap-x">
               {recs.map((c) => (
-                <Link key={c.id} to="/app/curso/$slug" params={{ slug: String(c.slug || c.id) }} className="snap-start shrink-0 w-[220px] overflow-hidden rounded-2xl border border-border bg-card shadow-sm block">
+                <Link key={c.id} to="/app/curso/$slug" params={{ slug: safeSlug(c.slug, c.id) }} className="snap-start shrink-0 w-[220px] overflow-hidden rounded-2xl border border-border bg-card shadow-sm block">
                   {c.cover_url ? <img src={c.cover_url} alt={c.title} className="h-28 w-full object-cover" /> : <div className="h-28 bg-muted" />}
                   <div className="p-3">
                     <div className="text-[9px] uppercase tracking-wider text-muted-foreground line-clamp-1">{c.category ?? "Curso"}</div>
@@ -133,10 +142,10 @@ function StudentDashboard() {
         <section>
           <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-secondary"><PlayCircle className="h-5 w-5 text-primary" />Continuar assistindo</h2>
           {lastCourse ? (
-            <Link to="/app/curso/$slug" params={{ slug: String(lastCourse.slug || "curso") }} className="flex items-center justify-between rounded-2xl border border-border bg-card p-6 transition hover:border-primary/40">
+            <Link to="/app/curso/$slug" params={{ slug: safeSlug((lastCourse as any)?.slug, "curso") }} className="flex items-center justify-between rounded-2xl border border-border bg-card p-6 transition hover:border-primary/40">
               <div>
-                <div className="text-sm text-muted-foreground">{lastCourse.title}</div>
-                <div className="text-lg font-semibold text-secondary">{lastLesson?.title}</div>
+                <div className="text-sm text-muted-foreground">{(lastCourse as any)?.title ?? "Curso"}</div>
+                <div className="text-lg font-semibold text-secondary">{(lastLesson as any)?.title ?? ""}</div>
                 <div className="mt-2 h-2 w-64 max-w-full overflow-hidden rounded-full bg-muted">
                   <div className="h-full bg-primary" style={{ width: `${Math.round(Number(lastProgress?.percent || 0))}%` }} />
                 </div>
@@ -169,7 +178,7 @@ function StudentDashboard() {
             <h2 className="mb-4 text-lg font-semibold text-secondary">Recomendado para você</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               {recs.map((c) => (
-                <Link key={c.id} to="/app/curso/$slug" params={{ slug: String(c.slug || c.id) }} className="overflow-hidden rounded-2xl border border-border bg-card transition hover:border-primary/40 block">
+                <Link key={c.id} to="/app/curso/$slug" params={{ slug: safeSlug(c.slug, c.id) }} className="overflow-hidden rounded-2xl border border-border bg-card transition hover:border-primary/40 block">
                   {c.cover_url ? <img src={c.cover_url} alt={c.title} className="h-32 w-full object-cover" /> : <div className="h-32 bg-muted" />}
                   <div className="p-4">
                     <div className="text-xs uppercase tracking-wider text-muted-foreground">{c.category ?? "Curso"}</div>

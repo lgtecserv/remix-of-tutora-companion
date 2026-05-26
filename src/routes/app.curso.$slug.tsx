@@ -3,6 +3,7 @@ import { createCheckoutSession } from "@/actions/checkout";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import { unwrapRelation } from "@/lib/supabase-utils";
 import { Button } from "@/components/ui/button";
 import { Play, PlayCircle, Clock, BookOpen, GraduationCap, ChevronDown, CheckCircle2, Circle, Lock, ArrowLeft, Star, Users } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -196,6 +197,7 @@ function CourseOverview() {
   }
 
   const c = data.course;
+  const instructor = unwrapRelation((c as any).instructors);
 
   return (
     <div className="space-y-8 pb-20">
@@ -238,16 +240,16 @@ function CourseOverview() {
             </div>
 
             <div className="flex flex-wrap items-center gap-6 text-sm font-medium text-secondary-foreground/70">
-              {c.instructors && (
+              {instructor && (
                 <div className="flex items-center gap-2">
-                  {(Array.isArray(c.instructors) ? c.instructors[0] : c.instructors)?.avatar_url ? (
-                    <img src={(Array.isArray(c.instructors) ? c.instructors[0] : c.instructors).avatar_url} alt={(Array.isArray(c.instructors) ? c.instructors[0] : c.instructors)?.name || "Instrutor"} className="h-8 w-8 rounded-full border border-border" />
+                  {instructor.avatar_url ? (
+                    <img src={instructor.avatar_url} alt={instructor.name || "Instrutor"} className="h-8 w-8 rounded-full border border-border" />
                   ) : (
                     <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
-                      {((Array.isArray(c.instructors) ? c.instructors[0] : c.instructors)?.name || "?").charAt(0).toUpperCase()}
+                      {(instructor.name || "?").charAt(0).toUpperCase()}
                     </div>
                   )}
-                  <span className="text-white">{(Array.isArray(c.instructors) ? c.instructors[0] : c.instructors)?.name || "Instrutor"}</span>
+                  <span className="text-white">{instructor.name || "Instrutor"}</span>
                 </div>
               )}
               <div className="flex items-center gap-1.5"><BookOpen className="h-4 w-4 text-primary" /> {flatLessons.length} Aulas</div>
@@ -476,19 +478,19 @@ function CourseOverview() {
             </div>
           </div>
           
-          {c.instructors && (
+          {instructor && (
             <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
               <h3 className="font-bold text-secondary mb-4 uppercase tracking-wider text-xs">O Instrutor</h3>
               <div className="flex gap-4">
-                {((Array.isArray(c.instructors) ? c.instructors[0] : c.instructors)?.avatar_url) ? (
-                  <img src={(Array.isArray(c.instructors) ? c.instructors[0] : c.instructors).avatar_url} alt="Instructor" className="h-14 w-14 rounded-full border border-border object-cover" />
+                {instructor.avatar_url ? (
+                  <img src={instructor.avatar_url} alt="Instructor" className="h-14 w-14 rounded-full border border-border object-cover" />
                 ) : (
-                  <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">{((Array.isArray(c.instructors) ? c.instructors[0] : c.instructors)?.name || "?").charAt(0).toUpperCase()}</div>
+                  <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">{(instructor.name || "?").charAt(0).toUpperCase()}</div>
                 )}
                 <div>
-                  <h3 className="text-lg font-bold text-secondary">{(Array.isArray(c.instructors) ? c.instructors[0] : c.instructors)?.name || "Instrutor"}</h3>
+                  <h3 className="text-lg font-bold text-secondary">{instructor.name || "Instrutor"}</h3>
                   <div className="text-xs text-primary font-medium mb-2">Criador do Curso</div>
-                  {((Array.isArray(c.instructors) ? c.instructors[0] : c.instructors)?.bio) && <div className="text-sm text-muted-foreground line-clamp-3">{((Array.isArray(c.instructors) ? c.instructors[0] : c.instructors)?.bio)}</div>}
+                  {instructor.bio && <div className="text-sm text-muted-foreground line-clamp-3">{instructor.bio}</div>}
                 </div>
               </div>
             </div>
