@@ -29,7 +29,9 @@ function StudentDashboard() {
     },
   });
 
-  const last = data?.progress.find((p) => !p.is_completed) ?? data?.progress[0];
+  const lastProgress = data?.progress.find((p) => !p.is_completed) ?? data?.progress[0];
+  const lastLesson = lastProgress?.lessons as any;
+  const lastCourse = lastLesson?.modules?.courses ? (Array.isArray(lastLesson.modules.courses) ? lastLesson.modules.courses[0] : lastLesson.modules.courses) : null;
   const enrolledIds = new Set((data?.enrollments ?? []).map((e) => e.course_id));
   const inProgress = data?.enrollments.length ?? 0;
   const completed = data?.progress.filter((p) => p.is_completed).length ?? 0;
@@ -59,18 +61,18 @@ function StudentDashboard() {
 
         {/* Continue Watching */}
         <div className="px-5 -mt-8 relative z-20">
-          {last?.lessons?.modules?.courses ? (
-            <Link to="/app/curso/$slug" params={{ slug: String((Array.isArray(last.lessons.modules.courses) ? last.lessons.modules.courses[0] : last.lessons.modules.courses)?.slug || "curso") }} className="block bg-card rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-border">
+          {lastCourse ? (
+            <Link to="/app/curso/$slug" params={{ slug: String(lastCourse.slug || "curso") }} className="block bg-card rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-border">
               <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary mb-3">
                 <PlayCircle className="h-4 w-4" /> Continuar assistindo
               </div>
-              <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1 line-clamp-1">{last.lessons.modules.courses.title}</div>
-              <div className="text-sm font-semibold text-secondary leading-tight line-clamp-2">{last.lessons.title}</div>
+              <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1 line-clamp-1">{lastCourse.title}</div>
+              <div className="text-sm font-semibold text-secondary leading-tight line-clamp-2">{lastLesson?.title}</div>
               <div className="mt-4 flex items-center gap-3">
                 <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
-                  <div className="h-full bg-primary" style={{ width: `${Math.round(Number(last.percent))}%` }} />
+                  <div className="h-full bg-primary" style={{ width: `${Math.round(Number(lastProgress?.percent || 0))}%` }} />
                 </div>
-                <span className="text-[10px] font-bold text-muted-foreground">{Math.round(Number(last.percent))}%</span>
+                <span className="text-[10px] font-bold text-muted-foreground">{Math.round(Number(lastProgress?.percent || 0))}%</span>
               </div>
             </Link>
           ) : (
@@ -130,13 +132,13 @@ function StudentDashboard() {
 
         <section>
           <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-secondary"><PlayCircle className="h-5 w-5 text-primary" />Continuar assistindo</h2>
-          {last?.lessons?.modules?.courses ? (
-            <Link to="/app/curso/$slug" params={{ slug: String((Array.isArray(last.lessons.modules.courses) ? last.lessons.modules.courses[0] : last.lessons.modules.courses)?.slug || "curso") }} className="flex items-center justify-between rounded-2xl border border-border bg-card p-6 transition hover:border-primary/40">
+          {lastCourse ? (
+            <Link to="/app/curso/$slug" params={{ slug: String(lastCourse.slug || "curso") }} className="flex items-center justify-between rounded-2xl border border-border bg-card p-6 transition hover:border-primary/40">
               <div>
-                <div className="text-sm text-muted-foreground">{last.lessons.modules.courses.title}</div>
-                <div className="text-lg font-semibold text-secondary">{last.lessons.title}</div>
+                <div className="text-sm text-muted-foreground">{lastCourse.title}</div>
+                <div className="text-lg font-semibold text-secondary">{lastLesson?.title}</div>
                 <div className="mt-2 h-2 w-64 max-w-full overflow-hidden rounded-full bg-muted">
-                  <div className="h-full bg-primary" style={{ width: `${Math.round(Number(last.percent))}%` }} />
+                  <div className="h-full bg-primary" style={{ width: `${Math.round(Number(lastProgress?.percent || 0))}%` }} />
                 </div>
               </div>
               <ArrowRight className="h-5 w-5 text-primary" />
