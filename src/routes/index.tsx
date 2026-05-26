@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import heroImg from "@/assets/hero-fundador.jpg";
+import heroBg from "@/assets/hero.jpg";
 import logoImg from "@/assets/logo-imersao.png";
 import { Brain, Smartphone, Code2, Globe, Megaphone, Zap, Check, ChevronDown, Rocket, Trophy, GraduationCap, DollarSign } from "lucide-react";
 import { useState } from "react";
@@ -97,47 +97,45 @@ function Header() {
 
 function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden" style={{ background: "var(--gradient-hero-harmony)" }}>
-      <div className="absolute inset-0 opacity-40" style={{ backgroundImage: "radial-gradient(circle at 15% 25%, oklch(0.62 0.22 265 / 0.5), transparent 55%), radial-gradient(ellipse at 80% 60%, rgba(0,0,0,0.85), transparent 65%)" }} />
-      <div className="container relative mx-auto grid items-center gap-10 px-4 py-20 md:grid-cols-2 md:py-28">
-        <div className="text-primary-foreground">
+    <section id="top" className="relative flex min-h-[90vh] items-center justify-center overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${heroBg})` }}
+      />
+      {/* Dark Overlays for readability and fading into next section */}
+      <div className="absolute inset-0 z-10 bg-black/60" />
+      <div className="absolute inset-0 z-10 bg-gradient-to-t from-background via-background/60 to-transparent" />
+      
+      <div className="container relative z-20 mx-auto px-4 py-20 text-center md:py-32">
+        <div className="mx-auto max-w-4xl text-white">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider backdrop-blur">
             APRENDA · CRIE · E FATURE
           </span>
-          <h1 className="mt-6 text-4xl font-bold leading-[1.05] tracking-tight md:text-6xl">
+          <h1 className="mt-8 text-5xl font-bold leading-[1.1] tracking-tight md:text-7xl">
             Domine a tecnologia.<br />
-            <span className="bg-gradient-to-r from-white to-primary-foreground/70 bg-clip-text text-transparent">Construa o seu futuro.</span>
+            <span className="bg-gradient-to-r from-orange-400 via-red-500 to-orange-600 bg-clip-text text-transparent drop-shadow-sm">
+              Construa o seu futuro.
+            </span>
           </h1>
-          <p className="mt-6 max-w-lg text-base text-primary-foreground/85 md:text-lg">
+          <p className="mx-auto mt-8 max-w-2xl text-lg text-white/90 md:text-xl">
             A Imersão Completa é a plataforma onde aprende Inteligência Artificial, apps, sistemas, web, marketing digital e negócios digitais — e transforma conhecimento em faturamento.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/registo" className="rounded-full bg-background px-8 py-3 text-base font-semibold text-foreground shadow-[var(--shadow-glow)] transition hover:scale-105">
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
+            <Link to="/registo" className="rounded-full bg-orange-600 px-8 py-4 text-lg font-semibold text-white shadow-[0_0_30px_-5px_rgba(234,88,12,0.6)] transition hover:scale-105 hover:bg-orange-500">
               Começar agora
             </Link>
-            <a href="#cursos" className="rounded-full border border-white/30 bg-white/5 px-8 py-3 text-base font-semibold text-primary-foreground backdrop-blur transition hover:bg-white/15">
+            <a href="#cursos" className="rounded-full border border-white/30 bg-white/10 px-8 py-4 text-lg font-semibold text-white backdrop-blur transition hover:bg-white/20">
               Ver cursos
             </a>
           </div>
-          <div className="mt-10 flex items-center gap-6 text-sm text-primary-foreground/80">
-            <div><div className="text-2xl font-bold text-white">9+</div>trilhas práticas</div>
-            <div className="h-10 w-px bg-white/20" />
-            <div><div className="text-2xl font-bold text-white">100%</div>em português</div>
-            <div className="h-10 w-px bg-white/20" />
-            <div><div className="text-2xl font-bold text-white">∞</div>acesso vitalício</div>
+          <div className="mt-16 flex flex-wrap items-center justify-center gap-8 text-sm text-white/80 md:gap-14">
+            <div className="flex flex-col items-center"><div className="text-3xl font-bold text-white">9+</div>trilhas práticas</div>
+            <div className="hidden h-12 w-px bg-white/20 md:block" />
+            <div className="flex flex-col items-center"><div className="text-3xl font-bold text-white">100%</div>em português</div>
+            <div className="hidden h-12 w-px bg-white/20 md:block" />
+            <div className="flex flex-col items-center"><div className="text-3xl font-bold text-white">∞</div>acesso vitalício</div>
           </div>
-        </div>
-        <div className="relative">
-          <div className="absolute -inset-10 rounded-[2.5rem] bg-black/70 blur-3xl" />
-          <img
-            src={heroImg}
-            alt="Fundador da Imersão Completa"
-            className="relative h-auto w-full rounded-3xl border border-white/5 object-cover shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)]"
-            style={{
-              WebkitMaskImage: "radial-gradient(ellipse 95% 95% at 50% 50%, #000 62%, transparent 100%)",
-              maskImage: "radial-gradient(ellipse 95% 95% at 50% 50%, #000 62%, transparent 100%)",
-            }}
-          />
         </div>
       </div>
     </section>
