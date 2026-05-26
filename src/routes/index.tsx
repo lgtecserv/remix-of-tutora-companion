@@ -62,10 +62,8 @@ function BookIcon(props: React.SVGProps<SVGSVGElement>) {
 
 function Logo() {
   return (
-    <Link to="/" className="flex items-center gap-2">
-      <span className="inline-flex items-center rounded-xl bg-secondary px-3 py-2 shadow-[var(--shadow-card)]">
-        <img src={logoImg} alt="Imersão Completa" className="h-8 w-auto md:h-9 invert dark:invert-0 hue-rotate-180 dark:hue-rotate-0" />
-      </span>
+    <Link to="/" className="flex items-center gap-3">
+      <img src={logoImg} alt="Imersão Completa" className="h-16 w-auto md:h-24 invert dark:invert-0 hue-rotate-180 dark:hue-rotate-0" />
     </Link>
   );
 }
@@ -79,17 +77,17 @@ function Header() {
     { label: "FAQ", href: "#faq" },
   ];
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur">
-      <div className="container mx-auto flex items-center justify-between px-4 py-3">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0a0a]/90 backdrop-blur-xl">
+      <div className="container mx-auto flex items-center justify-between px-4 py-4">
         <Logo />
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-8 md:flex">
           {navItems.map((n) => (
-            <a key={n.label} href={n.href} className="text-sm font-medium text-foreground/80 transition hover:text-primary">{n.label}</a>
+            <a key={n.label} href={n.href} className="text-sm font-semibold text-white/70 transition-colors hover:text-orange-500">{n.label}</a>
           ))}
         </nav>
-        <div className="flex items-center gap-2">
-          <Link to="/login" className="rounded-full border border-border px-4 py-2 text-sm font-medium transition hover:bg-muted">Entrar</Link>
-          <Link to="/registo" className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition hover:bg-primary-glow">Começar agora</Link>
+        <div className="flex items-center gap-4">
+          <Link to="/login" className="rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10">Entrar</Link>
+          <Link to="/registo" className="rounded-full bg-gradient-to-r from-orange-500 to-red-600 px-6 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_-5px_rgba(234,88,12,0.6)] transition-all hover:scale-105 hover:shadow-[0_0_30px_-5px_rgba(234,88,12,0.8)] border-0">Começar agora</Link>
         </div>
       </div>
     </header>
@@ -329,10 +327,7 @@ function Footer() {
         <div className="grid gap-12 md:grid-cols-4 lg:gap-16">
           <div className="md:col-span-1">
             <Link to="/" className="inline-flex items-center gap-3">
-              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.05)]">
-                <img src={logoImg} alt="Imersão Completa" className="h-7 w-auto invert" />
-              </span>
-              <span className="text-xl font-bold text-white tracking-tight">Imersão Completa</span>
+              <img src={logoImg} alt="Imersão Completa" className="h-12 w-auto md:h-16 invert dark:invert-0 hue-rotate-180 dark:hue-rotate-0" />
             </Link>
             <p className="mt-6 text-sm leading-relaxed">
               APRENDA. CRIE. E FATURE.<br/> A plataforma de educação digital da nova geração para quem procura resultados reais.
