@@ -144,22 +144,23 @@ function Hero() {
 
 function Tracks() {
   return (
-    <section id="cursos" className="bg-background py-24">
+    <section id="cursos" className="bg-[#0a0a0a] py-32">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center">
-          <span className="text-sm font-semibold uppercase tracking-wider text-primary">O que vai aprender</span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Trilhas para te levar do zero ao <span className="text-primary">profissional digital</span>
+          <span className="text-sm font-bold uppercase tracking-widest text-orange-500">O que vai aprender</span>
+          <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+            Trilhas para te levar do zero ao <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent drop-shadow-sm">profissional digital</span>
           </h2>
         </div>
-        <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-20 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {tracks.map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="group rounded-2xl border border-border bg-card p-6 transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-[var(--shadow-glow)]">
-              <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-accent text-primary">
-                <Icon className="h-6 w-6" />
+            <div key={title} className="group relative rounded-3xl border border-white/10 bg-white/5 p-8 transition-all duration-300 hover:-translate-y-2 hover:border-orange-500/50 hover:bg-white/[0.07] hover:shadow-[0_0_40px_-10px_rgba(234,88,12,0.2)]">
+              <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br from-orange-500/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500/10 text-orange-500 shadow-[inset_0_0_20px_rgba(234,88,12,0.2)]">
+                <Icon className="h-7 w-7" />
               </div>
-              <h3 className="mb-2 text-lg font-semibold text-foreground">{title}</h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">{desc}</p>
+              <h3 className="mb-3 text-xl font-bold text-white">{title}</h3>
+              <p className="text-base leading-relaxed text-white/60">{desc}</p>
             </div>
           ))}
         </div>
@@ -170,30 +171,31 @@ function Tracks() {
 
 function Benefits() {
   return (
-    <section className="bg-muted py-24">
-      <div className="container mx-auto grid items-center gap-14 px-4 md:grid-cols-2">
+    <section className="relative overflow-hidden bg-[#050505] py-32">
+      <div className="absolute top-0 left-1/2 h-[500px] w-[1000px] -translate-x-1/2 rounded-[100%] bg-orange-600/10 blur-[120px] pointer-events-none" />
+      <div className="container relative mx-auto grid items-center gap-16 px-4 md:grid-cols-2">
         <div>
-          <span className="text-sm font-semibold uppercase tracking-wider text-primary">Benefícios</span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Tudo o que precisa para <span className="text-primary">aprender e crescer</span>
+          <span className="text-sm font-bold uppercase tracking-widest text-orange-500">Benefícios</span>
+          <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+            Tudo o que precisa para <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent drop-shadow-sm">aprender e crescer</span>
           </h2>
-          <ul className="mt-8 space-y-4">
+          <ul className="mt-10 space-y-6">
             {benefits.map((b) => (
-              <li key={b} className="flex items-start gap-3">
-                <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  <Check className="h-4 w-4" />
+              <li key={b} className="flex items-start gap-4">
+                <span className="mt-1 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-orange-500/20 text-orange-500 shadow-[0_0_15px_rgba(234,88,12,0.3)]">
+                  <Check className="h-4 w-4 stroke-[3]" />
                 </span>
-                <span className="text-foreground">{b}</span>
+                <span className="text-lg font-medium text-white/80">{b}</span>
               </li>
             ))}
           </ul>
         </div>
         <div className="relative">
-          <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-primary/30 via-primary-glow/20 to-transparent blur-2xl" />
-          <div className="relative grid grid-cols-2 gap-4 rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
+          <div className="absolute -inset-10 rounded-[3rem] bg-gradient-to-br from-orange-600/20 via-red-500/10 to-transparent blur-3xl pointer-events-none" />
+          <div className="relative grid grid-cols-2 gap-4 rounded-[2.5rem] border border-white/10 bg-black/40 p-8 shadow-2xl backdrop-blur-xl">
             {[Brain, Smartphone, Code2, Globe].map((Icon, i) => (
-              <div key={i} className="flex aspect-square items-center justify-center rounded-2xl bg-gradient-to-br from-muted to-accent">
-                <Icon className="h-14 w-14 text-primary" />
+              <div key={i} className="group flex aspect-square items-center justify-center rounded-3xl border border-white/5 bg-white/5 transition-all duration-500 hover:scale-105 hover:border-orange-500/30 hover:bg-orange-500/10 hover:shadow-[0_0_30px_rgba(234,88,12,0.2)]">
+                <Icon className="h-16 w-16 text-white/30 transition-colors duration-500 group-hover:text-orange-500" />
               </div>
             ))}
           </div>
@@ -205,23 +207,26 @@ function Benefits() {
 
 function HowItWorks() {
   return (
-    <section id="como-funciona" className="bg-background py-24">
+    <section id="como-funciona" className="bg-[#0a0a0a] py-32">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center">
-          <span className="text-sm font-semibold uppercase tracking-wider text-primary">Como funciona</span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Do registo ao primeiro faturamento em <span className="text-primary">5 passos</span>
+          <span className="text-sm font-bold uppercase tracking-widest text-orange-500">Como funciona</span>
+          <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+            Do registo ao faturamento em <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent drop-shadow-sm">5 passos</span>
           </h2>
         </div>
-        <div className="mt-14 grid gap-6 md:grid-cols-5">
+        <div className="mt-20 grid gap-6 md:grid-cols-5">
           {steps.map(({ icon: Icon, title, desc }, i) => (
-            <div key={title} className="relative rounded-2xl border border-border bg-card p-6 text-center">
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary-glow text-primary-foreground">
-                <Icon className="h-7 w-7" />
+            <div key={title} className="relative rounded-3xl border border-white/10 bg-white/5 p-6 text-center transition-all duration-300 hover:bg-white/[0.08] hover:border-white/20 hover:-translate-y-1">
+              {i < steps.length - 1 && (
+                <div className="absolute right-0 top-1/2 -mr-3 hidden w-6 -translate-y-1/2 border-t-2 border-dashed border-white/20 md:block" />
+              )}
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 text-white shadow-[0_0_20px_rgba(234,88,12,0.4)] transition-transform hover:rotate-12">
+                <Icon className="h-8 w-8" />
               </div>
-              <div className="text-xs font-semibold uppercase tracking-wider text-primary">Passo {i + 1}</div>
-              <h3 className="mt-1 font-semibold text-foreground">{title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{desc}</p>
+              <div className="mb-2 text-xs font-bold uppercase tracking-widest text-orange-500">Passo {i + 1}</div>
+              <h3 className="mb-2 text-lg font-bold text-white">{title}</h3>
+              <p className="text-sm font-medium text-white/60">{desc}</p>
             </div>
           ))}
         </div>
@@ -233,24 +238,28 @@ function HowItWorks() {
 function Faq() {
   const [open, setOpen] = useState(0);
   return (
-    <section id="faq" className="bg-muted py-24">
+    <section id="faq" className="bg-[#050505] py-32">
       <div className="container mx-auto max-w-3xl px-4">
-        <div className="mb-12 text-center">
-          <span className="text-sm font-semibold uppercase tracking-wider text-primary">FAQ</span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">Perguntas frequentes</h2>
-          <p className="mt-2 text-muted-foreground">Dúvidas? Nós temos as respostas!</p>
+        <div className="mb-16 text-center">
+          <span className="text-sm font-bold uppercase tracking-widest text-orange-500">FAQ</span>
+          <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-white md:text-5xl">Perguntas frequentes</h2>
+          <p className="mt-4 text-lg text-white/60">Dúvidas? Nós temos as respostas!</p>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-4">
           {faqs.map((f, i) => (
-            <div key={i} className="overflow-hidden rounded-2xl border border-border bg-card">
-              <button onClick={() => setOpen(open === i ? -1 : i)} className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition hover:bg-muted">
-                <div className="flex items-center gap-4">
-                  <span className="text-2xl font-bold text-primary">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-semibold text-foreground">{f.q}</span>
+            <div key={i} className={`overflow-hidden rounded-2xl border transition-colors duration-300 ${open === i ? 'border-orange-500/50 bg-white/10' : 'border-white/10 bg-white/5 hover:bg-white/[0.07]'}`}>
+              <button onClick={() => setOpen(open === i ? -1 : i)} className="flex w-full items-center justify-between gap-6 px-8 py-6 text-left">
+                <div className="flex items-center gap-6">
+                  <span className={`text-2xl font-bold transition-colors ${open === i ? 'text-orange-500' : 'text-white/20'}`}>{String(i + 1).padStart(2, "0")}</span>
+                  <span className="text-lg font-semibold text-white">{f.q}</span>
                 </div>
-                <ChevronDown className={`h-5 w-5 flex-shrink-0 text-primary transition ${open === i ? "rotate-180" : ""}`} />
+                <ChevronDown className={`h-6 w-6 flex-shrink-0 transition-all duration-300 ${open === i ? "rotate-180 text-orange-500" : "text-white/40"}`} />
               </button>
-              {open === i && <div className="px-6 pb-5 pl-16 text-sm text-muted-foreground">{f.a}</div>}
+              <div className={`grid transition-all duration-300 ${open === i ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                <div className="overflow-hidden">
+                  <div className="px-8 pb-6 pl-[4.5rem] text-base leading-relaxed text-white/60">{f.a}</div>
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -261,13 +270,14 @@ function Faq() {
 
 function FinalCta() {
   return (
-    <section className="relative overflow-hidden py-24" style={{ background: "var(--gradient-hero)" }}>
-      <div className="container relative mx-auto max-w-3xl px-4 text-center text-primary-foreground">
-        <h2 className="text-3xl font-bold tracking-tight md:text-5xl">Pronto para começar a sua jornada?</h2>
-        <p className="mx-auto mt-4 max-w-xl text-primary-foreground/85">
+    <section className="relative flex items-center justify-center overflow-hidden bg-[#0a0a0a] py-40">
+      <div className="absolute inset-0 opacity-30" style={{ backgroundImage: "radial-gradient(circle at center, rgba(234,88,12,0.8), transparent 60%)" }} />
+      <div className="container relative z-10 mx-auto max-w-4xl px-4 text-center">
+        <h2 className="text-4xl font-black tracking-tight text-white md:text-6xl lg:text-7xl">Pronto para acender a faísca?</h2>
+        <p className="mx-auto mt-8 max-w-2xl text-xl font-medium text-white/80">
           Crie a sua conta gratuitamente e dê o primeiro passo para dominar a tecnologia e gerar renda online.
         </p>
-        <Link to="/registo" className="mt-8 inline-block rounded-full bg-background px-10 py-4 text-base font-semibold text-foreground shadow-[var(--shadow-glow)] transition hover:scale-105">
+        <Link to="/registo" className="mt-12 inline-block rounded-full bg-gradient-to-r from-orange-500 to-red-600 px-12 py-5 text-lg font-bold text-white shadow-[0_0_40px_-10px_rgba(234,88,12,0.8)] transition-all hover:scale-110 hover:shadow-[0_0_60px_-10px_rgba(234,88,12,1)]">
           Criar conta gratuita
         </Link>
       </div>
@@ -277,14 +287,19 @@ function FinalCta() {
 
 function Footer() {
   return (
-    <footer className="bg-secondary py-14 text-secondary-foreground/80">
+    <footer className="bg-black py-16 text-white/60 border-t border-white/10">
       <div className="container mx-auto px-4">
-        <div className="grid gap-10 md:grid-cols-4">
-          <div>
-            <span className="inline-flex items-center rounded-xl bg-background/10 px-3 py-2 ring-1 ring-white/10">
-              <img src={logoImg} alt="Imersão Completa" className="h-10 w-auto invert dark:invert-0 hue-rotate-180 dark:hue-rotate-0" />
-            </span>
-            <p className="mt-4 text-sm">APRENDA. CRIE. E FATURE. A plataforma de educação digital da nova geração.</p>
+        <div className="grid gap-12 md:grid-cols-4 lg:gap-16">
+          <div className="md:col-span-1">
+            <Link to="/" className="inline-flex items-center gap-3">
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+                <img src={logoImg} alt="Imersão Completa" className="h-7 w-auto invert" />
+              </span>
+              <span className="text-xl font-bold text-white tracking-tight">Imersão Completa</span>
+            </Link>
+            <p className="mt-6 text-sm leading-relaxed">
+              APRENDA. CRIE. E FATURE.<br/> A plataforma de educação digital da nova geração para quem procura resultados reais.
+            </p>
           </div>
           {[
             { t: "Plataforma", l: ["Cursos", "Como funciona", "Blog", "FAQ"] },
@@ -292,15 +307,20 @@ function Footer() {
             { t: "Suporte", l: ["Contacto", "Termos", "Privacidade", "Pagamentos"] },
           ].map((c) => (
             <div key={c.t}>
-              <h4 className="mb-3 font-semibold text-white">{c.t}</h4>
-              <ul className="space-y-2 text-sm">
-                {c.l.map((i) => <li key={i}><a href="#" className="hover:text-primary">{i}</a></li>)}
+              <h4 className="mb-5 text-sm font-bold uppercase tracking-wider text-white">{c.t}</h4>
+              <ul className="space-y-3 text-sm font-medium">
+                {c.l.map((i) => <li key={i}><a href="#" className="transition-colors hover:text-orange-500">{i}</a></li>)}
               </ul>
             </div>
           ))}
         </div>
-        <div className="mt-10 border-t border-border/20 pt-6 text-center text-sm">
-          © {new Date().getFullYear()} Imersão Completa. Todos os direitos reservados.
+        <div className="mt-16 flex flex-col items-center justify-between border-t border-white/10 pt-8 md:flex-row">
+          <div className="text-sm">
+            © {new Date().getFullYear()} Imersão Completa. Todos os direitos reservados.
+          </div>
+          <div className="mt-4 flex gap-6 md:mt-0">
+            <a href="#" className="text-white/40 hover:text-orange-500 transition-colors"><Globe className="h-5 w-5" /></a>
+          </div>
         </div>
       </div>
     </footer>
@@ -309,7 +329,7 @@ function Footer() {
 
 function Index() {
   return (
-    <div suppressHydrationWarning className="min-h-screen bg-background">
+    <div suppressHydrationWarning className="min-h-screen bg-[#0a0a0a] selection:bg-orange-500/30 selection:text-white">
       <Header />
       <main>
         <Hero />
