@@ -1,0 +1,501 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: SKT Magazine\n"
+"POT-Creation-Date: 2016-06-22 10:59+0530\n"
+"PO-Revision-Date: 2016-06-22 10:59+0530\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: style.css\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: 404.php:15
+msgid "<strong>404</strong> Not Found"
+msgstr "<strong>404</strong> ikke funnet"
+
+#: 404.php:21
+msgid ""
+"Looks like you have taken a wrong turn. Dont worry... it happens to the best "
+"of us."
+msgstr ""
+"Ser ut som du har tatt en feil sving. Ikke bekymre deg... det skjer til best "
+"av oss."
+
+#: archive.php:31
+#, php-format
+msgid "Author: %s"
+msgstr "Skribent: %s"
+
+#: archive.php:39
+#, php-format
+msgid "Day: %s"
+msgstr "Dag: %s"
+
+#: archive.php:42
+#, php-format
+msgid "Month: %s"
+msgstr "Måned: %s"
+
+#: archive.php:45
+#, php-format
+msgid "Year: %s"
+msgstr "År: %s"
+
+#: archive.php:48
+msgid "Asides"
+msgstr "Sidekolonner"
+
+#: archive.php:51
+msgid "Images"
+msgstr "Bilder"
+
+#: archive.php:54
+msgid "Videos"
+msgstr "Videoer"
+
+#: archive.php:57
+msgid "Quotes"
+msgstr "Sitater"
+
+#: archive.php:60
+msgid "Links"
+msgstr "Lenker"
+
+#: archive.php:63 sidebar.php:11
+msgid "Archives"
+msgstr "Arkiv"
+
+#: archive.php:86 category.php:33 index.php:32 search.php:26
+msgid "Back"
+msgstr "Tilbake"
+
+#: archive.php:87 category.php:34 index.php:33 search.php:27
+msgid "Next"
+msgstr "Neste"
+
+#: archive.php:88 category.php:35 index.php:34 search.php:28
+msgid "Posts navigation"
+msgstr "Navigasjon for Innlegg"
+
+#: comments.php:29
+#, php-format
+msgctxt "comments title"
+msgid "One thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] "Ett tilbakepek på &ldquo;%2$s&rdquo;"
+msgstr[1] ""
+
+#: comments.php:36 comments.php:56
+msgid "Comment navigation"
+msgstr "Kommentarnavigering"
+
+#: comments.php:37 comments.php:57
+msgid "&larr; Older Comments"
+msgstr "&larr; Eldre kommentarer"
+
+#: comments.php:38 comments.php:58
+msgid "Newer Comments &rarr;"
+msgstr "Nyere kommentarer &rarr;"
+
+#: comments.php:68 content-single.php:16 content.php:21
+msgid "Comments closed"
+msgstr "| Kommentarfeltet er lukket"
+
+#: content-page.php:18 content-single.php:31 content.php:32 image.php:60
+msgid "Pages:"
+msgstr "Sider:"
+
+#: content-page.php:23 content-single.php:49 image.php:34 image.php:66
+#: inc/template-tags.php:70 inc/template-tags.php:89
+msgid "Edit"
+msgstr "Rediger"
+
+#: content-single.php:16 content.php:21
+msgid "0 Comment"
+msgstr "0 kommentarer"
+
+#: content-single.php:16 content.php:21
+msgid "1 Comment"
+msgstr "Én kommentar"
+
+#: content-single.php:16 content.php:21
+msgid "% Comments"
+msgstr "&larr; Eldre kommentarer"
+
+#: content-single.php:40
+msgid "&nbsp;|&nbsp; Tags: "
+msgstr "| Tags:"
+
+#: content.php:25
+msgid "Read More &raquo;"
+msgstr "Les mer &raquo;"
+
+#: content.php:29
+msgid "Continue reading <span class=\"meta-nav\">&rarr;</span>"
+msgstr "Les mer <span class=\"meta-nav\">&rarr;</span>"
+
+#: footer.php:15
+msgid ""
+"Please go to Appearance >> Widgets >> Footer Widget 1 and add some widget "
+"here."
+msgstr ""
+"Gå til utseende >> Widgets >> bunntekst Widget 1 og legge til noen widget "
+"her."
+
+#: footer.php:20
+msgid ""
+"Please go to Appearance >> Widgets >> ooter Widget 2 and add some widget "
+"here."
+msgstr "Gå til utseende >> Widgets >> ooter Widget 2 og legge noen widget her."
+
+#: footer.php:25
+msgid ""
+"Please go to Appearance >> Widgets >> ooter Widget 3 and add some widget "
+"here."
+msgstr "Gå til utseende >> Widgets >> ooter Widget 3 og legge noen widget her."
+
+#: footer.php:30
+msgid ""
+"Please go to Appearance >> Widgets >> Footer Widget 4 and add some widget "
+"here."
+msgstr ""
+"Gå til utseende >> Widgets >> bunntekst Widget 4 og legge noen widget her."
+
+#: footer.php:39
+msgid "&copy; "
+msgstr "&copy; 2016"
+
+#: footer.php:39
+msgid "All Rights Reserved"
+msgstr "Alle rettigheter forebeholdt."
+
+#: footer.php:40
+msgid "Design by "
+msgstr "Design av"
+
+#: functions.php:54
+msgid "Primary Menu"
+msgstr "Hovedmeny"
+
+#: functions.php:55
+msgid "Top Menu"
+msgstr "Topp Meny"
+
+#: functions.php:56
+msgid "Footer Menu"
+msgstr "Footer meny"
+
+#: functions.php:72
+msgid "Left Sidebar"
+msgstr "Venstre sidepanel"
+
+#: functions.php:73 functions.php:84
+msgid "Appears on blog page sidebar"
+msgstr "Vises på bloggen siden sidepanelet"
+
+#: functions.php:83
+msgid "Right Sidebar"
+msgstr "Høyre sidepanel"
+
+#: functions.php:94
+msgid "Header Ads Widget"
+msgstr "Topp annonser Widget"
+
+#: functions.php:95
+msgid "Appears on header of site"
+msgstr "Vises overskriften området"
+
+#: functions.php:104
+msgid "Footer Widget 1"
+msgstr "Bunntekstpanel 1"
+
+#: functions.php:105 functions.php:115 functions.php:125 functions.php:135
+msgid "Appears on footer"
+msgstr "Vises i bunnteksten"
+
+#: functions.php:114
+msgid "Footer Widget 2"
+msgstr "Bunntekst widget 2"
+
+#: functions.php:124
+msgid "Footer Widget 3"
+msgstr "Bunntekst widget 3"
+
+#: functions.php:134
+msgid "Footer Widget 4"
+msgstr "Bunntekst widget 4"
+
+#: functions.php:154
+msgctxt "roboto:on or off"
+msgid "on"
+msgstr "den"
+
+#: functions.php:161
+msgctxt "Scada:on or off"
+msgid "on"
+msgstr "den"
+
+#: header.php:28 inc/customizer.php:67
+msgid "Headline"
+msgstr "Overskrift"
+
+#: header.php:34 inc/customizer.php:77
+msgid "Add your news ticker description here."
+msgstr "Legge til din nyheter ticker beskrivelse her."
+
+#: header.php:41 header.php:74
+msgid "Menu"
+msgstr "Meny"
+
+#: image.php:24
+#, php-format
+msgid ""
+"Published <span class=\"entry-date\"><time class=\"entry-date\" datetime="
+"\"%1$s\">%2$s</time></span> at <a href=\"%3$s\">%4$s &times; %5$s</a> in <a "
+"href=\"%6$s\" rel=\"gallery\">%7$s</a>"
+msgstr ""
+"Publisert <span class=\\\"entry-date\\\"><time class=\\\"entry-date\\\" "
+"datetime=\\\"%1$s\\\">%2$s</time></span> at <a href=\\\"%3$s\\\">%4$s "
+"&times; %5$s</a> in <a href=\\\"%6$s\\\" rel=\\\"gallery\\\">%7$s</a>"
+
+#: image.php:39
+msgid "<span class=\"meta-nav\">&larr;</span> Previous"
+msgstr "<span class=“meta-nav”>&larr;</span> Forrige"
+
+#: image.php:40
+msgid "Next <span class=\"meta-nav\">&rarr;</span>"
+msgstr "Neste <span class=“meta-nav”>&rarr;</span>"
+
+#: inc/about-themes.php:11
+msgid "About Theme"
+msgstr "Om Temaet"
+
+#: inc/about-themes.php:30
+msgid "About Theme Info"
+msgstr "Om temaet Info"
+
+#: inc/about-themes.php:32
+msgid ""
+"SKT Magazine is a responsive free news and magazine WordPress theme which "
+"can be used for newspaper, publishing, personal and corporate blogs, and "
+"editorial style websites. Multilingual and compatible with any multilingual "
+"plugin and translation ready and compatible with WooCommerce for Ecommerce "
+"and shop and Nextgen gallery compatibility for portfolio and gallery. "
+"Compatible with all SEO plugins and contact form 7."
+msgstr ""
+"SKT Magazine er en forståelsesfull gratis nyheter og magasin WordPress tema "
+"som kan brukes til avisen og publisering, personlig og bedriftens blogger "
+"redaksjonelle stil nettsteder. Flerspråklig og kompatibel med alle "
+"flerspråklig plugin og oversettelse klar og kompatibel med WooCommerce e-"
+"handel og butikk og Nextgen gallery kompatibilitet for portefølje og "
+"galleri. Kompatibel med alle SEO plugins og kontakt form 7."
+
+#: inc/about-themes.php:39
+msgid "Live Demo"
+msgstr "Live Demo"
+
+#: inc/about-themes.php:40
+msgid "Buy Pro"
+msgstr "Kjøpe Pro"
+
+#: inc/about-themes.php:41
+msgid "Documentation"
+msgstr "Hjelpedokumenter"
+
+#: inc/customizer.php:54
+msgid "Color Scheme"
+msgstr "Fargepalett"
+
+#: inc/customizer.php:55
+msgid "More color options in PRO Version."
+msgstr "Flere fargevalg i PRO-versjonen."
+
+#: inc/customizer.php:62
+msgid "Header News Ticker"
+msgstr "Topp nyheter Ticker"
+
+#: inc/customizer.php:72
+msgid "Add news title for header"
+msgstr "Legge til nyhetstittel for hodet"
+
+#: inc/customizer.php:81
+msgid "Add news description for header"
+msgstr "Legge til nyheter beskrivelse for topptekst"
+
+#: inc/customizer.php:97
+msgid "Uncheck this to show this Section"
+msgstr "Fjern merket for denne boksen for å vise denne delen"
+
+#: inc/customizer.php:105
+msgid "Homepage Three Coloumn Section"
+msgstr "Hjemmesiden tre Coloumn delen"
+
+#: inc/customizer.php:106
+msgid "Select Categories from the Dropdowns"
+msgstr "Velge kategorier fra rullegardinlistene"
+
+#: inc/customizer.php:114
+msgid "Select Category for Left Coloumn"
+msgstr "Velg kategorien for venstre Coloumn"
+
+#: inc/customizer.php:123
+msgid "Select Category for Slider( Middle ) Section"
+msgstr "Velg kategorien for glidebryteren (midten)"
+
+#: inc/customizer.php:133
+msgid "Select Category for Right Section"
+msgstr "Velg kategorien for høyre"
+
+#: inc/customizer.php:149
+msgid "Uncheck This Option To Display This Section"
+msgstr "Fjern merket for dette alternativet for å vise denne delen"
+
+#: inc/customizer.php:155
+msgid "Footer Area"
+msgstr "Bunnområde"
+
+#: inc/customizer.php:157
+msgid ""
+"Please go to Appearance >> idgets >> Footer Widget 1, Footer Widget 2, "
+"Footer Widget 3, Footer Widget 4 and add some widget."
+msgstr ""
+"Gå til utseende >> idgets >> bunntekst Widget 1, bunntekst Widget 2, "
+"bunntekst Widget 3, bunntekst Widget 4 og Legg til noen."
+
+#: inc/customizer.php:169
+msgid "Hide This Section"
+msgstr "Merk av for å skjule inndeling 1"
+
+#: inc/template-tags.php:33
+msgid "Post navigation"
+msgstr "Innleggsnavigering"
+
+#: inc/template-tags.php:37
+msgctxt "Previous post link"
+msgid "&larr;"
+msgstr "<span class=“meta-nav”>&larr;</span> Forrige"
+
+#: inc/template-tags.php:38
+msgctxt "Next post link"
+msgid "&rarr;"
+msgstr "Neste <span class=“meta-nav”>&rarr;</span>"
+
+#: inc/template-tags.php:43
+msgid "<span class=\"meta-nav\">&larr;</span> Older posts"
+msgstr "<span class=\"meta-nav\">&larr;</span> Eldre Innnlegg"
+
+#: inc/template-tags.php:47
+msgid "Newer posts <span class=\"meta-nav\">&rarr;</span>"
+msgstr "Nyere Innlegg <span class=\"meta-nav\">&rarr;</span>"
+
+#: inc/template-tags.php:70
+msgid "Pingback:"
+msgstr "Tilbakeping:"
+
+#: inc/template-tags.php:86
+#, php-format
+msgctxt "1: date"
+msgid "%1$s"
+msgstr "%1$s"
+
+#: inc/template-tags.php:93
+msgid "Your comment is awaiting moderation."
+msgstr "Kommentaren avventer moderasjon."
+
+#: inc/template-tags.php:184
+#, php-format
+msgid ""
+"<span class=\"posted-on\">Published %1$s</span><span class=\"byline\"> by "
+"%2$s</span>"
+msgstr ""
+"<span class=\"posted-on\">Publisert %1$s</span> <span class=\"byline\">av "
+"%2$s</span>"
+
+#: no-results.php:13
+msgid "Nothing Found"
+msgstr "Fant ingenting"
+
+#: no-results.php:18
+#, php-format
+msgid ""
+"Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr ""
+"Klar for å publisere din første artikkel? <a href=“%1$s”>Kom i gang her</a>."
+
+#: no-results.php:21
+msgid ""
+"Sorry, but nothing matched your search terms. Please try again with some "
+"different keywords."
+msgstr "Vi fant ingen treff med dine søkeord. Prøv igjen med noen andre."
+
+#: no-results.php:26
+msgid ""
+"It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps "
+"searching can help."
+msgstr ""
+"Det kan se ut som vi ikke finner det du leter etter. Kanskje et søk kan "
+"hjelpe."
+
+#: search.php:17
+#, php-format
+msgid "Search Results for: %s"
+msgstr "Søkeresultater for: %s"
+
+#: searchform.php:10
+msgctxt "placeholder"
+msgid "Search..."
+msgstr "Søk…"
+
+#: searchform.php:12
+msgctxt "submit button"
+msgid "Search"
+msgstr "Søk"
+
+#: sidebar-left.php:11
+msgid "Category"
+msgstr "Kategori"
+
+#: sidebar-left.php:18
+msgid "Meta"
+msgstr "Meta"
+
+#. Theme Name of the plugin/theme
+msgid "SKT Magazine"
+msgstr "SKT Magazine"
+
+#. Theme URI of the plugin/theme
+msgid "http://www.sktthemes.net/shop/skt-magazine/"
+msgstr "http://www.sktthemes.net/Shop/Skt-Magazine/"
+
+#. Description of the plugin/theme
+msgid ""
+"SKT Magazine is a responsive free news and magazine WordPress theme which "
+"can be used for newspaper, publishing, personal and corporate blogs, and "
+"editorial style websites. Non profit, military, technology, fashion, food, "
+"recipes, sports, schools, how to, tips, reviews, SEO blogging, Affiliate "
+"marketing, tour and travel, automated, comedy, gaming, music, photography, "
+"politics and journal style writing. Multilingual and compatible with any "
+"multilingual plugin and translation ready and compatible with WooCommerce "
+"for Ecommerce and shop and Nextgen gallery compatibility for portfolio and "
+"gallery. Compatible with all SEO plugins and contact form 7. Check demo at: "
+"http://sktthemesdemo.net/magazine/"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "SKT Themes"
+msgstr "SKT Themes"
+
+#. Author URI of the plugin/theme
+msgid "http://www.sktthemes.net"
+msgstr "http://www.sktthemes.net"

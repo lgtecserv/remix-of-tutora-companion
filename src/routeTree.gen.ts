@@ -30,9 +30,9 @@ import { Route as ApiUploadRouteImport } from './routes/api.upload'
 import { Route as AdminPagamentosRouteImport } from './routes/admin.pagamentos'
 import { Route as AdminConfiguracoesRouteImport } from './routes/admin.configuracoes'
 import { Route as AdminComentariosRouteImport } from './routes/admin.comentarios'
-import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 import { Route as AdminAlunosRouteImport } from './routes/admin.alunos'
 import { Route as AdminCursosIndexRouteImport } from './routes/admin.cursos.index'
+import { Route as AdminBlogIndexRouteImport } from './routes/admin.blog.index'
 import { Route as AppPlayerLessonIdRouteImport } from './routes/app.player.$lessonId'
 import { Route as AppCursoSlugRouteImport } from './routes/app.curso.$slug'
 import { Route as AppBlogSlugRouteImport } from './routes/app.blog.$slug'
@@ -145,11 +145,6 @@ const AdminComentariosRoute = AdminComentariosRouteImport.update({
   path: '/comentarios',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminBlogRoute = AdminBlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminAlunosRoute = AdminAlunosRouteImport.update({
   id: '/alunos',
   path: '/alunos',
@@ -158,6 +153,11 @@ const AdminAlunosRoute = AdminAlunosRouteImport.update({
 const AdminCursosIndexRoute = AdminCursosIndexRouteImport.update({
   id: '/cursos/',
   path: '/cursos/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
   getParentRoute: () => AdminRoute,
 } as any)
 const AppPlayerLessonIdRoute = AppPlayerLessonIdRouteImport.update({
@@ -186,9 +186,9 @@ const AdminCursosIdRoute = AdminCursosIdRouteImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminBlogIdRoute = AdminBlogIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AdminBlogRoute,
+  id: '/blog/$id',
+  path: '/blog/$id',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -202,7 +202,6 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/alunos': typeof AdminAlunosRoute
-  '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/pagamentos': typeof AdminPagamentosRoute
@@ -221,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/app/blog/$slug': typeof AppBlogSlugRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
   '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
+  '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/cursos/': typeof AdminCursosIndexRoute
 }
 export interface FileRoutesByTo {
@@ -232,7 +232,6 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/alunos': typeof AdminAlunosRoute
-  '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/pagamentos': typeof AdminPagamentosRoute
@@ -251,6 +250,7 @@ export interface FileRoutesByTo {
   '/app/blog/$slug': typeof AppBlogSlugRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
   '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
+  '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/cursos': typeof AdminCursosIndexRoute
 }
 export interface FileRoutesById {
@@ -265,7 +265,6 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/alunos': typeof AdminAlunosRoute
-  '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/pagamentos': typeof AdminPagamentosRoute
@@ -284,6 +283,7 @@ export interface FileRoutesById {
   '/app/blog/$slug': typeof AppBlogSlugRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
   '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
+  '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/cursos/': typeof AdminCursosIndexRoute
 }
 export interface FileRouteTypes {
@@ -299,7 +299,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/admin/alunos'
-    | '/admin/blog'
     | '/admin/comentarios'
     | '/admin/configuracoes'
     | '/admin/pagamentos'
@@ -318,6 +317,7 @@ export interface FileRouteTypes {
     | '/app/blog/$slug'
     | '/app/curso/$slug'
     | '/app/player/$lessonId'
+    | '/admin/blog/'
     | '/admin/cursos/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -329,7 +329,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/admin/alunos'
-    | '/admin/blog'
     | '/admin/comentarios'
     | '/admin/configuracoes'
     | '/admin/pagamentos'
@@ -348,6 +347,7 @@ export interface FileRouteTypes {
     | '/app/blog/$slug'
     | '/app/curso/$slug'
     | '/app/player/$lessonId'
+    | '/admin/blog'
     | '/admin/cursos'
   id:
     | '__root__'
@@ -361,7 +361,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/admin/alunos'
-    | '/admin/blog'
     | '/admin/comentarios'
     | '/admin/configuracoes'
     | '/admin/pagamentos'
@@ -380,6 +379,7 @@ export interface FileRouteTypes {
     | '/app/blog/$slug'
     | '/app/curso/$slug'
     | '/app/player/$lessonId'
+    | '/admin/blog/'
     | '/admin/cursos/'
   fileRoutesById: FileRoutesById
 }
@@ -546,13 +546,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminComentariosRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/blog': {
-      id: '/admin/blog'
-      path: '/blog'
-      fullPath: '/admin/blog'
-      preLoaderRoute: typeof AdminBlogRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/alunos': {
       id: '/admin/alunos'
       path: '/alunos'
@@ -565,6 +558,13 @@ declare module '@tanstack/react-router' {
       path: '/cursos'
       fullPath: '/admin/cursos/'
       preLoaderRoute: typeof AdminCursosIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/blog/': {
+      id: '/admin/blog/'
+      path: '/blog'
+      fullPath: '/admin/blog/'
+      preLoaderRoute: typeof AdminBlogIndexRouteImport
       parentRoute: typeof AdminRoute
     }
     '/app/player/$lessonId': {
@@ -604,45 +604,35 @@ declare module '@tanstack/react-router' {
     }
     '/admin/blog/$id': {
       id: '/admin/blog/$id'
-      path: '/$id'
+      path: '/blog/$id'
       fullPath: '/admin/blog/$id'
       preLoaderRoute: typeof AdminBlogIdRouteImport
-      parentRoute: typeof AdminBlogRoute
+      parentRoute: typeof AdminRoute
     }
   }
 }
 
-interface AdminBlogRouteChildren {
-  AdminBlogIdRoute: typeof AdminBlogIdRoute
-}
-
-const AdminBlogRouteChildren: AdminBlogRouteChildren = {
-  AdminBlogIdRoute: AdminBlogIdRoute,
-}
-
-const AdminBlogRouteWithChildren = AdminBlogRoute._addFileChildren(
-  AdminBlogRouteChildren,
-)
-
 interface AdminRouteChildren {
   AdminAlunosRoute: typeof AdminAlunosRoute
-  AdminBlogRoute: typeof AdminBlogRouteWithChildren
   AdminComentariosRoute: typeof AdminComentariosRoute
   AdminConfiguracoesRoute: typeof AdminConfiguracoesRoute
   AdminPagamentosRoute: typeof AdminPagamentosRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminBlogIdRoute: typeof AdminBlogIdRoute
   AdminCursosIdRoute: typeof AdminCursosIdRoute
+  AdminBlogIndexRoute: typeof AdminBlogIndexRoute
   AdminCursosIndexRoute: typeof AdminCursosIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAlunosRoute: AdminAlunosRoute,
-  AdminBlogRoute: AdminBlogRouteWithChildren,
   AdminComentariosRoute: AdminComentariosRoute,
   AdminConfiguracoesRoute: AdminConfiguracoesRoute,
   AdminPagamentosRoute: AdminPagamentosRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminBlogIdRoute: AdminBlogIdRoute,
   AdminCursosIdRoute: AdminCursosIdRoute,
+  AdminBlogIndexRoute: AdminBlogIndexRoute,
   AdminCursosIndexRoute: AdminCursosIndexRoute,
 }
 

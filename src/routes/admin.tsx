@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { BookOpen, Users, MessageSquare, Newspaper, DollarSign, LayoutDashboard, Settings, LogOut, GraduationCap, Menu } from "lucide-react";
 import logoImg from "@/assets/logo-imersao.png";
@@ -16,20 +16,30 @@ function AdminLayout() {
   const { user, isAdmin, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/login" });
-    if (!loading && user && !isAdmin) navigate({ to: "/app" });
-  }, [loading, user, isAdmin, navigate]);
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!loading && !user && isClient) navigate({ to: "/login" });
+    if (!loading && user && !isAdmin && isClient) navigate({ to: "/app" });
+  }, [loading, user, isAdmin, navigate, isClient]);
+
+  // Previne Hydration Mismatch causado por extensões (força renderização apenas no lado do cliente)
+  if (!isClient) {
+    return null;
+  }
 
   // Still loading auth state — show spinner
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center text-muted-foreground">A carregar...</div>;
+    return <div suppressHydrationWarning className="flex min-h-screen items-center justify-center text-muted-foreground">A carregar...</div>;
   }
 
   // Not logged in or not admin — will redirect via the useEffect above, just show blank
   if (!user || !isAdmin) {
-    return <div className="flex min-h-screen items-center justify-center text-muted-foreground">A redirecionar...</div>;
+    return <div suppressHydrationWarning className="flex min-h-screen items-center justify-center text-muted-foreground">A redirecionar...</div>;
   }
 
   const nav: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [

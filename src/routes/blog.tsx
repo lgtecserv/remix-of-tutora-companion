@@ -96,7 +96,7 @@ function BlogPublicPage() {
                     )}
                   </Link>
                   <div className="flex flex-col justify-center">
-                    <div className="mb-2 text-sm text-white/40">
+                    <div suppressHydrationWarning className="mb-2 text-sm text-white/40">
                       {new Date(post.published_at || post.created_at).toLocaleDateString("pt-PT", { day: "numeric", month: "long", year: "numeric" })}
                     </div>
                     <Link to={`/blog/$slug`} params={{ slug: post.slug || post.id }}>
@@ -135,7 +135,7 @@ function BlogPublicPage() {
                     <a href="#" className="group flex items-center justify-between text-sm text-white/70 transition-colors hover:text-orange-500">
                       <span>{cat}</span>
                       <span className="rounded bg-white/5 px-2 py-0.5 text-xs text-white/40 group-hover:bg-orange-500/10 group-hover:text-orange-500">
-                        {Math.floor(Math.random() * 10) + 1}
+                        {cat.length * 2 + 1}
                       </span>
                     </a>
                   </li>
@@ -183,7 +183,7 @@ function FeaturedPostCard({ post, isLarge = false, idx }: { post: any, isLarge?:
             {post.title}
           </h3>
           <div className="mt-3 flex items-center gap-3 text-xs font-medium text-white/70">
-            <span>{new Date(post.published_at || post.created_at).toLocaleDateString("pt-PT")}</span>
+            <span suppressHydrationWarning>{new Date(post.published_at || post.created_at).toLocaleDateString("pt-PT")}</span>
             {post.reading_minutes && (
               <>
                 <span className="h-1 w-1 rounded-full bg-white/30" />

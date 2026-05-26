@@ -1,0 +1,59 @@
+Version 1.0
+i)   Intial version Release
+
+Version 1.2
+i)   Solved all issues as per reviewer comments
+
+Version 1.3
+i)   Add Comments closed on the listing (home, archive, etc.) as per reviewer comments
+ii)  Solved untranslated code issue from functions.php
+iii) Solved untranslated strings problem from customizer.php and also recompile language file.
+iv)  In footer.php as per reviewer recommendation we will making year with dynamice date.
+
+Version 1.4
+i)   Solved all issues as per reviewer comments
+
+Version 1.5
+i)   All changes done as per reviewer comments. 
+
+Version 1.6
+i)   Header Ads Widget Position Change
+ii)  Default post thumbnail set
+iii) Spelling Correction
+
+Version 1.7
+i)   Solved issues as per reviewer comments
+
+Version 1.8
+i)   Translated theme into 15 languages
+
+Version 1.9
+i)   Resolved WooCommerce Compatibility Issues.
+ii)  Resolved Sidebar Widget Title Issues.
+iii) Resolved Theme Check Issues.
+
+Version 2.0
+i)   Updated require PHP version.
+ii)  Compatibility with WordPress 6.3
+
+Version 2.1
+i)  Compatibility with WordPress 6.4
+ii) Added company footer credits
+
+Version 2.2
+i)  Compatibility check with WordPress version 6.5
+ii) Footer credentials tweaked
+
+Version 2.3
+i)  Removed footer link.
+
+Version 2.4
+i)  Footer credentials tweaked and Compatibility check with WordPress version 6.7
+
+Version 3.0
+i)   Compatible with PHP 8.3
+ii)  Compatible with WordPress 6.9
+iii) Footer credentials tweaked
+
+Version 3.1
+i)   Author URL has been rectified.

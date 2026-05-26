@@ -33,6 +33,12 @@ export type Database = {
           tags: string[]
           title: string
           updated_at: string
+          primary_keyword: string | null
+          secondary_keywords: string[] | null
+          llm_summary: string | null
+          seo_score: number | null
+          key_takeaways: string[] | null
+          cover_alt: string | null
         }
         Insert: {
           author_id?: string | null
@@ -52,6 +58,12 @@ export type Database = {
           tags?: string[]
           title: string
           updated_at?: string
+          primary_keyword?: string | null
+          secondary_keywords?: string[] | null
+          llm_summary?: string | null
+          seo_score?: number | null
+          key_takeaways?: string[] | null
+          cover_alt?: string | null
         }
         Update: {
           author_id?: string | null
@@ -71,6 +83,12 @@ export type Database = {
           tags?: string[]
           title?: string
           updated_at?: string
+          primary_keyword?: string | null
+          secondary_keywords?: string[] | null
+          llm_summary?: string | null
+          seo_score?: number | null
+          key_takeaways?: string[] | null
+          cover_alt?: string | null
         }
         Relationships: []
       }

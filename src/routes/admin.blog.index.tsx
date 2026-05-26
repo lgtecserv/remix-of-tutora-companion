@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, Trash2, Plus } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/admin/blog")({ component: AdminBlog });
+export const Route = createFileRoute("/admin/blog/")({ component: AdminBlog });
 
 function AdminBlog() {
   const qc = useQueryClient();

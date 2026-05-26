@@ -3,7 +3,7 @@ import { Header, Footer } from "@/components/public-layout";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/blog/$slug")({
   component: BlogPublicArticle,
@@ -57,6 +57,27 @@ function BlogPublicArticle() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] selection:bg-orange-500/30 selection:text-white flex flex-col">
+      {post.llm_summary && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Article",
+              "headline": post.title,
+              "image": post.cover_url ? [post.cover_url] : [],
+              "datePublished": post.published_at || post.created_at,
+              "dateModified": post.updated_at || post.published_at || post.created_at,
+              "abstract": post.llm_summary,
+              "author": [{
+                "@type": "Organization",
+                "name": "Imersão Completa",
+                "url": "https://lgtecserv.com"
+              }]
+            })
+          }}
+        />
+      )}
       <Header />
       
       <main className="flex-1 pb-20">
@@ -94,7 +115,7 @@ function BlogPublicArticle() {
               </h1>
               
               <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-white/60">
-                <span>{new Date(post.published_at || post.created_at).toLocaleDateString("pt-PT", { day: "numeric", month: "long", year: "numeric" })}</span>
+                <span suppressHydrationWarning>{new Date(post.published_at || post.created_at).toLocaleDateString("pt-PT", { day: "numeric", month: "long", year: "numeric" })}</span>
                 {post.reading_minutes && (
                   <>
                     <span className="h-1 w-1 rounded-full bg-white/30" />
@@ -123,6 +144,22 @@ function BlogPublicArticle() {
               <p className="text-xl md:text-2xl text-white/80 leading-relaxed font-light mb-12 border-l-4 border-orange-500 pl-6">
                 {post.excerpt}
               </p>
+            )}
+
+            {(post.key_takeaways ?? []).length > 0 && (
+              <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-6 mb-12">
+                <h4 className="font-bold text-orange-500 mb-4 flex items-center gap-2">
+                  <Sparkles className="w-5 h-5" /> Principais Conclusões
+                </h4>
+                <ul className="space-y-3">
+                  {(post.key_takeaways as string[]).map((k, i) => (
+                    <li key={i} className="flex items-start gap-3 text-white/80">
+                      <CheckCircle2 className="w-5 h-5 text-orange-500 shrink-0 mt-0.5" /> 
+                      <span className="leading-relaxed">{k}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
 
             <div className="prose prose-invert prose-orange prose-lg max-w-none text-white/70">

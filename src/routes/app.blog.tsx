@@ -41,7 +41,7 @@ function BlogPage() {
               <div className="text-xs uppercase tracking-wider text-muted-foreground">{p.category ?? "Artigo"}</div>
               <div className="mt-1 font-semibold text-foreground">{p.title}</div>
               {p.excerpt && <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{p.excerpt}</p>}
-              <div className="mt-3 text-xs text-muted-foreground">
+              <div className="mt-3 text-xs text-muted-foreground" suppressHydrationWarning>
                 {p.published_at && new Date(p.published_at).toLocaleDateString("pt-PT")}
                 {p.reading_minutes ? ` · ${p.reading_minutes} min de leitura` : ""}
               </div>
