@@ -3,7 +3,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export const uploadPaymentReceipt = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((data: { paymentId: string; receiptUrl: string }) => data)
+  .inputValidator((data: { paymentId: string; receiptUrl: string }) => data)
   .handler(async ({ data, context }) => {
     const { paymentId, receiptUrl } = data;
     const { supabase, userId } = context;

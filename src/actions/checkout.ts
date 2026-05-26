@@ -5,7 +5,7 @@ import crypto from "crypto";
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((data: { courseId: string; method?: "mpesa" | "emola" | "credit_card" | "transferencia" }) => data)
+  .inputValidator((data: { courseId: string; method?: "mpesa" | "emola" | "credit_card" | "transferencia" }) => data)
   .handler(async ({ data, context }) => {
     const { courseId, method } = data;
     const { supabase, userId } = context;
