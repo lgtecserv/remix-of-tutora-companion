@@ -17,23 +17,12 @@ if (isVercel) {
   process.env.NITRO_PRESET = "vercel";
 }
 
-export default isVercel
-  ? defineViteConfig({
-      plugins: [
-        tailwindcss(),
-        tsConfigPaths({ projects: ["./tsconfig.json"] }),
-        tanstackStart(),
-        viteReact(),
-      ],
-      resolve: {
-        alias: {
-          "@": `${process.cwd()}/src`
-        }
-      }
-    })
-  : defineLovableConfig({
-      cloudflare: true,
-      tanstackStart: {
-        server: { entry: "server" },
-      },
-    });
+export default defineLovableConfig({
+  cloudflare: !isVercel,
+  tanstackStart: {
+    server: { 
+      preset: isVercel ? "vercel" : undefined,
+      entry: "server" 
+    },
+  },
+});
