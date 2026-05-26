@@ -77,15 +77,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" },
-      { name: "theme-color", content: "#09090b" },
-      { title: "Imersão Completa — Aprenda. Crie. E fature." },
-      { name: "description", content: "Plataforma de ensino online de IA, apps, sistemas, web, marketing digital e negócios digitais. Aprenda na prática e transforme conhecimento em faturamento." },
+      { name: "theme-color", content: "#0a0a0a" },
+      { title: "Imersão Completa | Aprenda. Crie. Fature. Cursos de IA e Web" },
+      { name: "description", content: "A Imersão Completa é a plataforma definitiva em Moçambique para aprender programação, desenvolvimento web, Inteligência Artificial e Marketing Digital do zero." },
+      { name: "keywords", content: "curso de programação, criar sites, aprender inteligência artificial, marketing digital, renda online, plataforma de ensino online, cursos online, Moçambique" },
       { name: "author", content: "Imersão Completa" },
-      { property: "og:title", content: "Imersão Completa — Aprenda. Crie. E fature." },
-      { property: "og:description", content: "Aprenda IA, desenvolvimento de apps, sistemas e marketing digital com a Imersão Completa." },
+      { property: "og:title", content: "Imersão Completa | Aprenda. Crie. Fature." },
+      { property: "og:description", content: "Aprenda desenvolvimento web, sistemas, IA e negócios digitais. A plataforma definitiva para transformar conhecimento em faturamento." },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Imersão Completa" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:image", content: "https://tutora-companion.vercel.app/hero.jpg" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Imersão Completa | Cursos de Tecnologia e Negócios" },
+      { name: "twitter:description", content: "Transforme o seu futuro dominando a tecnologia com o apoio de Inteligência Artificial." },
+      { name: "twitter:image", content: "https://tutora-companion.vercel.app/hero.jpg" },
     ],
     links: [
       {
@@ -101,10 +106,50 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "Organization",
-          name: "Imersão Completa",
-          slogan: "APRENDA. CRIE. E FATURE.",
-          description: "Plataforma de ensino online em Moçambique.",
+          "@graph": [
+            {
+              "@type": "EducationalOrganization",
+              "@id": "https://imersaocompleta.com/#organization",
+              "name": "Imersão Completa",
+              "slogan": "APRENDA. CRIE. E FATURE.",
+              "description": "Plataforma de ensino online especializada em tecnologia, programação, Inteligência Artificial e negócios digitais.",
+              "url": "https://imersaocompleta.com",
+              "logo": "https://imersaocompleta.com/favicon.ico"
+            },
+            {
+              "@type": "Course",
+              "name": "Desenvolvimento Web com IA",
+              "description": "Aprenda a criar sites, sistemas web e aplicativos do zero com o apoio da Inteligência Artificial.",
+              "provider": { "@id": "https://imersaocompleta.com/#organization" }
+            },
+            {
+              "@type": "Course",
+              "name": "Inteligência Artificial Aplicada",
+              "description": "Domine as ferramentas de IA mais recentes para automatizar tarefas e aumentar a produtividade em 10x.",
+              "provider": { "@id": "https://imersaocompleta.com/#organization" }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Preciso ter experiência prévia?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Não! A nossa metodologia foi desenhada para levar-te do zero absoluto até ao nível de poder criar os teus próprios sistemas."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Qual é a duração da Imersão?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "A imersão é contínua e podes estudar ao teu próprio ritmo enquanto tiveres subscrição ativa."
+                  }
+                }
+              ]
+            }
+          ]
         }),
       },
     ],

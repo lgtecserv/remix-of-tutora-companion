@@ -148,11 +148,11 @@ function Hero() {
 
 function Tracks() {
   return (
-    <section id="cursos" className="bg-[#0a0a0a] py-32">
+    <section id="cursos" aria-labelledby="cursos-title" className="bg-[#0a0a0a] py-32">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-sm font-bold uppercase tracking-widest text-orange-500">O que vai aprender</span>
-          <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+          <h2 id="cursos-title" className="mt-4 text-4xl font-extrabold tracking-tight text-white md:text-5xl">
             Trilhas para te levar do zero ao <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent drop-shadow-sm">profissional digital</span>
           </h2>
         </div>
@@ -182,7 +182,7 @@ function Tracks() {
 
 function Benefits() {
   return (
-    <section className="relative overflow-hidden bg-[#050505] py-32">
+    <section aria-labelledby="benefits-title" className="relative overflow-hidden bg-[#050505] py-32">
       <div className="absolute top-0 left-1/2 h-[500px] w-[1000px] -translate-x-1/2 rounded-[100%] bg-orange-600/10 blur-[120px] pointer-events-none" />
       <div className="container relative mx-auto grid items-center gap-16 px-4 md:grid-cols-2">
         <motion.div
@@ -192,7 +192,7 @@ function Benefits() {
           transition={{ duration: 0.6 }}
         >
           <span className="text-sm font-bold uppercase tracking-widest text-orange-500">Benefícios</span>
-          <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+          <h2 id="benefits-title" className="mt-4 text-4xl font-extrabold tracking-tight text-white md:text-5xl">
             Tudo o que precisa para <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent drop-shadow-sm">aprender e crescer</span>
           </h2>
           <ul className="mt-10 space-y-6">
