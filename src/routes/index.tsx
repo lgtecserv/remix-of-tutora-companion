@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 import heroBg from "@/assets/hero.jpg";
 import logoImg from "@/assets/logo-imersao.png";
 import { Brain, Smartphone, Code2, Globe, Megaphone, Zap, Check, ChevronDown, Rocket, Trophy, GraduationCap, DollarSign } from "lucide-react";
@@ -108,7 +109,12 @@ function Hero() {
       <div className="absolute inset-0 z-10 bg-gradient-to-t from-background via-background/60 to-transparent" />
       
       <div className="container relative z-20 mx-auto px-4 py-20 text-center md:py-32">
-        <div className="mx-auto max-w-4xl text-white">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="mx-auto max-w-4xl text-white"
+        >
           <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider backdrop-blur">
             APRENDA · CRIE · E FATURE
           </span>
@@ -136,7 +142,7 @@ function Hero() {
             <div className="hidden h-12 w-px bg-white/20 md:block" />
             <div className="flex flex-col items-center"><div className="text-3xl font-bold text-white">∞</div>acesso vitalício</div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -153,15 +159,22 @@ function Tracks() {
           </h2>
         </div>
         <div className="mt-20 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {tracks.map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="group relative rounded-3xl border border-white/10 bg-white/5 p-8 transition-all duration-300 hover:-translate-y-2 hover:border-orange-500/50 hover:bg-white/[0.07] hover:shadow-[0_0_40px_-10px_rgba(234,88,12,0.2)]">
+          {tracks.map(({ icon: Icon, title, desc }, idx) => (
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              key={title} 
+              className="group relative rounded-3xl border border-white/10 bg-white/5 p-8 transition-all duration-300 hover:-translate-y-2 hover:border-orange-500/50 hover:bg-white/[0.07] hover:shadow-[0_0_40px_-10px_rgba(234,88,12,0.2)]"
+            >
               <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br from-orange-500/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500/10 text-orange-500 shadow-[inset_0_0_20px_rgba(234,88,12,0.2)]">
                 <Icon className="h-7 w-7" />
               </div>
               <h3 className="mb-3 text-xl font-bold text-white">{title}</h3>
               <p className="text-base leading-relaxed text-white/60">{desc}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -174,7 +187,12 @@ function Benefits() {
     <section className="relative overflow-hidden bg-[#050505] py-32">
       <div className="absolute top-0 left-1/2 h-[500px] w-[1000px] -translate-x-1/2 rounded-[100%] bg-orange-600/10 blur-[120px] pointer-events-none" />
       <div className="container relative mx-auto grid items-center gap-16 px-4 md:grid-cols-2">
-        <div>
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+        >
           <span className="text-sm font-bold uppercase tracking-widest text-orange-500">Benefícios</span>
           <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-white md:text-5xl">
             Tudo o que precisa para <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent drop-shadow-sm">aprender e crescer</span>
@@ -189,8 +207,14 @@ function Benefits() {
               </li>
             ))}
           </ul>
-        </div>
-        <div className="relative">
+        </motion.div>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="relative"
+        >
           <div className="absolute -inset-10 rounded-[3rem] bg-gradient-to-br from-orange-600/20 via-red-500/10 to-transparent blur-3xl pointer-events-none" />
           <div className="relative grid grid-cols-2 gap-4 rounded-[2.5rem] border border-white/10 bg-black/40 p-8 shadow-2xl backdrop-blur-xl">
             {[Brain, Smartphone, Code2, Globe].map((Icon, i) => (
@@ -199,7 +223,7 @@ function Benefits() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -217,7 +241,14 @@ function HowItWorks() {
         </div>
         <div className="mt-20 grid gap-6 md:grid-cols-5">
           {steps.map(({ icon: Icon, title, desc }, i) => (
-            <div key={title} className="relative rounded-3xl border border-white/10 bg-white/5 p-6 text-center transition-all duration-300 hover:bg-white/[0.08] hover:border-white/20 hover:-translate-y-1">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              key={title} 
+              className="relative rounded-3xl border border-white/10 bg-white/5 p-6 text-center transition-all duration-300 hover:bg-white/[0.08] hover:border-white/20 hover:-translate-y-1"
+            >
               {i < steps.length - 1 && (
                 <div className="absolute right-0 top-1/2 -mr-3 hidden w-6 -translate-y-1/2 border-t-2 border-dashed border-white/20 md:block" />
               )}
@@ -227,7 +258,7 @@ function HowItWorks() {
               <div className="mb-2 text-xs font-bold uppercase tracking-widest text-orange-500">Passo {i + 1}</div>
               <h3 className="mb-2 text-lg font-bold text-white">{title}</h3>
               <p className="text-sm font-medium text-white/60">{desc}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -272,7 +303,13 @@ function FinalCta() {
   return (
     <section className="relative flex items-center justify-center overflow-hidden bg-[#0a0a0a] py-40">
       <div className="absolute inset-0 opacity-30" style={{ backgroundImage: "radial-gradient(circle at center, rgba(234,88,12,0.8), transparent 60%)" }} />
-      <div className="container relative z-10 mx-auto max-w-4xl px-4 text-center">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.6 }}
+        className="container relative z-10 mx-auto max-w-4xl px-4 text-center"
+      >
         <h2 className="text-4xl font-black tracking-tight text-white md:text-6xl lg:text-7xl">Pronto para acender a faísca?</h2>
         <p className="mx-auto mt-8 max-w-2xl text-xl font-medium text-white/80">
           Crie a sua conta gratuitamente e dê o primeiro passo para dominar a tecnologia e gerar renda online.
@@ -280,7 +317,7 @@ function FinalCta() {
         <Link to="/registo" className="mt-12 inline-block rounded-full bg-gradient-to-r from-orange-500 to-red-600 px-12 py-5 text-lg font-bold text-white shadow-[0_0_40px_-10px_rgba(234,88,12,0.8)] transition-all hover:scale-110 hover:shadow-[0_0_60px_-10px_rgba(234,88,12,1)]">
           Criar conta gratuita
         </Link>
-      </div>
+      </motion.div>
     </section>
   );
 }
