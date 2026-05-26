@@ -55,7 +55,7 @@ function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-md rounded-2xl border border-border bg-card/80 backdrop-blur-xl p-8 shadow-[var(--shadow-card)] animate-in fade-in zoom-in-95 duration-500">
-        <Link to="/" className="mb-6 flex justify-center"><img src={logoImg} alt="Imersão Completa" className="h-20 w-auto object-contain invert brightness-0" /></Link>
+        <Link to="/" className="mb-6 flex justify-center"><img src={logoImg} alt="Imersão Completa" className="h-20 w-auto object-contain invert dark:invert-0 hue-rotate-180 dark:hue-rotate-0" /></Link>
         <h1 className="text-center text-2xl font-bold text-foreground">Entrar</h1>
         <p className="mt-1 text-center text-sm text-muted-foreground">Bem-vindo de volta!</p>
         <button onClick={onGoogle} className="mt-6 w-full rounded-full border border-border bg-background py-3 text-sm font-semibold transition hover:bg-muted">
