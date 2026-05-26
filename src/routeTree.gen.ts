@@ -14,11 +14,13 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegistoRouteImport } from './routes/registo'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AppPerfilRouteImport } from './routes/app.perfil'
 import { Route as AppCursosRouteImport } from './routes/app.cursos'
 import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes'
@@ -63,6 +65,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
@@ -87,6 +94,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
 } as any)
 const AppPerfilRoute = AppPerfilRouteImport.update({
   id: '/perfil',
@@ -183,6 +195,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
+  '/blog': typeof BlogRouteWithChildren
   '/login': typeof LoginRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/registo': typeof RegistoRoute
@@ -199,6 +212,7 @@ export interface FileRoutesByFullPath {
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/perfil': typeof AppPerfilRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
@@ -211,6 +225,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/blog': typeof BlogRouteWithChildren
   '/login': typeof LoginRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/registo': typeof RegistoRoute
@@ -227,6 +242,7 @@ export interface FileRoutesByTo {
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/perfil': typeof AppPerfilRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
@@ -242,6 +258,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
+  '/blog': typeof BlogRouteWithChildren
   '/login': typeof LoginRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/registo': typeof RegistoRoute
@@ -258,6 +275,7 @@ export interface FileRoutesById {
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/perfil': typeof AppPerfilRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
@@ -274,6 +292,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/app'
+    | '/blog'
     | '/login'
     | '/recuperar-senha'
     | '/registo'
@@ -290,6 +309,7 @@ export interface FileRouteTypes {
     | '/app/configuracoes'
     | '/app/cursos'
     | '/app/perfil'
+    | '/blog/$slug'
     | '/admin/'
     | '/app/'
     | '/admin/blog/$id'
@@ -302,6 +322,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/blog'
     | '/login'
     | '/recuperar-senha'
     | '/registo'
@@ -318,6 +339,7 @@ export interface FileRouteTypes {
     | '/app/configuracoes'
     | '/app/cursos'
     | '/app/perfil'
+    | '/blog/$slug'
     | '/admin'
     | '/app'
     | '/admin/blog/$id'
@@ -332,6 +354,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/app'
+    | '/blog'
     | '/login'
     | '/recuperar-senha'
     | '/registo'
@@ -348,6 +371,7 @@ export interface FileRouteTypes {
     | '/app/configuracoes'
     | '/app/cursos'
     | '/app/perfil'
+    | '/blog/$slug'
     | '/admin/'
     | '/app/'
     | '/admin/blog/$id'
@@ -363,6 +387,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
+  BlogRoute: typeof BlogRouteWithChildren
   LoginRoute: typeof LoginRoute
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
   RegistoRoute: typeof RegistoRoute
@@ -409,6 +434,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -443,6 +475,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/app/perfil': {
       id: '/app/perfil'
@@ -644,10 +683,21 @@ const AppRouteChildren: AppRouteChildren = {
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AppRoute: AppRouteWithChildren,
+  BlogRoute: BlogRouteWithChildren,
   LoginRoute: LoginRoute,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
   RegistoRoute: RegistoRoute,

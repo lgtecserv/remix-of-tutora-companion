@@ -2,9 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero.jpg";
-import logoImg from "@/assets/logo-imersao.png";
 import { Brain, Smartphone, Code2, Globe, Megaphone, Zap, Check, ChevronDown, Rocket, Trophy, GraduationCap, DollarSign } from "lucide-react";
 import { useState } from "react";
+import { Header, Footer } from "@/components/public-layout";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -60,39 +60,7 @@ function BookIcon(props: React.SVGProps<SVGSVGElement>) {
   return <Code2 {...props} />;
 }
 
-function Logo() {
-  return (
-    <Link to="/" className="flex items-center gap-3">
-      <img src={logoImg} alt="Imersão Completa" className="h-16 w-auto md:h-24 invert dark:invert-0 hue-rotate-180 dark:hue-rotate-0" />
-    </Link>
-  );
-}
 
-function Header() {
-  const navItems = [
-    { label: "Início", href: "#top" },
-    { label: "Cursos", href: "#cursos" },
-    { label: "Como Funciona", href: "#como-funciona" },
-    { label: "Blog", href: "#blog" },
-    { label: "FAQ", href: "#faq" },
-  ];
-  return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0a0a]/90 backdrop-blur-xl">
-      <div className="container mx-auto flex items-center justify-between px-4 py-4">
-        <Logo />
-        <nav className="hidden items-center gap-8 md:flex">
-          {navItems.map((n) => (
-            <a key={n.label} href={n.href} className="text-sm font-semibold text-white/70 transition-colors hover:text-orange-500">{n.label}</a>
-          ))}
-        </nav>
-        <div className="flex items-center gap-4">
-          <Link to="/login" className="rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10">Entrar</Link>
-          <Link to="/registo" className="rounded-full bg-gradient-to-r from-orange-500 to-red-600 px-6 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_-5px_rgba(234,88,12,0.6)] transition-all hover:scale-105 hover:shadow-[0_0_30px_-5px_rgba(234,88,12,0.8)] border-0">Começar agora</Link>
-        </div>
-      </div>
-    </header>
-  );
-}
 
 function Hero() {
   return (
@@ -320,44 +288,7 @@ function FinalCta() {
   );
 }
 
-function Footer() {
-  return (
-    <footer className="bg-black py-16 text-white/60 border-t border-white/10">
-      <div className="container mx-auto px-4">
-        <div className="grid gap-12 md:grid-cols-4 lg:gap-16">
-          <div className="md:col-span-1">
-            <Link to="/" className="inline-flex items-center gap-3">
-              <img src={logoImg} alt="Imersão Completa" className="h-12 w-auto md:h-16 invert dark:invert-0 hue-rotate-180 dark:hue-rotate-0" />
-            </Link>
-            <p className="mt-6 text-sm leading-relaxed">
-              APRENDA. CRIE. E FATURE.<br/> A plataforma de educação digital da nova geração para quem procura resultados reais.
-            </p>
-          </div>
-          {[
-            { t: "Plataforma", l: ["Cursos", "Como funciona", "Blog", "FAQ"] },
-            { t: "Conta", l: ["Entrar", "Criar conta", "Meus cursos", "Perfil"] },
-            { t: "Suporte", l: ["Contacto", "Termos", "Privacidade", "Pagamentos"] },
-          ].map((c) => (
-            <div key={c.t}>
-              <h4 className="mb-5 text-sm font-bold uppercase tracking-wider text-white">{c.t}</h4>
-              <ul className="space-y-3 text-sm font-medium">
-                {c.l.map((i) => <li key={i}><a href="#" className="transition-colors hover:text-orange-500">{i}</a></li>)}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <div className="mt-16 flex flex-col items-center justify-between border-t border-white/10 pt-8 md:flex-row">
-          <div className="text-sm">
-            © {new Date().getFullYear()} Imersão Completa. Todos os direitos reservados.
-          </div>
-          <div className="mt-4 flex gap-6 md:mt-0">
-            <a href="#" className="text-white/40 hover:text-orange-500 transition-colors"><Globe className="h-5 w-5" /></a>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-}
+
 
 function Index() {
   return (
