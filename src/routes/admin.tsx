@@ -46,7 +46,7 @@ function AdminLayout() {
     <div className="flex min-h-screen bg-muted flex-col md:flex-row pt-16 md:pt-0">
       {/* Mobile Top Bar */}
       <header className="md:hidden fixed top-0 left-0 right-0 h-16 z-40 flex items-center justify-between border-b border-border bg-card/75 backdrop-blur-xl px-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
-        <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-8 w-auto object-contain dark:brightness-0 dark:invert" /></Link>
+        <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-16 w-auto object-contain dark:brightness-0 dark:invert" /></Link>
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="text-secondary-foreground hover:bg-secondary">
@@ -83,7 +83,7 @@ function AdminLayout() {
       {/* Desktop Sidebar */}
       <aside className="hidden w-64 flex-col border-r border-border bg-secondary text-secondary-foreground md:flex">
         <div className="border-b border-border/20 p-5">
-          <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-10 brightness-0 invert" /></Link>
+          <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-20 w-auto object-contain brightness-0 invert" /></Link>
           <div className="mt-2 text-xs font-medium uppercase tracking-wider text-primary">Painel Admin</div>
         </div>
         <nav className="flex-1 space-y-1 p-3">

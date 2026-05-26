@@ -46,7 +46,7 @@ function MyCourses() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-secondary">Meus Cursos</h1>
+      <h1 className="text-3xl font-bold text-foreground">Meus Cursos</h1>
       {isLoading && <div className="text-muted-foreground">A carregar...</div>}
       {!isLoading && (data?.length ?? 0) === 0 && (
         <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center text-muted-foreground">
@@ -62,7 +62,7 @@ function MyCourses() {
               {course.cover_url ? <img src={course.cover_url} alt={course.title} className="h-28 sm:h-40 w-full object-cover" /> : <div className="h-28 sm:h-40 bg-muted" />}
               <div className="p-3 sm:p-5 flex flex-col flex-1">
                 <div className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground line-clamp-1">{course.category ?? "Curso"}</div>
-                <div className="mt-1 text-sm sm:text-base font-semibold text-secondary line-clamp-2 leading-tight">{course.title}</div>
+                <div className="mt-1 text-sm sm:text-base font-semibold text-foreground line-clamp-2 leading-tight">{course.title}</div>
                 {course.instructor && <div className="text-xs sm:text-sm text-muted-foreground mt-1">por {course.instructor}</div>}
                 <div className="mt-auto pt-3">
                   <div className="flex items-center justify-between text-xs text-muted-foreground">

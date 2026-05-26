@@ -314,7 +314,7 @@ function CourseOverview() {
                         </DialogTrigger>
                         <DialogContent className="bg-card border-border sm:max-w-md">
                           <DialogHeader>
-                            <DialogTitle className="text-secondary">Reivindicar Pagamento</DialogTitle>
+                            <DialogTitle className="text-foreground">Reivindicar Pagamento</DialogTitle>
                           </DialogHeader>
                           <div className="space-y-4 py-4">
                             <p className="text-sm text-muted-foreground">
@@ -352,7 +352,7 @@ function CourseOverview() {
         
         <div className="space-y-8">
           <div>
-            <h2 className="text-2xl font-bold text-secondary mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
               <BookOpen className="h-6 w-6 text-primary" /> Conteúdo do Curso
             </h2>
 
@@ -374,7 +374,7 @@ function CourseOverview() {
                         className="w-full flex items-center justify-between p-5 hover:bg-muted/50 transition-colors"
                       >
                         <div className="text-left">
-                          <h3 className="font-bold text-secondary">{m.title}</h3>
+                          <h3 className="font-bold text-foreground">{m.title}</h3>
                           <div className="text-xs text-muted-foreground mt-1 flex items-center gap-2">
                             <span>{mLessons.length} aulas</span>
                           </div>
@@ -414,7 +414,7 @@ function CourseOverview() {
                                     )}
                                   </div>
                                   <div className="flex-1">
-                                    <div className="font-medium text-secondary group-hover:text-primary transition-colors">{l.title}</div>
+                                    <div className="font-medium text-foreground group-hover:text-primary transition-colors">{l.title}</div>
                                     <div className="text-xs text-muted-foreground mt-1 line-clamp-1">{l.description || "Aula em vídeo"}</div>
                                   </div>
                                 </button>
@@ -434,7 +434,7 @@ function CourseOverview() {
         {/* SIDEBAR DETAILS */}
         <div className="space-y-6">
           <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-            <h3 className="font-bold text-secondary mb-4 uppercase tracking-wider text-xs">Sobre este curso</h3>
+            <h3 className="font-bold text-foreground mb-4 uppercase tracking-wider text-xs">Sobre este curso</h3>
             <div className="space-y-4">
               <div className="flex items-center gap-3 text-sm">
                 <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-primary/10 text-primary">
@@ -442,7 +442,7 @@ function CourseOverview() {
                 </div>
                 <div>
                   <div className="text-muted-foreground text-xs">Duração Total</div>
-                  <div className="font-medium text-secondary">{c.duration_minutes ? `${Math.floor(c.duration_minutes / 60)}h ${c.duration_minutes % 60}m` : "Não informada"}</div>
+                  <div className="font-medium text-foreground">{c.duration_minutes ? `${Math.floor(c.duration_minutes / 60)}h ${c.duration_minutes % 60}m` : "Não informada"}</div>
                 </div>
               </div>
               
@@ -452,7 +452,7 @@ function CourseOverview() {
                 </div>
                 <div>
                   <div className="text-muted-foreground text-xs">Aulas</div>
-                  <div className="font-medium text-secondary">{flatLessons.length} aulas estruturadas</div>
+                  <div className="font-medium text-foreground">{flatLessons.length} aulas estruturadas</div>
                 </div>
               </div>
               
@@ -462,7 +462,7 @@ function CourseOverview() {
                 </div>
                 <div>
                   <div className="text-muted-foreground text-xs">Idioma</div>
-                  <div className="font-medium text-secondary">{c.language === 'pt' ? 'Português' : c.language === 'en' ? 'Inglês' : c.language || 'Português'}</div>
+                  <div className="font-medium text-foreground">{c.language === 'pt' ? 'Português' : c.language === 'en' ? 'Inglês' : c.language || 'Português'}</div>
                 </div>
               </div>
               
@@ -472,7 +472,7 @@ function CourseOverview() {
                 </div>
                 <div>
                   <div className="text-muted-foreground text-xs">Certificado</div>
-                  <div className="font-medium text-secondary">{c.has_certificate ? "Sim, ao concluir" : "Não possui"}</div>
+                  <div className="font-medium text-foreground">{c.has_certificate ? "Sim, ao concluir" : "Não possui"}</div>
                 </div>
               </div>
             </div>
@@ -480,7 +480,7 @@ function CourseOverview() {
           
           {instructor && (
             <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <h3 className="font-bold text-secondary mb-4 uppercase tracking-wider text-xs">O Instrutor</h3>
+              <h3 className="font-bold text-foreground mb-4 uppercase tracking-wider text-xs">O Instrutor</h3>
               <div className="flex gap-4">
                 {instructor.avatar_url ? (
                   <img src={instructor.avatar_url} alt="Instructor" className="h-14 w-14 rounded-full border border-border object-cover" />
@@ -488,7 +488,7 @@ function CourseOverview() {
                   <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">{(instructor.name || "?").charAt(0).toUpperCase()}</div>
                 )}
                 <div>
-                  <h3 className="text-lg font-bold text-secondary">{instructor.name || "Instrutor"}</h3>
+                  <h3 className="text-lg font-bold text-foreground">{instructor.name || "Instrutor"}</h3>
                   <div className="text-xs text-primary font-medium mb-2">Criador do Curso</div>
                   {instructor.bio && <div className="text-sm text-muted-foreground line-clamp-3">{instructor.bio}</div>}
                 </div>

@@ -63,7 +63,7 @@ function AdminCourses() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-secondary">Cursos</h1>
+        <h1 className="text-3xl font-bold text-foreground">Cursos</h1>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild><Button><Plus className="h-4 w-4" />Novo curso</Button></DialogTrigger>
           <DialogContent>
@@ -85,9 +85,9 @@ function AdminCourses() {
           <tbody>
             {(data ?? []).map((c: any) => (
               <tr key={c.id} className="border-t border-border">
-                <td className="px-4 py-3 font-medium text-secondary">{c.title}</td>
+                <td className="px-4 py-3 font-medium text-foreground">{c.title}</td>
                 <td className="px-4 py-3 text-muted-foreground">{c.category ?? "—"}</td>
-                <td className="px-4 py-3 font-semibold text-secondary">{c.studentCount}</td>
+                <td className="px-4 py-3 font-semibold text-foreground">{c.studentCount}</td>
                 <td className="px-4 py-3">{c.is_free ? <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs text-emerald-700">Grátis</span> : `${Number(c.price_mzn).toLocaleString("pt-PT")} MT`}</td>
                 <td className="px-4 py-3">{c.is_published ? <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">Publicado</span> : <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">Rascunho</span>}</td>
                 <td className="px-4 py-3"><div className="flex gap-1">

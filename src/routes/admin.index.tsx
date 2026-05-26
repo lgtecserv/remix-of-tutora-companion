@@ -58,7 +58,7 @@ function AdminDashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-secondary">Dashboard</h1>
+        <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
         <p className="mt-1 text-muted-foreground">Visão geral da plataforma.</p>
       </div>
 
@@ -66,7 +66,7 @@ function AdminDashboard() {
         {kpis.map((k) => (
           <div key={k.label} className="rounded-2xl border border-border bg-card p-6">
             <k.icon className="h-6 w-6 text-primary" />
-            <div className="mt-3 text-2xl font-bold text-secondary">{k.v}</div>
+            <div className="mt-3 text-2xl font-bold text-foreground">{k.v}</div>
             <div className="text-sm text-muted-foreground">{k.label}</div>
           </div>
         ))}
@@ -76,7 +76,7 @@ function AdminDashboard() {
         <Section icon={DollarSign} title="Cursos mais vendidos" empty="Nenhuma venda ainda.">
           {data.topSelling.map((r, i) => (
             <div key={i} className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm">
-              <span className="text-secondary">{r.title}</span>
+              <span className="text-foreground">{r.title}</span>
               <span className="font-semibold text-primary">{r.revenue.toLocaleString("pt-PT")} MT</span>
             </div>
           ))}
@@ -84,7 +84,7 @@ function AdminDashboard() {
         <Section icon={PlayCircle} title="Cursos mais assistidos" empty="Nenhuma inscrição ainda.">
           {data.topWatched.map((r, i) => (
             <div key={i} className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm">
-              <span className="text-secondary">{r.title}</span>
+              <span className="text-foreground">{r.title}</span>
               <span className="font-semibold text-primary">{r.students} alunos</span>
             </div>
           ))}
@@ -98,7 +98,7 @@ function Section({ icon: Icon, title, empty, children }: any) {
   const arr = Array.isArray(children) ? children : [children];
   return (
     <div className="rounded-2xl border border-border bg-card p-6">
-      <h2 className="mb-4 flex items-center gap-2 font-semibold text-secondary"><Icon className="h-5 w-5 text-primary" />{title}</h2>
+      <h2 className="mb-4 flex items-center gap-2 font-semibold text-foreground"><Icon className="h-5 w-5 text-primary" />{title}</h2>
       <div className="space-y-2">{arr.length ? arr : <div className="text-sm text-muted-foreground">{empty}</div>}</div>
     </div>
   );

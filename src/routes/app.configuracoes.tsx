@@ -18,15 +18,15 @@ function SettingsPage() {
   }
   return (
     <div className="max-w-2xl space-y-6">
-      <h1 className="text-3xl font-bold text-secondary">Configurações</h1>
+      <h1 className="text-3xl font-bold text-foreground">Configurações</h1>
       <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
-        <h2 className="font-semibold text-secondary">Alterar senha</h2>
+        <h2 className="font-semibold text-foreground">Alterar senha</h2>
         <div><Label>Nova senha</Label><Input type="password" value={pw} onChange={(e) => setPw(e.target.value)} /></div>
         <div><Label>Confirmar nova senha</Label><Input type="password" value={pw2} onChange={(e) => setPw2(e.target.value)} /></div>
         <Button onClick={changePassword}>Atualizar senha</Button>
       </div>
       <div className="rounded-2xl border border-border bg-card p-6">
-        <h2 className="font-semibold text-secondary">Segurança</h2>
+        <h2 className="font-semibold text-foreground">Segurança</h2>
         <p className="mt-2 text-sm text-muted-foreground">Mantenha sua conta segura usando uma senha forte e única.</p>
       </div>
     </div>

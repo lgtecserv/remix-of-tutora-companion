@@ -34,7 +34,7 @@ export class RouteErrorBoundary extends Component<Props, State> {
       return (
         <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
           <div className="rounded-2xl border border-border bg-card p-10 max-w-md shadow-lg space-y-4">
-            <h2 className="text-xl font-bold text-secondary">
+            <h2 className="text-xl font-bold text-foreground">
               {this.props.fallbackTitle || "Algo correu mal"}
             </h2>
             <p className="text-sm text-muted-foreground">

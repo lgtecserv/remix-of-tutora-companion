@@ -83,7 +83,7 @@ function Header() {
         <Logo />
         <nav className="hidden items-center gap-6 md:flex">
           {navItems.map((n) => (
-            <a key={n.label} href={n.href} className="text-sm font-medium text-secondary/80 transition hover:text-primary">{n.label}</a>
+            <a key={n.label} href={n.href} className="text-sm font-medium text-foreground/80 transition hover:text-primary">{n.label}</a>
           ))}
         </nav>
         <div className="flex items-center gap-2">
@@ -112,7 +112,7 @@ function Hero() {
             A Imersão Completa é a plataforma onde aprende Inteligência Artificial, apps, sistemas, web, marketing digital e negócios digitais — e transforma conhecimento em faturamento.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/registo" className="rounded-full bg-background px-8 py-3 text-base font-semibold text-secondary shadow-[var(--shadow-glow)] transition hover:scale-105">
+            <Link to="/registo" className="rounded-full bg-background px-8 py-3 text-base font-semibold text-foreground shadow-[var(--shadow-glow)] transition hover:scale-105">
               Começar agora
             </Link>
             <a href="#cursos" className="rounded-full border border-white/30 bg-white/5 px-8 py-3 text-base font-semibold text-primary-foreground backdrop-blur transition hover:bg-white/15">
@@ -150,7 +150,7 @@ function Tracks() {
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-sm font-semibold uppercase tracking-wider text-primary">O que vai aprender</span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-secondary md:text-4xl">
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
             Trilhas para te levar do zero ao <span className="text-primary">profissional digital</span>
           </h2>
         </div>
@@ -160,7 +160,7 @@ function Tracks() {
               <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-accent text-primary">
                 <Icon className="h-6 w-6" />
               </div>
-              <h3 className="mb-2 text-lg font-semibold text-secondary">{title}</h3>
+              <h3 className="mb-2 text-lg font-semibold text-foreground">{title}</h3>
               <p className="text-sm leading-relaxed text-muted-foreground">{desc}</p>
             </div>
           ))}
@@ -176,7 +176,7 @@ function Benefits() {
       <div className="container mx-auto grid items-center gap-14 px-4 md:grid-cols-2">
         <div>
           <span className="text-sm font-semibold uppercase tracking-wider text-primary">Benefícios</span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-secondary md:text-4xl">
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
             Tudo o que precisa para <span className="text-primary">aprender e crescer</span>
           </h2>
           <ul className="mt-8 space-y-4">
@@ -185,7 +185,7 @@ function Benefits() {
                 <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
                   <Check className="h-4 w-4" />
                 </span>
-                <span className="text-secondary">{b}</span>
+                <span className="text-foreground">{b}</span>
               </li>
             ))}
           </ul>
@@ -211,7 +211,7 @@ function HowItWorks() {
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-sm font-semibold uppercase tracking-wider text-primary">Como funciona</span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-secondary md:text-4xl">
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
             Do registo ao primeiro faturamento em <span className="text-primary">5 passos</span>
           </h2>
         </div>
@@ -222,7 +222,7 @@ function HowItWorks() {
                 <Icon className="h-7 w-7" />
               </div>
               <div className="text-xs font-semibold uppercase tracking-wider text-primary">Passo {i + 1}</div>
-              <h3 className="mt-1 font-semibold text-secondary">{title}</h3>
+              <h3 className="mt-1 font-semibold text-foreground">{title}</h3>
               <p className="mt-2 text-sm text-muted-foreground">{desc}</p>
             </div>
           ))}
@@ -239,7 +239,7 @@ function Faq() {
       <div className="container mx-auto max-w-3xl px-4">
         <div className="mb-12 text-center">
           <span className="text-sm font-semibold uppercase tracking-wider text-primary">FAQ</span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-secondary md:text-4xl">Perguntas frequentes</h2>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">Perguntas frequentes</h2>
           <p className="mt-2 text-muted-foreground">Dúvidas? Nós temos as respostas!</p>
         </div>
         <div className="space-y-3">
@@ -248,7 +248,7 @@ function Faq() {
               <button onClick={() => setOpen(open === i ? -1 : i)} className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition hover:bg-muted">
                 <div className="flex items-center gap-4">
                   <span className="text-2xl font-bold text-primary">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-semibold text-secondary">{f.q}</span>
+                  <span className="font-semibold text-foreground">{f.q}</span>
                 </div>
                 <ChevronDown className={`h-5 w-5 flex-shrink-0 text-primary transition ${open === i ? "rotate-180" : ""}`} />
               </button>
@@ -269,7 +269,7 @@ function FinalCta() {
         <p className="mx-auto mt-4 max-w-xl text-primary-foreground/85">
           Crie a sua conta gratuitamente e dê o primeiro passo para dominar a tecnologia e gerar renda online.
         </p>
-        <Link to="/registo" className="mt-8 inline-block rounded-full bg-background px-10 py-4 text-base font-semibold text-secondary shadow-[var(--shadow-glow)] transition hover:scale-105">
+        <Link to="/registo" className="mt-8 inline-block rounded-full bg-background px-10 py-4 text-base font-semibold text-foreground shadow-[var(--shadow-glow)] transition hover:scale-105">
           Criar conta gratuita
         </Link>
       </div>

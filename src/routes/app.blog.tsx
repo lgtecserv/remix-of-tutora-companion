@@ -23,14 +23,14 @@ function BlogPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-secondary">Blog</h1>
+        <h1 className="text-3xl font-bold text-foreground">Blog</h1>
         <p className="text-muted-foreground">Artigos, tutoriais e novidades.</p>
       </div>
       <div className="flex flex-wrap gap-2">
         <Input placeholder="Pesquisar..." value={q} onChange={(e) => setQ(e.target.value)} className="max-w-sm" />
-        <button onClick={() => setCat(null)} className={`rounded-full px-3 py-1 text-sm ${!cat ? "bg-primary text-primary-foreground" : "bg-muted text-secondary"}`}>Todos</button>
+        <button onClick={() => setCat(null)} className={`rounded-full px-3 py-1 text-sm ${!cat ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"}`}>Todos</button>
         {categories.map((c) => (
-          <button key={c} onClick={() => setCat(c)} className={`rounded-full px-3 py-1 text-sm ${cat === c ? "bg-primary text-primary-foreground" : "bg-muted text-secondary"}`}>{c}</button>
+          <button key={c} onClick={() => setCat(c)} className={`rounded-full px-3 py-1 text-sm ${cat === c ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"}`}>{c}</button>
         ))}
       </div>
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -39,7 +39,7 @@ function BlogPage() {
             {p.cover_url ? <img src={p.cover_url} alt={p.title} className="h-44 w-full object-cover" /> : <div className="h-44 bg-muted" />}
             <div className="p-5">
               <div className="text-xs uppercase tracking-wider text-muted-foreground">{p.category ?? "Artigo"}</div>
-              <div className="mt-1 font-semibold text-secondary">{p.title}</div>
+              <div className="mt-1 font-semibold text-foreground">{p.title}</div>
               {p.excerpt && <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{p.excerpt}</p>}
               <div className="mt-3 text-xs text-muted-foreground">
                 {p.published_at && new Date(p.published_at).toLocaleDateString("pt-PT")}

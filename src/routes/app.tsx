@@ -47,14 +47,14 @@ function AppLayout() {
     <div className="flex min-h-screen bg-background pb-20 md:pb-0 pt-16 md:pt-0">
       {/* Mobile Top Bar */}
       <header className="md:hidden fixed top-0 left-0 right-0 h-16 z-40 flex items-center justify-between border-b border-border bg-card/75 backdrop-blur-xl px-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
-        <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-8 w-auto object-contain dark:brightness-0 dark:invert" /></Link>
+        <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-16 w-auto object-contain dark:brightness-0 dark:invert" /></Link>
         <NotificationBell />
       </header>
 
       <aside className="hidden w-64 flex-col border-r border-border bg-card/50 backdrop-blur-xl md:flex z-50">
         <div className="border-b border-border p-5 flex items-center justify-between gap-3">
           <div>
-            <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-16 w-auto object-contain dark:brightness-0 dark:invert" /></Link>
+            <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-32 w-auto object-contain dark:brightness-0 dark:invert" /></Link>
             <div className="mt-2 text-xs font-medium uppercase tracking-wider text-primary">Área do Aluno</div>
           </div>
           <div className="flex-shrink-0">
@@ -67,7 +67,7 @@ function AppLayout() {
             return (
               <Link key={n.label} to={n.to as string} className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
-                active ? "bg-primary text-primary-foreground" : "text-secondary/80 hover:bg-muted hover:text-primary"
+                active ? "bg-primary text-primary-foreground" : "text-foreground/80 hover:bg-muted hover:text-primary"
               )}>
                 <n.icon className="h-4 w-4" />{n.label}
               </Link>
@@ -81,11 +81,11 @@ function AppLayout() {
         </nav>
         
         <div className="mt-auto border-t border-border p-3 space-y-1">
-          <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-secondary">
+          <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
             {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             <span>Tema {theme === 'dark' ? 'Claro' : 'Escuro'}</span>
           </button>
-          <button onClick={() => signOut().then(() => navigate({ to: "/" }))} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-secondary">
+          <button onClick={() => signOut().then(() => navigate({ to: "/" }))} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
             <LogOut className="h-4 w-4" />Sair
           </button>
         </div>

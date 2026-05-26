@@ -53,7 +53,7 @@ export function ImageUpload({ bucket, value, onChange, label = "Capa", aspect = 
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-secondary">{label}</span>
+        <span className="text-sm font-medium text-foreground">{label}</span>
         <div className="flex gap-1 text-xs">
           <button type="button" onClick={() => setMode("upload")} className={`rounded px-2 py-1 ${mode === "upload" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}>Upload</button>
           <button type="button" onClick={() => setMode("url")} className={`rounded px-2 py-1 ${mode === "url" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}>URL</button>

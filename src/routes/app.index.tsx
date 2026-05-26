@@ -76,7 +76,7 @@ function StudentDashboard() {
                 <PlayCircle className="h-4 w-4" /> Continuar assistindo
               </div>
               <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1 line-clamp-1">{(lastCourse as any)?.title ?? "Curso"}</div>
-              <div className="text-sm font-semibold text-secondary leading-tight line-clamp-2">{(lastLesson as any)?.title ?? ""}</div>
+              <div className="text-sm font-semibold text-foreground leading-tight line-clamp-2">{(lastLesson as any)?.title ?? ""}</div>
               <div className="mt-4 flex items-center gap-3">
                 <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
                   <div className="h-full bg-primary" style={{ width: `${Math.round(Number(lastProgress?.percent || 0))}%` }} />
@@ -87,7 +87,7 @@ function StudentDashboard() {
           ) : (
             <div className="bg-card rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-border text-center">
               <BookOpen className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
-              <div className="text-sm text-secondary font-medium">Nenhum curso em andamento</div>
+              <div className="text-sm text-foreground font-medium">Nenhum curso em andamento</div>
               <Link to="/app/catalogo" className="mt-3 inline-block text-xs font-bold text-primary bg-primary/10 px-4 py-2 rounded-full">Explorar cursos</Link>
             </div>
           )}
@@ -102,7 +102,7 @@ function StudentDashboard() {
             <div key={c.label} className="bg-card rounded-2xl p-4 border border-border flex flex-col justify-between shadow-sm">
               <c.icon className="h-5 w-5 text-primary mb-2" />
               <div>
-                <div className="text-xl font-black text-secondary">{c.v}</div>
+                <div className="text-xl font-black text-foreground">{c.v}</div>
                 <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">{c.label}</div>
               </div>
             </div>
@@ -113,7 +113,7 @@ function StudentDashboard() {
         {recs.length > 0 && (
           <div className="mt-8">
             <div className="px-5 mb-4 flex items-center justify-between">
-              <h2 className="text-base font-bold text-secondary">Recomendados</h2>
+              <h2 className="text-base font-bold text-foreground">Recomendados</h2>
             </div>
             <div className="flex gap-4 overflow-x-auto px-5 pb-4 hide-scrollbar snap-x">
               {recs.map((c) => (
@@ -121,7 +121,7 @@ function StudentDashboard() {
                   {c.cover_url ? <img src={c.cover_url} alt={c.title} className="h-28 w-full object-cover" /> : <div className="h-28 bg-muted" />}
                   <div className="p-3">
                     <div className="text-[9px] uppercase tracking-wider text-muted-foreground line-clamp-1">{c.category ?? "Curso"}</div>
-                    <div className="mt-1 text-sm font-semibold text-secondary line-clamp-2 leading-tight">{c.title}</div>
+                    <div className="mt-1 text-sm font-semibold text-foreground line-clamp-2 leading-tight">{c.title}</div>
                   </div>
                 </Link>
               ))}
@@ -135,17 +135,17 @@ function StudentDashboard() {
           ========================================================================= */}
       <div className="hidden md:block space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-secondary">Olá, {name} 👋</h1>
+          <h1 className="text-3xl font-bold text-foreground">Olá, {name} 👋</h1>
           <p className="mt-1 text-muted-foreground">Continue de onde parou e aprenda algo novo hoje.</p>
         </div>
 
         <section>
-          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-secondary"><PlayCircle className="h-5 w-5 text-primary" />Continuar assistindo</h2>
+          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-foreground"><PlayCircle className="h-5 w-5 text-primary" />Continuar assistindo</h2>
           {lastCourse ? (
             <Link to="/app/curso/$slug" params={{ slug: safeSlug((lastCourse as any)?.slug, "curso") }} className="flex items-center justify-between rounded-2xl border border-border bg-card p-6 transition hover:border-primary/40">
               <div>
                 <div className="text-sm text-muted-foreground">{(lastCourse as any)?.title ?? "Curso"}</div>
-                <div className="text-lg font-semibold text-secondary">{(lastLesson as any)?.title ?? ""}</div>
+                <div className="text-lg font-semibold text-foreground">{(lastLesson as any)?.title ?? ""}</div>
                 <div className="mt-2 h-2 w-64 max-w-full overflow-hidden rounded-full bg-muted">
                   <div className="h-full bg-primary" style={{ width: `${Math.round(Number(lastProgress?.percent || 0))}%` }} />
                 </div>
@@ -167,7 +167,7 @@ function StudentDashboard() {
           ].map((c) => (
             <div key={c.label} className="rounded-2xl border border-border bg-card p-6">
               <c.icon className="h-6 w-6 text-primary" />
-              <div className="mt-3 text-2xl font-bold text-secondary">{c.v}</div>
+              <div className="mt-3 text-2xl font-bold text-foreground">{c.v}</div>
               <div className="text-sm text-muted-foreground">{c.label}</div>
             </div>
           ))}
@@ -175,14 +175,14 @@ function StudentDashboard() {
 
         {recs.length > 0 && (
           <section>
-            <h2 className="mb-4 text-lg font-semibold text-secondary">Recomendado para você</h2>
+            <h2 className="mb-4 text-lg font-semibold text-foreground">Recomendado para você</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               {recs.map((c) => (
                 <Link key={c.id} to="/app/curso/$slug" params={{ slug: safeSlug(c.slug, c.id) }} className="overflow-hidden rounded-2xl border border-border bg-card transition hover:border-primary/40 block">
                   {c.cover_url ? <img src={c.cover_url} alt={c.title} className="h-32 w-full object-cover" /> : <div className="h-32 bg-muted" />}
                   <div className="p-4">
                     <div className="text-xs uppercase tracking-wider text-muted-foreground">{c.category ?? "Curso"}</div>
-                    <div className="mt-1 font-semibold text-secondary">{c.title}</div>
+                    <div className="mt-1 font-semibold text-foreground">{c.title}</div>
                   </div>
                 </Link>
               ))}

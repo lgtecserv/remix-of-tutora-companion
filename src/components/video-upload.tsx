@@ -59,7 +59,7 @@ export function VideoUpload({ value, onChange, label = "Vídeo Aula" }: Props) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-secondary">{label}</span>
+        <span className="text-sm font-medium text-foreground">{label}</span>
         <div className="flex gap-1 text-xs">
           <button
             type="button"

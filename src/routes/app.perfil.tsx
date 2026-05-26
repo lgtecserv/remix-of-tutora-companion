@@ -29,11 +29,11 @@ function ProfilePage() {
 
   return (
     <div className="max-w-2xl space-y-6">
-      <h1 className="text-3xl font-bold text-secondary">Perfil</h1>
+      <h1 className="text-3xl font-bold text-foreground">Perfil</h1>
       <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
         <div className="flex items-center gap-4">
           {avatar ? <img src={avatar} alt="" className="h-20 w-20 rounded-full object-cover" /> : <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center text-2xl text-muted-foreground">{(name || user?.email || "?")[0]?.toUpperCase()}</div>}
-          <div><div className="font-semibold text-secondary">{user?.email}</div><div className="text-xs text-muted-foreground">Email não pode ser alterado aqui</div></div>
+          <div><div className="font-semibold text-foreground">{user?.email}</div><div className="text-xs text-muted-foreground">Email não pode ser alterado aqui</div></div>
         </div>
         <div><Label>Nome completo</Label><Input value={name} onChange={(e) => setName(e.target.value)} /></div>
         <div><Label>URL da foto</Label><Input value={avatar} onChange={(e) => setAvatar(e.target.value)} placeholder="https://..." /></div>

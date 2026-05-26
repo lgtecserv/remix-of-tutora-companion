@@ -45,7 +45,7 @@ function SignupPage() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-8">
       <div className="w-full max-w-md rounded-2xl border border-border bg-card/80 backdrop-blur-xl p-8 shadow-[var(--shadow-card)] animate-in fade-in zoom-in-95 duration-500">
         <Link to="/" className="mb-6 flex justify-center"><img src={logoImg} alt="Imersão Completa" className="h-20 w-auto object-contain invert brightness-0" /></Link>
-        <h1 className="text-center text-2xl font-bold text-secondary">Criar conta</h1>
+        <h1 className="text-center text-2xl font-bold text-foreground">Criar conta</h1>
         <p className="mt-1 text-center text-sm text-muted-foreground">Comece grátis em 30 segundos.</p>
         <button onClick={onGoogle} className="mt-6 w-full rounded-full border border-border bg-background py-3 text-sm font-semibold transition hover:bg-muted">
           Continuar com Google

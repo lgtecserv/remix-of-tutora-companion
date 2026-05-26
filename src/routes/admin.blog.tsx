@@ -35,13 +35,13 @@ function AdminBlog() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-secondary">Blog</h1>
+        <h1 className="text-3xl font-bold text-foreground">Blog</h1>
         <Button onClick={createNew}><Plus className="h-4 w-4" />Novo artigo</Button>
       </div>
       <div className="flex flex-wrap gap-2">
         <Input placeholder="Pesquisar..." value={q} onChange={(e) => setQ(e.target.value)} className="max-w-sm" />
         {([["all","Todos"],["published","Publicados"],["draft","Rascunhos"],["scheduled","Agendados"]] as const).map(([k, l]) => (
-          <button key={k} onClick={() => setFilter(k)} className={`rounded-full px-3 py-1 text-sm ${filter === k ? "bg-primary text-primary-foreground" : "bg-muted text-secondary"}`}>{l}</button>
+          <button key={k} onClick={() => setFilter(k)} className={`rounded-full px-3 py-1 text-sm ${filter === k ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"}`}>{l}</button>
         ))}
       </div>
       <div className="overflow-hidden rounded-2xl border border-border bg-card">
@@ -50,7 +50,7 @@ function AdminBlog() {
           <tbody>
             {filtered.map((p: any) => (
               <tr key={p.id} className="border-t border-border">
-                <td className="px-4 py-3 font-medium text-secondary">{p.title}</td>
+                <td className="px-4 py-3 font-medium text-foreground">{p.title}</td>
                 <td className="px-4 py-3 text-muted-foreground">{p.category ?? "—"}</td>
                 <td className="px-4 py-3">{p.is_published ? <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">Publicado</span> : p.scheduled_at ? <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs text-amber-700">Agendado</span> : <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">Rascunho</span>}</td>
                 <td className="px-4 py-3"><div className="flex gap-1">

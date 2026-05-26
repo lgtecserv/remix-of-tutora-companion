@@ -69,7 +69,7 @@ export function RichEditor({ value, onChange, placeholder = "Comece a escrever..
 
 function Btn({ active, onClick, title, children }: any) {
   return (
-    <button type="button" onClick={onClick} title={title} className={`rounded p-1.5 text-sm transition hover:bg-muted ${active ? "bg-primary/10 text-primary" : "text-secondary"}`}>
+    <button type="button" onClick={onClick} title={title} className={`rounded p-1.5 text-sm transition hover:bg-muted ${active ? "bg-primary/10 text-primary" : "text-foreground"}`}>
       {children}
     </button>
   );

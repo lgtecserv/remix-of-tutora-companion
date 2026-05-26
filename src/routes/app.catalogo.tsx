@@ -105,7 +105,7 @@ function Catalog() {
                     ? <span className="rounded-full bg-emerald-500/10 px-1.5 sm:px-2 py-0.5 text-emerald-700 whitespace-nowrap">Grátis</span>
                     : <span className="font-semibold text-primary whitespace-nowrap">{Number(c.price_mzn).toLocaleString("pt-PT")} MT</span>}
                 </div>
-                <h3 className="mt-2 text-sm sm:text-base font-semibold text-secondary line-clamp-2 leading-tight">{c.title}</h3>
+                <h3 className="mt-2 text-sm sm:text-base font-semibold text-foreground line-clamp-2 leading-tight">{c.title}</h3>
                 {c.short_description && <p className="mt-1 hidden sm:block line-clamp-2 text-sm text-muted-foreground">{c.short_description}</p>}
                 {c.instructor && <div className="mt-1 text-xs text-muted-foreground">por {c.instructor}</div>}
                 <div className="mt-auto pt-4">

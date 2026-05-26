@@ -31,7 +31,7 @@ function AdminStudents() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-secondary">Alunos</h1>
+      <h1 className="text-3xl font-bold text-foreground">Alunos</h1>
       {isLoading && <div className="text-muted-foreground">A carregar...</div>}
       <div className="overflow-hidden rounded-2xl border border-border bg-card">
         <table className="w-full text-sm">
@@ -41,7 +41,7 @@ function AdminStudents() {
           <tbody>
             {(data ?? []).map((s: any) => (
               <tr key={s.id} className="border-t border-border">
-                <td className="px-4 py-3 font-medium text-secondary">{s.full_name ?? "—"}</td>
+                <td className="px-4 py-3 font-medium text-foreground">{s.full_name ?? "—"}</td>
                 <td className="px-4 py-3 text-muted-foreground max-w-xs truncate">{s.bio ?? "—"}</td>
                 <td className="px-4 py-3">{s.courses.length ? s.courses.map((c: any) => c.courses?.title).filter(Boolean).join(", ") : <span className="text-muted-foreground">—</span>}</td>
                 <td className="px-4 py-3">{s.lessonsDone}</td>

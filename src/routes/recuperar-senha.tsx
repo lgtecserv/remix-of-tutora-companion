@@ -19,7 +19,7 @@ export const Route = createFileRoute("/recuperar-senha")({
     return (
       <div className="flex min-h-screen items-center justify-center bg-muted px-4">
         <form onSubmit={onSubmit} className="w-full max-w-md rounded-2xl border border-border bg-card p-8">
-          <h1 className="text-2xl font-bold text-secondary">Recuperar senha</h1>
+          <h1 className="text-2xl font-bold text-foreground">Recuperar senha</h1>
           <p className="mt-1 text-sm text-muted-foreground">Enviaremos um link para o seu email.</p>
           <input type="email" required placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}
             className="mt-6 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm focus:border-primary focus:outline-none" />

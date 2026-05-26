@@ -90,9 +90,9 @@ function EditCourse() {
     <div className="space-y-6">
       <Link to="/admin/cursos" className="text-sm text-muted-foreground hover:text-primary">← Voltar para cursos</Link>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-3xl font-bold text-secondary">{form.title}</h1>
+        <h1 className="text-3xl font-bold text-foreground">{form.title}</h1>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 text-sm text-secondary">
+          <div className="flex items-center gap-2 text-sm text-foreground">
             <Switch id="is-published-switch" checked={!!form.is_published} onCheckedChange={togglePublish} />
             <Label htmlFor="is-published-switch" className="cursor-pointer font-medium">{form.is_published ? "Publicado" : "Rascunho"}</Label>
           </div>
@@ -109,7 +109,7 @@ function EditCourse() {
         <TabsContent value="details" className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
             <section className="space-y-4 rounded-2xl border border-border bg-card p-6">
-              <h2 className="font-semibold text-secondary">Informações do curso</h2>
+              <h2 className="font-semibold text-foreground">Informações do curso</h2>
               <div className="grid gap-3">
                 <div><Label>Título *</Label><Input value={form.title ?? ""} onChange={(e) => setForm({ ...form, title: e.target.value })} /></div>
                 <div><Label>Slug (URL)</Label><Input value={form.slug ?? ""} onChange={(e) => setForm({ ...form, slug: e.target.value })} /></div>
@@ -177,7 +177,7 @@ function EditCourse() {
                 <ImageUpload bucket="course-covers" label="Capa do curso" value={form.cover_url ?? ""} onChange={(url) => setForm({ ...form, cover_url: url })} />
               </div>
               <div className="space-y-3 rounded-2xl border border-border bg-card p-6">
-                <h3 className="text-sm font-semibold text-secondary">Preço</h3>
+                <h3 className="text-sm font-semibold text-foreground">Preço</h3>
                 <div className="flex items-center justify-between text-sm">
                   <Label htmlFor="is-free-switch" className="cursor-pointer font-medium">Curso gratuito</Label>
                   <Switch id="is-free-switch" checked={!!form.is_free} onCheckedChange={(v) => setForm({ ...form, is_free: v, price_mzn: v ? 0 : form.price_mzn })} />
@@ -202,7 +202,7 @@ function EditCourse() {
         <TabsContent value="curriculum" className="space-y-4">
           <section className="rounded-2xl border border-border bg-card p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-secondary">Módulos e aulas</h2>
+              <h2 className="font-semibold text-foreground">Módulos e aulas</h2>
               <Button onClick={addModule}><Plus className="h-4 w-4" />Novo módulo</Button>
             </div>
             {(data?.modules ?? []).map((m) => (
@@ -217,7 +217,7 @@ function EditCourse() {
 
         <TabsContent value="seo" className="space-y-4">
           <section className="rounded-2xl border border-border bg-card p-6 space-y-3 max-w-2xl">
-            <h2 className="font-semibold text-secondary">SEO</h2>
+            <h2 className="font-semibold text-foreground">SEO</h2>
             <p className="text-xs text-muted-foreground">A capa será usada como imagem de partilha automaticamente.</p>
             <div><Label>Slug</Label><Input value={form.slug ?? ""} onChange={(e) => setForm({ ...form, slug: e.target.value })} /></div>
             <Button onClick={saveCourse}><Save className="h-4 w-4" />Salvar</Button>
@@ -252,7 +252,7 @@ function ModuleBlock({ module: m, lessons, onRename, onDelete, onMoveUp, onMoveD
   return (
     <div className="rounded-xl border border-border p-4">
       <div className="flex items-center justify-between gap-2">
-        <button onClick={onRename} className="flex-1 text-left font-semibold text-secondary hover:text-primary">{m.title}</button>
+        <button onClick={onRename} className="flex-1 text-left font-semibold text-foreground hover:text-primary">{m.title}</button>
         <div className="flex gap-1">
           <Button variant="ghost" size="icon" onClick={onMoveUp}><ChevronUp className="h-4 w-4" /></Button>
           <Button variant="ghost" size="icon" onClick={onMoveDown}><ChevronDown className="h-4 w-4" /></Button>
@@ -266,7 +266,7 @@ function ModuleBlock({ module: m, lessons, onRename, onDelete, onMoveUp, onMoveD
           const isLocal = !yt && !vm && l.youtube_url?.startsWith("http");
           return (
             <div key={l.id} className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm">
-              <span className="flex-1 text-secondary">
+              <span className="flex-1 text-foreground">
                 {l.title}{" "}
                 {!yt && !vm && !isLocal && <span className="text-xs text-destructive">(vídeo inválido)</span>}
                 {vm && <span className="text-xs text-blue-500 font-semibold">(Vimeo)</span>}

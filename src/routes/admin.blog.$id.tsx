@@ -112,7 +112,7 @@ function EditPost() {
           <article className="mx-auto max-w-3xl rounded-2xl bg-background p-8" onClick={(e) => e.stopPropagation()}>
             {f.cover_url && <img src={f.cover_url} alt="" className="mb-6 max-h-80 w-full rounded-xl object-cover" />}
             <div className="text-xs uppercase tracking-wider text-muted-foreground">{f.category ?? "Artigo"}</div>
-            <h1 className="mt-2 text-3xl font-bold text-secondary">{f.title}</h1>
+            <h1 className="mt-2 text-3xl font-bold text-foreground">{f.title}</h1>
             {f.excerpt && <p className="mt-2 text-lg text-muted-foreground">{f.excerpt}</p>}
             <div className="prose prose-sm mt-6 max-w-none" dangerouslySetInnerHTML={{ __html: f.content ?? "" }} />
             <Button variant="outline" className="mt-6" onClick={() => setPreview(false)}>Fechar</Button>
