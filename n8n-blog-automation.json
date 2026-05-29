@@ -1,0 +1,246 @@
+{
+  "name": "Auto Blog - Mega SEO Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 3
+            }
+          ]
+        }
+      },
+      "id": "e4b52eb1-7e30-4e31-893c-99d8d69f0b5d",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const themes = [\n  'Cursos online',\n  'Programação',\n  'Inteligência Artificial',\n  'Cursos em Moçambique',\n  'Melhores cursos para jovens',\n  'Cursos para o mercado de emprego',\n  'Marketing digital',\n  'Tecnologia',\n  'Empreendedorismo',\n  'Profissões em alta',\n  'Desenvolvimento web',\n  'Educação profissional'\n];\n\nconst randomTheme = themes[Math.floor(Math.random() * themes.length)];\n\nconst staticData = $getWorkflowStaticData('global');\nstaticData.runCount = staticData.runCount || 0;\nstaticData.runCount++;\n\nconst language = (staticData.runCount % 2 === 0) ? 'English' : 'Português';\n\nreturn { theme: randomTheme, language: language };"
+      },
+      "id": "a2c332ab-47f1-432d-88b1-39df8ec7d5f1",
+      "name": "Set Theme and Language",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [200, 0]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Você é um especialista de SEO nível sênior. Baseado no tema recebido, você deve:\n1. Escolher uma Palavra-chave Principal.\n2. Escrever um Título Altamente Clicável (SEO Title, 40-60 caracteres).\n3. Escrever uma Meta Description (120-160 caracteres).\n4. Escrever um Slug otimizado.\n5. Sugerir 5 keywords secundárias.\n6. Definir uma Categoria curta (ex: Tecnologia, Negócios).\n7. Criar um Resumo do Artigo (excerpt).\n8. Criar um LLM Summary (resumo para treinar IA).\n9. Sugerir 3 a 5 Pontos Chave (key_takeaways).\n10. Sugerir 3 a 5 Tags Padrão.\n11. Sugerir o cover_alt (texto alternativo da imagem com a palavra-chave).\n12. Estimar o tempo de leitura (reading_minutes, numero inteiro).\n\nRetorne APENAS um JSON válido no formato:\n{\n  \"keyword\": \"...\",\n  \"title\": \"...\",\n  \"metaDescription\": \"...\",\n  \"slug\": \"...\",\n  \"category\": \"...\",\n  \"secondaryKeywords\": [\"...\", \"...\"],\n  \"excerpt\": \"...\",\n  \"llm_summary\": \"...\",\n  \"key_takeaways\": [\"...\", \"...\"],\n  \"tags\": [\"...\", \"...\"],\n  \"cover_alt\": \"...\",\n  \"reading_minutes\": 5\n}",
+              "role": "system"
+            },
+            {
+              "content": "=$json.theme",
+              "role": "user"
+            }
+          ]
+        }
+      },
+      "id": "f5e92c10-91a3-48e0-a7d0-7a0e7f918e90",
+      "name": "SEO Intelligence",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [400, 0],
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let content = $json.message.content;\n\n// Remover formatação markdown (se o ChatGPT enviar)\nif (content.startsWith('```json')) {\n  content = content.replace(/^```json\\n?/, '').replace(/\\n?```$/, '');\n} else if (content.startsWith('```')) {\n  content = content.replace(/^```\\n?/, '').replace(/\\n?```$/, '');\n}\n\nconst seoData = JSON.parse(content);\nreturn { ...seoData, theme: $('Set Theme and Language').item.json.theme, language: $('Set Theme and Language').item.json.language };"
+      },
+      "id": "81f7cb94-81e1-4569-b1d5-89f4eb12d097",
+      "name": "Parse SEO JSON",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [600, 0]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.pexels.com/v1/search?query={{ encodeURIComponent($('Parse SEO JSON').item.json.keyword) }}&per_page=3&orientation=landscape",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Cz58SI3ypFZ40cC6O4J8A1gaqsSj1gEHGchRhtdk4eBLzbvV1vYkK0nH"
+            }
+          ]
+        },
+        "options": {
+          "ignoreResponseCode": true
+        }
+      },
+      "id": "pexels-search-node",
+      "name": "Search Pexels Images",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [800, 0]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Você é um Copywriter Especialista em SEO.\nRegras Obrigatórias:\n1. Apenas H2 e H3 (NÃO use H1).\n2. Introdução forte.\n3. Listas e tabelas formatadas em Markdown.\n4. No mínimo 2 links externos e 2 internos (ex: [Nossos Cursos](/cursos)).\n5. Adicione as imagens que receber no prompt ao longo do texto com o formato ![Descrição](URL).\n6. FAQ com 3 perguntas e Conclusão com CTA.\nRetorne apenas o texto Markdown.",
+              "role": "system"
+            },
+            {
+              "content": "=Escreva um artigo completo sobre '{{ $('Parse SEO JSON').item.json.keyword }}'. Idioma obrigatório: {{ $('Parse SEO JSON').item.json.language }}.\n\nSe a API do Pexels encontrou imagens, utilize estas imagens REAIS e CREDÍVEIS no meio do texto com markdown:\nImagem 1: {{ $json.photos ? $json.photos[0]?.src?.large : '' }}\nImagem 2: {{ $json.photos ? $json.photos[1]?.src?.large : '' }}\n(Se as URLs estiverem vazias, não adicione imagens ao longo do texto).",
+              "role": "user"
+            }
+          ]
+        }
+      },
+      "id": "b1e9c522-83b5-4b14-8789-f5d37a54b321",
+      "name": "Generate Article Content",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [1000, 0],
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const seo = $('Parse SEO JSON').item.json;\nconst content = $('Generate Article Content').item.json.message.content;\nconst pexels = $('Search Pexels Images').item.json;\n\n// Pega a primeira imagem do Pexels para ser a capa do artigo (cover_url)\nlet cover_url = null;\nif (pexels && pexels.photos && pexels.photos.length > 0) {\n  cover_url = pexels.photos[0].src.large2x || pexels.photos[0].src.large;\n}\n\nreturn {\n  title: seo.title || \"Sem Titulo\",\n  content: content || \"\",\n  seo_title: seo.title || \"\",\n  seo_description: seo.metaDescription || \"\",\n  slug: seo.slug || \"artigo-\" + Date.now(),\n  category: seo.category || \"Geral\",\n  tags: seo.tags || [],\n  is_published: false,\n  excerpt: seo.excerpt || \"\",\n  primary_keyword: seo.keyword || \"\",\n  secondary_keywords: seo.secondaryKeywords || [],\n  llm_summary: seo.llm_summary || \"\",\n  key_takeaways: seo.key_takeaways || [],\n  cover_alt: seo.cover_alt || seo.keyword,\n  reading_minutes: seo.reading_minutes || 5,\n  cover_url: cover_url\n};"
+      },
+      "id": "prepare-supabase-node",
+      "name": "Prepare Supabase Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1200, 0]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": {
+          "__rl": true,
+          "value": "blog_posts",
+          "mode": "list"
+        },
+        "columns": "title, content, seo_title, seo_description, slug, category, tags, is_published, excerpt, primary_keyword, secondary_keywords, llm_summary, key_takeaways, cover_alt, reading_minutes, cover_url",
+        "options": {}
+      },
+      "id": "d1e7c522-99b5-4c14-8889-f5d37a54b311",
+      "name": "Publish to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1400, 0],
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Theme and Language",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Theme and Language": {
+      "main": [
+        [
+          {
+            "node": "SEO Intelligence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SEO Intelligence": {
+      "main": [
+        [
+          {
+            "node": "Parse SEO JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse SEO JSON": {
+      "main": [
+        [
+          {
+            "node": "Search Pexels Images",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Pexels Images": {
+      "main": [
+        [
+          {
+            "node": "Generate Article Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Article Content": {
+      "main": [
+        [
+          {
+            "node": "Prepare Supabase Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Supabase Data": {
+      "main": [
+        [
+          {
+            "node": "Publish to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
+}

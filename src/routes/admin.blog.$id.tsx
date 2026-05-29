@@ -165,7 +165,7 @@ function EditPost() {
     <div className="space-y-6 pb-20">
       <div className="flex flex-wrap items-center justify-between gap-3 sticky top-0 z-10 bg-background/95 backdrop-blur-sm py-4 border-b border-border">
         <Link to="/admin/blog" className="text-sm font-medium text-muted-foreground hover:text-primary">← Voltar ao Gestor de Conteúdos</Link>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4">
           <div className="hidden md:flex items-center gap-4 px-4 py-1.5 rounded-full bg-muted/50 border border-border/50 text-sm">
             <span className="text-muted-foreground"><span className="font-bold text-foreground">{wordCount}</span> palavras</span>
             <span className="w-1 h-1 rounded-full bg-border" />

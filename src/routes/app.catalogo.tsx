@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { createCheckoutSession } from "@/actions/checkout";
+import { PaymentDialog } from "@/components/PaymentDialog";
 
 export const Route = createFileRoute("/app/catalogo")({ component: Catalog });
 
@@ -17,11 +17,18 @@ function Catalog() {
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<"all" | "free" | "paid">("all");
   const [cat, setCat] = useState<string | null>(null);
-  const [loadingCheckout, setLoadingCheckout] = useState<string | null>(null);
+
+  // Payment dialog state
+  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<{ id: string; title: string; price: number } | null>(null);
 
   const { data: courses } = useQuery({
     queryKey: ["catalog"],
-    queryFn: async () => (await supabase.from("courses").select("*").eq("is_published", true).order("created_at", { ascending: false })).data ?? [],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("courses").select("*").eq("is_published", true).order("created_at", { ascending: false });
+      if (error) console.error("Error fetching catalog:", error);
+      return data ?? [];
+    },
   });
   const { data: enrolls } = useQuery({
     queryKey: ["my-enrolls", user?.id],
@@ -50,27 +57,13 @@ function Catalog() {
     navigate({ to: "/app/curso/$slug", params: { slug: c.slug } });
   }
 
-  async function handleCheckout(courseId: string) {
+  function handleBuyCourse(course: any) {
     if (!user) {
-      toast.error("Precisas de ter sessão iniciada para adquirir o curso.");
+      toast.error("Precisas de ter sessão iniciada para entrar na lista de espera.");
       navigate({ to: "/login", search: { redirect: "/app/catalogo" } });
       return;
     }
-    
-    try {
-      setLoadingCheckout(courseId);
-      const result = await createCheckoutSession({ data: { courseId } });
-      
-      if (result.checkoutUrl) {
-        window.location.href = result.checkoutUrl;
-      } else {
-        toast.error("Falha ao obter o link de pagamento.");
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Erro ao processar o pagamento");
-    } finally {
-      setLoadingCheckout(null);
-    }
+    toast.success("Adicionado à lista de espera! Avisaremos por email quando o curso for lançado.");
   }
 
   return (
@@ -103,7 +96,7 @@ function Catalog() {
                   <span className="line-clamp-1 mr-1">{c.category ?? "Curso"}</span>
                   {c.is_free
                     ? <span className="rounded-full bg-emerald-500/10 px-1.5 sm:px-2 py-0.5 text-emerald-700 whitespace-nowrap">Grátis</span>
-                    : <span className="font-semibold text-primary whitespace-nowrap">{Number(c.price_mzn).toLocaleString("pt-PT")} MT</span>}
+                    : <span className="rounded-full bg-orange-500/10 px-1.5 sm:px-2 py-0.5 font-semibold text-orange-500 whitespace-nowrap">Em Breve</span>}
                 </div>
                 <h3 className="mt-2 text-sm sm:text-base font-semibold text-foreground line-clamp-2 leading-tight">{c.title}</h3>
                 {c.short_description && <p className="mt-1 hidden sm:block line-clamp-2 text-sm text-muted-foreground">{c.short_description}</p>}
@@ -113,8 +106,8 @@ function Catalog() {
                     ? <Button className="w-full" onClick={() => navigate({ to: "/app/curso/$slug", params: { slug: c.slug } })}>Continuar</Button>
                     : c.is_free
                       ? <Button className="w-full" onClick={() => enrolFree(c)}>Começar agora</Button>
-                      : <Button className="w-full" onClick={() => handleCheckout(c.id)} disabled={loadingCheckout === c.id}>
-                          {loadingCheckout === c.id ? "A processar..." : "Adquirir"}
+                      : <Button variant="secondary" className="w-full" onClick={() => handleBuyCourse(c)}>
+                          Quero ser avisado
                         </Button>}
                 </div>
               </div>
@@ -123,6 +116,18 @@ function Catalog() {
         })}
         {filtered.length === 0 && <div className="col-span-full rounded-2xl border border-dashed border-border bg-card p-10 text-center text-muted-foreground">Nenhum curso encontrado.</div>}
       </div>
+
+      {/* Payment Dialog */}
+      {selectedCourse && user && (
+        <PaymentDialog
+          open={paymentOpen}
+          onOpenChange={setPaymentOpen}
+          courseId={selectedCourse.id}
+          courseTitle={selectedCourse.title}
+          price={selectedCourse.price}
+          userId={user.id}
+        />
+      )}
     </div>
   );
 }

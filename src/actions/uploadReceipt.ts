@@ -12,7 +12,7 @@ export const uploadPaymentReceipt = createServerFn({ method: "POST" })
     const { data: payment, error: fetchError } = await supabase
       .from("payments")
       .select("id, status")
-      .eq("id", paymentId)
+      .eq("reference", paymentId) // paymentId here is actually the reference string
       .eq("user_id", userId)
       .single();
 
@@ -27,8 +27,8 @@ export const uploadPaymentReceipt = createServerFn({ method: "POST" })
     // Update receipt URL
     const { error: updateError } = await supabase
       .from("payments")
-      .update({ receipt_url: receiptUrl }) // NOTE: requires DB schema update
-      .eq("id", paymentId);
+      .update({ receipt_url: receiptUrl } as any) // NOTE: requires DB schema update if missing from types
+      .eq("id", payment.id);
 
     if (updateError) {
       throw new Error("Falha ao anexar comprovativo. Verifique se a coluna 'receipt_url' foi criada.");

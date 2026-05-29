@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import { ArrowLeft, CheckCircle2, Sparkles } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export const Route = createFileRoute("/blog/$slug")({
   component: BlogPublicArticle,
@@ -86,9 +88,15 @@ function BlogPublicArticle() {
           <div className="absolute inset-0 bg-black/60 z-10" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent z-10" />
           
-          {post.cover_url && (
+          {post.cover_url ? (
             <img 
               src={post.cover_url} 
+              alt={post.title}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : (
+            <img 
+              src={`https://image.pollinations.ai/prompt/${encodeURIComponent(post.title)}?width=1200&height=600&nologo=true`} 
               alt={post.title}
               className="absolute inset-0 w-full h-full object-cover"
             />
@@ -166,7 +174,9 @@ function BlogPublicArticle() {
               {isHtml ? (
                 <div dangerouslySetInnerHTML={{ __html: post.content ?? "" }} />
               ) : (
-                <div className="whitespace-pre-wrap">{post.content}</div>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {post.content ?? ""}
+                </ReactMarkdown>
               )}
             </div>
             

@@ -265,18 +265,20 @@ function ModuleBlock({ module: m, lessons, onRename, onDelete, onMoveUp, onMoveD
           const vm = extractVimeoId(l.youtube_url);
           const isLocal = !yt && !vm && l.youtube_url?.startsWith("http");
           return (
-            <div key={l.id} className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm">
-              <span className="flex-1 text-foreground">
+            <div key={l.id} className="flex flex-col sm:flex-row sm:items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm">
+              <span className="flex-1 text-foreground break-words w-full sm:w-auto">
                 {l.title}{" "}
                 {!yt && !vm && !isLocal && <span className="text-xs text-destructive">(vídeo inválido)</span>}
                 {vm && <span className="text-xs text-blue-500 font-semibold">(Vimeo)</span>}
                 {isLocal && <span className="text-xs text-emerald-500 font-semibold">(Vídeo Local/Upload)</span>}
               </span>
-              <Button variant="ghost" size="icon" onClick={() => moveLesson(l, -1)}><ChevronUp className="h-4 w-4" /></Button>
-              <Button variant="ghost" size="icon" onClick={() => moveLesson(l, 1)}><ChevronDown className="h-4 w-4" /></Button>
-              <Button variant="ghost" size="icon" onClick={() => toggleLock(l)} title={l.is_locked ? "Desbloquear" : "Bloquear"}>{l.is_locked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}</Button>
-              <Button variant="ghost" size="icon" onClick={() => setEditing(l)}><Pencil className="h-4 w-4" /></Button>
-              <Button variant="ghost" size="icon" onClick={() => deleteLesson(l)}><Trash2 className="h-4 w-4" /></Button>
+              <div className="flex items-center gap-1 self-end sm:self-auto flex-wrap">
+                <Button variant="ghost" size="icon" onClick={() => moveLesson(l, -1)}><ChevronUp className="h-4 w-4" /></Button>
+                <Button variant="ghost" size="icon" onClick={() => moveLesson(l, 1)}><ChevronDown className="h-4 w-4" /></Button>
+                <Button variant="ghost" size="icon" onClick={() => toggleLock(l)} title={l.is_locked ? "Desbloquear" : "Bloquear"}>{l.is_locked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}</Button>
+                <Button variant="ghost" size="icon" onClick={() => setEditing(l)}><Pencil className="h-4 w-4" /></Button>
+                <Button variant="ghost" size="icon" onClick={() => deleteLesson(l)}><Trash2 className="h-4 w-4" /></Button>
+              </div>
             </div>
           );
         })}

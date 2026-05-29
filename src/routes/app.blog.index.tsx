@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 
-export const Route = createFileRoute("/app/blog")({ component: BlogPage });
+export const Route = createFileRoute("/app/blog/")({ component: BlogPage });
 
 function BlogPage() {
   const [q, setQ] = useState("");

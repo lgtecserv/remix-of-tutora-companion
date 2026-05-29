@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Users, UserPlus, DollarSign, TrendingUp, BookOpen, PlayCircle, Trophy, Clock } from "lucide-react";
+import { Users, UserPlus, DollarSign, TrendingUp, BookOpen, PlayCircle, Trophy, Clock, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+import heroBg from "@/assets/hero.jpg";
 
 export const Route = createFileRoute("/admin/")({ component: AdminDashboard });
 
@@ -56,39 +58,54 @@ function AdminDashboard() {
   ];
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-        <p className="mt-1 text-muted-foreground">Visão geral da plataforma.</p>
-      </div>
+    <div className="space-y-8 pb-10">
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary via-primary to-orange-600 px-8 py-14 shadow-2xl">
+        <div className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay" style={{ backgroundImage: `url(${heroBg})` }} />
+        <div className="absolute -right-10 -top-10 opacity-20 pointer-events-none mix-blend-overlay">
+          <Sparkles className="w-64 h-64 text-white" />
+        </div>
+        <div className="relative z-10">
+          <h1 className="text-3xl md:text-5xl font-black text-white drop-shadow-md">Painel Admin 👋</h1>
+          <p className="mt-2 text-white/90 text-sm md:text-lg font-medium max-w-xl">
+            Bem-vindo à central de controlo. Aqui acompanha todo o crescimento da plataforma em tempo real.
+          </p>
+        </div>
+      </motion.div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {kpis.map((k) => (
-          <div key={k.label} className="rounded-2xl border border-border bg-card p-6">
-            <k.icon className="h-6 w-6 text-primary" />
-            <div className="mt-3 text-2xl font-bold text-foreground">{k.v}</div>
-            <div className="text-sm text-muted-foreground">{k.label}</div>
-          </div>
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+        {kpis.map((k, i) => (
+          <motion.div key={k.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05 }} className="group rounded-3xl border border-border bg-card/80 backdrop-blur-md p-5 sm:p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:border-primary/40 relative overflow-hidden">
+            <div className="absolute -right-4 -top-4 opacity-[0.03] group-hover:opacity-10 transition-opacity duration-500"><k.icon className="h-28 w-28" /></div>
+            <div className="bg-primary/10 w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 group-hover:bg-primary/20">
+              <k.icon className="h-6 w-6 text-primary" />
+            </div>
+            <div className="text-2xl sm:text-3xl font-black text-foreground drop-shadow-sm">{k.v}</div>
+            <div className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-muted-foreground mt-1">{k.label}</div>
+          </motion.div>
         ))}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Section icon={DollarSign} title="Cursos mais vendidos" empty="Nenhuma venda ainda.">
-          {data.topSelling.map((r, i) => (
-            <div key={i} className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm">
-              <span className="text-foreground">{r.title}</span>
-              <span className="font-semibold text-primary">{r.revenue.toLocaleString("pt-PT")} MT</span>
-            </div>
-          ))}
-        </Section>
-        <Section icon={PlayCircle} title="Cursos mais assistidos" empty="Nenhuma inscrição ainda.">
-          {data.topWatched.map((r, i) => (
-            <div key={i} className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm">
-              <span className="text-foreground">{r.title}</span>
-              <span className="font-semibold text-primary">{r.students} alunos</span>
-            </div>
-          ))}
-        </Section>
+        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }} className="h-full">
+          <Section icon={DollarSign} title="Cursos mais vendidos" empty="Nenhuma venda ainda.">
+            {data.topSelling.map((r, i) => (
+              <div key={i} className="flex items-center justify-between rounded-2xl border border-border bg-card/40 p-4 transition-all duration-300 hover:bg-card hover:shadow-md hover:border-primary/20">
+                <span className="font-semibold text-foreground text-sm sm:text-base line-clamp-1 mr-2">{r.title}</span>
+                <span className="font-black text-primary bg-primary/10 px-3 py-1.5 rounded-full text-[10px] sm:text-xs whitespace-nowrap">{r.revenue.toLocaleString("pt-PT")} MT</span>
+              </div>
+            ))}
+          </Section>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }} className="h-full">
+          <Section icon={PlayCircle} title="Cursos mais assistidos" empty="Nenhuma inscrição ainda.">
+            {data.topWatched.map((r, i) => (
+              <div key={i} className="flex items-center justify-between rounded-2xl border border-border bg-card/40 p-4 transition-all duration-300 hover:bg-card hover:shadow-md hover:border-primary/20">
+                <span className="font-semibold text-foreground text-sm sm:text-base line-clamp-1 mr-2">{r.title}</span>
+                <span className="font-black text-primary bg-primary/10 px-3 py-1.5 rounded-full text-[10px] sm:text-xs whitespace-nowrap">{r.students} alunos</span>
+              </div>
+            ))}
+          </Section>
+        </motion.div>
       </div>
     </div>
   );
@@ -97,9 +114,9 @@ function AdminDashboard() {
 function Section({ icon: Icon, title, empty, children }: any) {
   const arr = Array.isArray(children) ? children : [children];
   return (
-    <div className="rounded-2xl border border-border bg-card p-6">
-      <h2 className="mb-4 flex items-center gap-2 font-semibold text-foreground"><Icon className="h-5 w-5 text-primary" />{title}</h2>
-      <div className="space-y-2">{arr.length ? arr : <div className="text-sm text-muted-foreground">{empty}</div>}</div>
+    <div className="rounded-[2rem] border border-border bg-card/60 backdrop-blur-sm p-6 sm:p-8 shadow-xl h-full flex flex-col">
+      <h2 className="mb-6 flex items-center gap-3 font-bold text-foreground text-lg sm:text-xl"><div className="bg-primary/20 p-2 rounded-xl"><Icon className="h-5 w-5 text-primary" /></div>{title}</h2>
+      <div className="space-y-3 flex-1">{arr.length ? arr : <div className="text-sm font-medium text-muted-foreground flex items-center justify-center h-20 bg-muted/30 rounded-2xl border border-dashed border-border">{empty}</div>}</div>
     </div>
   );
 }

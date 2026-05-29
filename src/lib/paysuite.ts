@@ -26,7 +26,7 @@ interface PaymentRequestResponse {
 export async function createPaymentRequest(
   payload: PaymentRequestPayload
 ): Promise<PaymentRequestResponse> {
-  const apiKey = process.env.PAYSUITE_API_KEY;
+  const apiKey = process.env.PAYSUITE_API_KEY?.trim();
 
   if (!apiKey) {
     throw new Error("PAYSUITE_API_KEY is not defined in environment variables.");

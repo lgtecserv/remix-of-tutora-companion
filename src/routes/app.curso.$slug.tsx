@@ -1,13 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { createCheckoutSession } from "@/actions/checkout";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { unwrapRelation } from "@/lib/supabase-utils";
 import { Button } from "@/components/ui/button";
 import { Play, PlayCircle, Clock, BookOpen, GraduationCap, ChevronDown, CheckCircle2, Circle, Lock, ArrowLeft, Star, Users } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { uploadPaymentReceipt } from "@/actions/uploadReceipt";
+import { PaymentDialog } from "@/components/PaymentDialog";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
@@ -59,66 +57,9 @@ function CourseOverview() {
   });
 
   const [expandedModules, setExpandedModules] = useState<Record<string, boolean>>({});
-  const [loadingCheckout, setLoadingCheckout] = useState<boolean>(false);
+  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
 
-  const handleCheckout = async () => {
-    if (!data?.course || !user) {
-      toast.error("Precisas de ter sessão iniciada para adquirir o curso.");
-      navigate({ to: "/login", search: { redirect: `/app/curso/${slug}` } });
-      return;
-    }
-    
-    try {
-      setLoadingCheckout(true);
-      const result = await createCheckoutSession({ data: { courseId: data.course.id } });
-      
-      if (result.checkoutUrl) {
-        window.location.href = result.checkoutUrl;
-      } else {
-        toast.error("Falha ao obter o link de pagamento.");
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Erro ao processar o pagamento");
-    } finally {
-      setLoadingCheckout(false);
-    }
-  };
 
-  const [receiptFile, setReceiptFile] = useState<File | null>(null);
-  const [uploadingReceipt, setUploadingReceipt] = useState(false);
-  const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false);
-
-  const handleUploadReceipt = async () => {
-    if (!receiptFile || !data?.pendingPayment || !user) return;
-    
-    try {
-      setUploadingReceipt(true);
-      // Upload file to bucket
-      const fileExt = receiptFile.name.split('.').pop();
-      const fileName = `${data.pendingPayment.id}.${fileExt}`;
-      const filePath = `${user.id}/${fileName}`;
-      
-      const { error: uploadError } = await supabase.storage
-        .from('payment-receipts')
-        .upload(filePath, receiptFile, { upsert: true });
-
-      if (uploadError) throw new Error("Erro ao fazer upload do ficheiro.");
-
-      const { data: publicUrlData } = supabase.storage
-        .from('payment-receipts')
-        .getPublicUrl(filePath);
-
-      await uploadPaymentReceipt({ data: { paymentId: data.pendingPayment.id, receiptUrl: publicUrlData.publicUrl } });
-      
-      toast.success("Comprovativo enviado! O administrador irá rever em breve.");
-      setIsReceiptModalOpen(false);
-      qc.invalidateQueries({ queryKey: ["course-overview", slug] });
-    } catch (err: any) {
-      toast.error(err.message || "Erro ao anexar comprovativo.");
-    } finally {
-      setUploadingReceipt(false);
-    }
-  };
 
   const toggleModule = (moduleId: string) => {
     setExpandedModules(prev => ({ ...prev, [moduleId]: !prev[moduleId] }));
@@ -292,54 +233,24 @@ function CourseOverview() {
               ) : (
                 <div className="space-y-4 text-center">
                   <div className="text-3xl font-bold text-white">
-                    {c.is_free ? "Gratuito" : `${Number(c.price_mzn).toLocaleString("pt-PT")} MT`}
+                    {c.is_free ? "Gratuito" : <span className="text-orange-500">Em Breve</span>}
                   </div>
                   {c.is_free ? (
                     <Button size="lg" className="w-full h-12 text-base font-semibold bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-900/50" onClick={handleEnroll}>
                       Matricular-se Gratuitamente
                     </Button>
                   ) : (
-                    <Button size="lg" className="w-full h-12 text-base font-semibold" onClick={handleCheckout} disabled={loadingCheckout}>
-                      {loadingCheckout ? "A processar..." : "Comprar Curso"}
+                    <Button size="lg" variant="secondary" className="w-full h-12 text-base font-semibold" onClick={() => toast.success("Adicionado à lista de espera! Avisaremos por email quando o curso for lançado.")}>
+                      Quero ser avisado no lançamento
                     </Button>
                   )}
                   {data.pendingPayment && (
                     <div className="mt-4 p-4 rounded-xl bg-primary/10 border border-primary/20 text-sm text-left shadow-inner">
-                      <p className="text-primary font-medium mb-3">Já foste debitado mas o curso não desbloqueou?</p>
-                      <Dialog open={isReceiptModalOpen} onOpenChange={setIsReceiptModalOpen}>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" className="w-full text-xs h-9 border-primary/30 text-primary hover:bg-primary/20">
-                            Reivindicar Acesso
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="bg-card border-border sm:max-w-md">
-                          <DialogHeader>
-                            <DialogTitle className="text-foreground">Reivindicar Pagamento</DialogTitle>
-                          </DialogHeader>
-                          <div className="space-y-4 py-4">
-                            <p className="text-sm text-muted-foreground">
-                              Anexa uma captura de ecrã do talão de transferência ou a SMS do M-Pesa comprovando o débito. 
-                              O nosso administrador fará a aprovação manual o mais rápido possível.
-                            </p>
-                            <input 
-                              type="file" 
-                              accept="image/*,.pdf"
-                              onChange={(e) => setReceiptFile(e.target.files?.[0] || null)}
-                              className="w-full text-sm text-secondary-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
-                            />
-                            <Button 
-                              className="w-full" 
-                              onClick={handleUploadReceipt}
-                              disabled={!receiptFile || uploadingReceipt}
-                            >
-                              {uploadingReceipt ? "A enviar..." : "Enviar Comprovativo"}
-                            </Button>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
+                      <p className="text-primary font-medium mb-3">Pagamento pendente — aguardando aprovação do administrador.</p>
+                      <p className="text-xs text-muted-foreground">Referência: {data.pendingPayment.reference?.slice(0, 18)}...</p>
                     </div>
                   )}
-                  <p className="text-xs text-muted-foreground pt-2">Acesso imediato a todo o conteúdo via PaySuite.</p>
+                  <p className="text-xs text-muted-foreground pt-2">{c.is_free ? "" : "Pré-inscrição sem compromisso. Avisamos por email."}</p>
                 </div>
               )}
             </div>
@@ -498,6 +409,17 @@ function CourseOverview() {
         </div>
         
       </div>
+      {/* Payment Dialog */}
+      {!data.enrolled && !c.is_free && user && (
+        <PaymentDialog
+          open={paymentDialogOpen}
+          onOpenChange={setPaymentDialogOpen}
+          courseId={c.id}
+          courseTitle={c.title}
+          price={Number(c.price_mzn)}
+          userId={user.id}
+        />
+      )}
     </div>
   );
 }

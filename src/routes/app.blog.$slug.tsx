@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export const Route = createFileRoute("/app/blog/$slug")({ component: Article });
 
@@ -19,7 +21,11 @@ function Article() {
   return (
     <article className="mx-auto max-w-3xl">
       <Link to="/app/blog" className="text-sm text-muted-foreground hover:text-primary">← Voltar ao blog</Link>
-      {data.cover_url && <img src={data.cover_url} alt="" className="mt-4 max-h-96 w-full rounded-2xl object-cover" />}
+      {data.cover_url ? (
+        <img src={data.cover_url} alt="" className="mt-4 max-h-96 w-full rounded-2xl object-cover" />
+      ) : (
+        <img src={`https://image.pollinations.ai/prompt/${encodeURIComponent(data.title)}?width=800&height=400&nologo=true`} alt="" className="mt-4 max-h-96 w-full rounded-2xl object-cover" />
+      )}
       <div className="mt-6 text-xs uppercase tracking-wider text-muted-foreground">{data.category ?? "Artigo"}</div>
       <h1 className="mt-2 text-4xl font-bold text-foreground">{data.title}</h1>
       {data.excerpt && <p className="mt-2 text-lg text-muted-foreground">{data.excerpt}</p>}
@@ -34,7 +40,7 @@ function Article() {
       )}
       {isHtml
         ? <div className="prose prose-base mt-8 max-w-none" dangerouslySetInnerHTML={{ __html: data.content ?? "" }} />
-        : <div className="mt-8 whitespace-pre-wrap text-foreground">{data.content}</div>}
+        : <div className="prose prose-base mt-8 max-w-none prose-invert"><ReactMarkdown remarkPlugins={[remarkGfm]}>{data.content ?? ""}</ReactMarkdown></div>}
     </article>
   );
 }

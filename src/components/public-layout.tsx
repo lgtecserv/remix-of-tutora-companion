@@ -58,19 +58,20 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="mb-6 text-sm font-bold uppercase tracking-wider text-white">Legal</h4>
+            <h4 className="mb-6 text-sm font-bold uppercase tracking-wider text-white">Legal & Empresa</h4>
             <ul className="space-y-4 text-sm">
-              <li><Link to="/" className="transition hover:text-orange-500">Termos de Uso</Link></li>
-              <li><Link to="/" className="transition hover:text-orange-500">Privacidade</Link></li>
+              <li><Link to="/sobre-nos" className="transition hover:text-orange-500">Sobre Nós</Link></li>
+              <li><Link to="/contacto" className="transition hover:text-orange-500">Contacto</Link></li>
+              <li><Link to="/termos-de-uso" className="transition hover:text-orange-500">Termos de Uso</Link></li>
+              <li><Link to="/politica-de-privacidade" className="transition hover:text-orange-500">Privacidade & Cookies</Link></li>
             </ul>
           </div>
-          <div>
-            <h4 className="mb-6 text-sm font-bold uppercase tracking-wider text-white">Redes Sociais</h4>
-            <div className="flex gap-4">
-              <a href="#" className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 transition hover:bg-orange-500 hover:text-white"><Instagram className="h-4 w-4" /></a>
-              <a href="#" className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 transition hover:bg-orange-500 hover:text-white"><Facebook className="h-4 w-4" /></a>
-              <a href="#" className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 transition hover:bg-orange-500 hover:text-white"><Twitter className="h-4 w-4" /></a>
-            </div>
+          <div className="md:col-span-1">
+            <h4 className="mb-6 text-sm font-bold uppercase tracking-wider text-white">Contactos</h4>
+            <ul className="space-y-4 text-sm">
+              <li><a href="mailto:contato@lgtecserv.com" className="transition hover:text-orange-500">contato@lgtecserv.com</a></li>
+              <li><a href="https://wa.me/258869824047" target="_blank" rel="noreferrer" className="transition hover:text-orange-500">WhatsApp: +258 869 824 047</a></li>
+            </ul>
           </div>
         </div>
         <div className="mt-20 border-t border-white/10 pt-8 text-center text-sm">

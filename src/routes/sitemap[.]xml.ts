@@ -2,13 +2,23 @@ import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 // URL base da plataforma
-const BASE_URL = "https://tutora-companion.lovable.app"; // URL padrão de produção
+const BASE_URL = "https://www.imersaocompleta.info";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const paths = ["/", "/login", "/registo"];
+        const paths = [
+          "/",
+          "/login",
+          "/registo",
+          "/blog",
+          "/cursos",
+          "/sobre-nos",
+          "/contacto",
+          "/politica-de-privacidade",
+          "/termos-de-uso"
+        ];
 
         try {
           // 1. Buscar posts de blog publicados dinamicamente
@@ -19,7 +29,7 @@ export const Route = createFileRoute("/sitemap.xml")({
 
           if (posts) {
             posts.forEach(post => {
-              paths.push(`/app/blog/${post.slug}`);
+              paths.push(`/blog/${post.slug}`);
             });
           }
 
@@ -31,7 +41,8 @@ export const Route = createFileRoute("/sitemap.xml")({
 
           if (courses) {
             courses.forEach(course => {
-              paths.push(`/app/curso/${course.slug}`);
+              // Assumindo que os cursos têm uma página pública em /curso/:slug
+              paths.push(`/curso/${course.slug}`);
             });
           }
         } catch (error) {

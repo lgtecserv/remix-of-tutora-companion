@@ -6,6 +6,7 @@ import logoImg from "@/assets/logo-imersao.png";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — Imersão Completa" }, { name: "robots", content: "noindex" }] }),
@@ -101,10 +102,17 @@ function AdminLayout() {
             const active = n.exact ? pathname === n.to : pathname.startsWith(n.to);
             return (
               <Link key={n.label} to={n.to as string} className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
-                active ? "bg-primary text-primary-foreground" : "text-secondary-foreground/70 hover:bg-white/5 hover:text-secondary-foreground"
+                "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
+                active ? "text-primary" : "text-secondary-foreground/70 hover:text-secondary-foreground"
               )}>
-                <n.icon className="h-4 w-4" />{n.label}
+                {active && (
+                  <div className="absolute inset-0 rounded-xl bg-primary/10 shadow-[inset_0_0_12px_rgba(234,88,12,0.1)]" />
+                )}
+                {active && (
+                  <div className="absolute left-0 top-1/2 -mt-2 h-4 w-1 rounded-r-full bg-primary" />
+                )}
+                <n.icon className={cn("relative z-10 h-5 w-5 transition-transform duration-300", active ? "scale-110" : "group-hover:scale-110 group-hover:text-primary")} />
+                <span className="relative z-10">{n.label}</span>
               </Link>
             );
           })}
@@ -113,7 +121,19 @@ function AdminLayout() {
           <LogOut className="h-4 w-4" />Sair
         </button>
       </aside>
-      <main className="flex-1 overflow-x-hidden p-6 md:p-10"><Outlet /></main>
+      <main className="flex-1 overflow-x-hidden p-6 md:p-10">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Outlet />
+          </motion.div>
+        </AnimatePresence>
+      </main>
     </div>
   );
 }

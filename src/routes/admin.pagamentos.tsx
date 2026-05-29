@@ -10,7 +10,18 @@ function AdminPayments() {
   const qc = useQueryClient();
   const { data } = useQuery({
     queryKey: ["admin-payments"],
-    queryFn: async () => (await supabase.from("payments").select("*, courses(title), profiles(full_name)").order("created_at", { ascending: false })).data ?? [],
+    queryFn: async () => {
+      const [{ data: payments }, { data: courses }, { data: profiles }] = await Promise.all([
+        supabase.from("payments").select("*").order("created_at", { ascending: false }),
+        supabase.from("courses").select("id, title"),
+        supabase.from("profiles").select("id, full_name")
+      ]);
+      return (payments ?? []).map(p => ({
+        ...p,
+        courses: (courses ?? []).find(c => c.id === p.course_id),
+        profiles: (profiles ?? []).find(pr => pr.id === p.user_id)
+      }));
+    },
   });
   async function setStatus(p: any, status: "approved" | "rejected") {
     const { error } = await supabase.from("payments").update({ status }).eq("id", p.id);

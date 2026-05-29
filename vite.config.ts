@@ -18,7 +18,7 @@ if (isVercel) {
 }
 
 export default defineLovableConfig({
-  cloudflare: !isVercel,
+  cloudflare: !isVercel ? {} : undefined,
   server: {
     port: 5173,
     strictPort: true, // Fail if 5173 is taken, preventing it from jumping to 8080 where the bad SW lives

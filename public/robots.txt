@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
-Sitemap: https://imersaocompleta.com/sitemap.xml
+Disallow: /admin/
+Disallow: /app/
+Disallow: /api/
+
+Sitemap: https://www.imersaocompleta.info/sitemap.xml

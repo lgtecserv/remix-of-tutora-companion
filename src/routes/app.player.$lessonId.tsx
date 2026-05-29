@@ -202,7 +202,7 @@ function CoursePlayer() {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_360px] p-6 flex-1">
+      <div className="grid gap-6 lg:grid-cols-[1fr_360px] p-3 md:p-6 flex-1">
         {/* Main Stream Area */}
         <div className="space-y-6">
           {current ? (

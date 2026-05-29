@@ -400,7 +400,7 @@ function CommentInput({
   const avatarUrl = user.user_metadata?.avatar_url;
 
   return (
-    <div className={cn("flex gap-3", compact && "pl-8")}>
+    <div className={cn("flex gap-2 md:gap-3", compact && "pl-4 md:pl-8")}>
       {/* Avatar */}
       <div className="flex-shrink-0 mt-1">
         {avatarUrl ? (
@@ -534,7 +534,7 @@ function CommentCard({
   }
 
   return (
-    <div id={`comment-${c.id}`} className={cn("group", depth > 0 && "ml-8 pl-4 border-l-2 border-neutral-800/60 transition-all duration-300 rounded-xl")}>
+    <div id={`comment-${c.id}`} className={cn("group", depth > 0 && "ml-3 pl-2 md:ml-8 md:pl-4 border-l-2 border-neutral-800/60 transition-all duration-300 rounded-xl")}>
       <div
         className={cn(
           "rounded-xl p-4 transition-all",

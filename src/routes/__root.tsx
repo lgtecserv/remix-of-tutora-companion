@@ -86,13 +86,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Aprenda desenvolvimento web, sistemas, IA e negócios digitais. A plataforma definitiva para transformar conhecimento em faturamento." },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Imersão Completa" },
-      { property: "og:image", content: "https://tutora-companion.vercel.app/hero.jpg" },
+      { property: "og:image", content: "https://www.imersaocompleta.info/hero.jpg" },
+      { property: "og:url", content: "https://www.imersaocompleta.info/" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Imersão Completa | Cursos de Tecnologia e Negócios" },
       { name: "twitter:description", content: "Transforme o seu futuro dominando a tecnologia com o apoio de Inteligência Artificial." },
-      { name: "twitter:image", content: "https://tutora-companion.vercel.app/hero.jpg" },
+      { name: "twitter:image", content: "https://www.imersaocompleta.info/hero.jpg" },
+      // Verificação do Google Search Console
+      { name: "google-site-verification", content: "xtVa_GklrXpoxNc_KxtW_bSN2JrIHLMxjp6AptyNGKo" }
     ],
     links: [
+      {
+        rel: "canonical",
+        href: "https://www.imersaocompleta.info/",
+      },
       {
         rel: "stylesheet",
         href: appCss,
@@ -103,30 +110,36 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     scripts: [
       {
+        type: "text/javascript",
+        src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0000000000000000",
+        crossOrigin: "anonymous",
+        async: true,
+      },
+      {
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@graph": [
             {
               "@type": "EducationalOrganization",
-              "@id": "https://imersaocompleta.com/#organization",
+              "@id": "https://www.imersaocompleta.info/#organization",
               "name": "Imersão Completa",
               "slogan": "APRENDA. CRIE. E FATURE.",
               "description": "Plataforma de ensino online especializada em tecnologia, programação, Inteligência Artificial e negócios digitais.",
-              "url": "https://imersaocompleta.com",
-              "logo": "https://imersaocompleta.com/favicon.ico"
+              "url": "https://www.imersaocompleta.info",
+              "logo": "https://www.imersaocompleta.info/favicon.ico"
             },
             {
               "@type": "Course",
               "name": "Desenvolvimento Web com IA",
               "description": "Aprenda a criar sites, sistemas web e aplicativos do zero com o apoio da Inteligência Artificial.",
-              "provider": { "@id": "https://imersaocompleta.com/#organization" }
+              "provider": { "@id": "https://www.imersaocompleta.info/#organization" }
             },
             {
               "@type": "Course",
               "name": "Inteligência Artificial Aplicada",
               "description": "Domine as ferramentas de IA mais recentes para automatizar tarefas e aumentar a produtividade em 10x.",
-              "provider": { "@id": "https://imersaocompleta.com/#organization" }
+              "provider": { "@id": "https://www.imersaocompleta.info/#organization" }
             },
             {
               "@type": "FAQPage",
@@ -174,6 +187,8 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+import { CookieBanner } from "@/components/CookieBanner";
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
@@ -194,6 +209,7 @@ function RootComponent() {
       <ThemeProvider defaultTheme="dark" storageKey="imersao-theme">
         <AuthProvider>
           <Outlet />
+          <CookieBanner />
           <Toaster />
         </AuthProvider>
       </ThemeProvider>

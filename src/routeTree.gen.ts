@@ -9,15 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermosDeUsoRouteImport } from './routes/termos-de-uso'
+import { Route as SobreNosRouteImport } from './routes/sobre-nos'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegistoRouteImport } from './routes/registo'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
+import { Route as PoliticaDePrivacidadeRouteImport } from './routes/politica-de-privacidade'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as BlogRouteImport } from './routes/blog'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as CursosRouteImport } from './routes/cursos'
+import { Route as ContactoRouteImport } from './routes/contacto'
+import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -25,12 +32,12 @@ import { Route as AppPerfilRouteImport } from './routes/app.perfil'
 import { Route as AppCursosRouteImport } from './routes/app.cursos'
 import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes'
 import { Route as AppCatalogoRouteImport } from './routes/app.catalogo'
-import { Route as AppBlogRouteImport } from './routes/app.blog'
 import { Route as ApiUploadRouteImport } from './routes/api.upload'
 import { Route as AdminPagamentosRouteImport } from './routes/admin.pagamentos'
 import { Route as AdminConfiguracoesRouteImport } from './routes/admin.configuracoes'
 import { Route as AdminComentariosRouteImport } from './routes/admin.comentarios'
 import { Route as AdminAlunosRouteImport } from './routes/admin.alunos'
+import { Route as AppBlogIndexRouteImport } from './routes/app.blog.index'
 import { Route as AdminCursosIndexRouteImport } from './routes/admin.cursos.index'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin.blog.index'
 import { Route as AppPlayerLessonIdRouteImport } from './routes/app.player.$lessonId'
@@ -40,6 +47,16 @@ import { Route as ApiWebhooksPaysuiteRouteImport } from './routes/api.webhooks.p
 import { Route as AdminCursosIdRouteImport } from './routes/admin.cursos.$id'
 import { Route as AdminBlogIdRouteImport } from './routes/admin.blog.$id'
 
+const TermosDeUsoRoute = TermosDeUsoRouteImport.update({
+  id: '/termos-de-uso',
+  path: '/termos-de-uso',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SobreNosRoute = SobreNosRouteImport.update({
+  id: '/sobre-nos',
+  path: '/sobre-nos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -60,14 +77,34 @@ const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
   path: '/recuperar-senha',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PoliticaDePrivacidadeRoute = PoliticaDePrivacidadeRouteImport.update({
+  id: '/politica-de-privacidade',
+  path: '/politica-de-privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CursosRoute = CursosRouteImport.update({
+  id: '/cursos',
+  path: '/cursos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactoRoute = ContactoRouteImport.update({
+  id: '/contacto',
+  path: '/contacto',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComoFuncionaRoute = ComoFuncionaRouteImport.update({
+  id: '/como-funciona',
+  path: '/como-funciona',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
@@ -85,6 +122,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -96,9 +138,9 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => BlogRoute,
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AppPerfilRoute = AppPerfilRouteImport.update({
   id: '/perfil',
@@ -118,11 +160,6 @@ const AppConfiguracoesRoute = AppConfiguracoesRouteImport.update({
 const AppCatalogoRoute = AppCatalogoRouteImport.update({
   id: '/catalogo',
   path: '/catalogo',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppBlogRoute = AppBlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
   getParentRoute: () => AppRoute,
 } as any)
 const ApiUploadRoute = ApiUploadRouteImport.update({
@@ -150,6 +187,11 @@ const AdminAlunosRoute = AdminAlunosRouteImport.update({
   path: '/alunos',
   getParentRoute: () => AdminRoute,
 } as any)
+const AppBlogIndexRoute = AppBlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AdminCursosIndexRoute = AdminCursosIndexRouteImport.update({
   id: '/cursos/',
   path: '/cursos/',
@@ -171,9 +213,9 @@ const AppCursoSlugRoute = AppCursoSlugRouteImport.update({
   getParentRoute: () => AppRoute,
 } as any)
 const AppBlogSlugRoute = AppBlogSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => AppBlogRoute,
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => AppRoute,
 } as any)
 const ApiWebhooksPaysuiteRoute = ApiWebhooksPaysuiteRouteImport.update({
   id: '/api/webhooks/paysuite',
@@ -195,18 +237,23 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
-  '/blog': typeof BlogRouteWithChildren
+  '/como-funciona': typeof ComoFuncionaRoute
+  '/contacto': typeof ContactoRoute
+  '/cursos': typeof CursosRoute
+  '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sobre-nos': typeof SobreNosRoute
+  '/termos-de-uso': typeof TermosDeUsoRoute
   '/admin/alunos': typeof AdminAlunosRoute
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/pagamentos': typeof AdminPagamentosRoute
   '/api/upload': typeof ApiUploadRoute
-  '/app/blog': typeof AppBlogRouteWithChildren
   '/app/catalogo': typeof AppCatalogoRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
@@ -214,6 +261,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/cursos/$id': typeof AdminCursosIdRoute
   '/api/webhooks/paysuite': typeof ApiWebhooksPaysuiteRoute
@@ -222,21 +270,27 @@ export interface FileRoutesByFullPath {
   '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/cursos/': typeof AdminCursosIndexRoute
+  '/app/blog/': typeof AppBlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/blog': typeof BlogRouteWithChildren
+  '/como-funciona': typeof ComoFuncionaRoute
+  '/contacto': typeof ContactoRoute
+  '/cursos': typeof CursosRoute
+  '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sobre-nos': typeof SobreNosRoute
+  '/termos-de-uso': typeof TermosDeUsoRoute
   '/admin/alunos': typeof AdminAlunosRoute
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/pagamentos': typeof AdminPagamentosRoute
   '/api/upload': typeof ApiUploadRoute
-  '/app/blog': typeof AppBlogRouteWithChildren
   '/app/catalogo': typeof AppCatalogoRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
@@ -244,6 +298,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/cursos/$id': typeof AdminCursosIdRoute
   '/api/webhooks/paysuite': typeof ApiWebhooksPaysuiteRoute
@@ -252,24 +307,30 @@ export interface FileRoutesByTo {
   '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/cursos': typeof AdminCursosIndexRoute
+  '/app/blog': typeof AppBlogIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
-  '/blog': typeof BlogRouteWithChildren
+  '/como-funciona': typeof ComoFuncionaRoute
+  '/contacto': typeof ContactoRoute
+  '/cursos': typeof CursosRoute
+  '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sobre-nos': typeof SobreNosRoute
+  '/termos-de-uso': typeof TermosDeUsoRoute
   '/admin/alunos': typeof AdminAlunosRoute
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/pagamentos': typeof AdminPagamentosRoute
   '/api/upload': typeof ApiUploadRoute
-  '/app/blog': typeof AppBlogRouteWithChildren
   '/app/catalogo': typeof AppCatalogoRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
@@ -277,6 +338,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/cursos/$id': typeof AdminCursosIdRoute
   '/api/webhooks/paysuite': typeof ApiWebhooksPaysuiteRoute
@@ -285,6 +347,7 @@ export interface FileRoutesById {
   '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/cursos/': typeof AdminCursosIndexRoute
+  '/app/blog/': typeof AppBlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -292,18 +355,23 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/app'
-    | '/blog'
+    | '/como-funciona'
+    | '/contacto'
+    | '/cursos'
+    | '/faq'
     | '/login'
+    | '/politica-de-privacidade'
     | '/recuperar-senha'
     | '/registo'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/sobre-nos'
+    | '/termos-de-uso'
     | '/admin/alunos'
     | '/admin/comentarios'
     | '/admin/configuracoes'
     | '/admin/pagamentos'
     | '/api/upload'
-    | '/app/blog'
     | '/app/catalogo'
     | '/app/configuracoes'
     | '/app/cursos'
@@ -311,6 +379,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/admin/'
     | '/app/'
+    | '/blog/'
     | '/admin/blog/$id'
     | '/admin/cursos/$id'
     | '/api/webhooks/paysuite'
@@ -319,21 +388,27 @@ export interface FileRouteTypes {
     | '/app/player/$lessonId'
     | '/admin/blog/'
     | '/admin/cursos/'
+    | '/app/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/blog'
+    | '/como-funciona'
+    | '/contacto'
+    | '/cursos'
+    | '/faq'
     | '/login'
+    | '/politica-de-privacidade'
     | '/recuperar-senha'
     | '/registo'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/sobre-nos'
+    | '/termos-de-uso'
     | '/admin/alunos'
     | '/admin/comentarios'
     | '/admin/configuracoes'
     | '/admin/pagamentos'
     | '/api/upload'
-    | '/app/blog'
     | '/app/catalogo'
     | '/app/configuracoes'
     | '/app/cursos'
@@ -341,6 +416,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/admin'
     | '/app'
+    | '/blog'
     | '/admin/blog/$id'
     | '/admin/cursos/$id'
     | '/api/webhooks/paysuite'
@@ -349,23 +425,29 @@ export interface FileRouteTypes {
     | '/app/player/$lessonId'
     | '/admin/blog'
     | '/admin/cursos'
+    | '/app/blog'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/app'
-    | '/blog'
+    | '/como-funciona'
+    | '/contacto'
+    | '/cursos'
+    | '/faq'
     | '/login'
+    | '/politica-de-privacidade'
     | '/recuperar-senha'
     | '/registo'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/sobre-nos'
+    | '/termos-de-uso'
     | '/admin/alunos'
     | '/admin/comentarios'
     | '/admin/configuracoes'
     | '/admin/pagamentos'
     | '/api/upload'
-    | '/app/blog'
     | '/app/catalogo'
     | '/app/configuracoes'
     | '/app/cursos'
@@ -373,6 +455,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/admin/'
     | '/app/'
+    | '/blog/'
     | '/admin/blog/$id'
     | '/admin/cursos/$id'
     | '/api/webhooks/paysuite'
@@ -381,24 +464,47 @@ export interface FileRouteTypes {
     | '/app/player/$lessonId'
     | '/admin/blog/'
     | '/admin/cursos/'
+    | '/app/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
-  BlogRoute: typeof BlogRouteWithChildren
+  ComoFuncionaRoute: typeof ComoFuncionaRoute
+  ContactoRoute: typeof ContactoRoute
+  CursosRoute: typeof CursosRoute
+  FaqRoute: typeof FaqRoute
   LoginRoute: typeof LoginRoute
+  PoliticaDePrivacidadeRoute: typeof PoliticaDePrivacidadeRoute
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
   RegistoRoute: typeof RegistoRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SobreNosRoute: typeof SobreNosRoute
+  TermosDeUsoRoute: typeof TermosDeUsoRoute
   ApiUploadRoute: typeof ApiUploadRoute
+  BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   ApiWebhooksPaysuiteRoute: typeof ApiWebhooksPaysuiteRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/termos-de-uso': {
+      id: '/termos-de-uso'
+      path: '/termos-de-uso'
+      fullPath: '/termos-de-uso'
+      preLoaderRoute: typeof TermosDeUsoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sobre-nos': {
+      id: '/sobre-nos'
+      path: '/sobre-nos'
+      fullPath: '/sobre-nos'
+      preLoaderRoute: typeof SobreNosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -427,6 +533,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecuperarSenhaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/politica-de-privacidade': {
+      id: '/politica-de-privacidade'
+      path: '/politica-de-privacidade'
+      fullPath: '/politica-de-privacidade'
+      preLoaderRoute: typeof PoliticaDePrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -434,11 +547,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cursos': {
+      id: '/cursos'
+      path: '/cursos'
+      fullPath: '/cursos'
+      preLoaderRoute: typeof CursosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contacto': {
+      id: '/contacto'
+      path: '/contacto'
+      fullPath: '/contacto'
+      preLoaderRoute: typeof ContactoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/como-funciona': {
+      id: '/como-funciona'
+      path: '/como-funciona'
+      fullPath: '/como-funciona'
+      preLoaderRoute: typeof ComoFuncionaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app': {
@@ -462,6 +596,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app/': {
       id: '/app/'
       path: '/'
@@ -478,10 +619,10 @@ declare module '@tanstack/react-router' {
     }
     '/blog/$slug': {
       id: '/blog/$slug'
-      path: '/$slug'
+      path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof BlogRoute
+      parentRoute: typeof rootRouteImport
     }
     '/app/perfil': {
       id: '/app/perfil'
@@ -509,13 +650,6 @@ declare module '@tanstack/react-router' {
       path: '/catalogo'
       fullPath: '/app/catalogo'
       preLoaderRoute: typeof AppCatalogoRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/blog': {
-      id: '/app/blog'
-      path: '/blog'
-      fullPath: '/app/blog'
-      preLoaderRoute: typeof AppBlogRouteImport
       parentRoute: typeof AppRoute
     }
     '/api/upload': {
@@ -553,6 +687,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAlunosRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/app/blog/': {
+      id: '/app/blog/'
+      path: '/blog'
+      fullPath: '/app/blog/'
+      preLoaderRoute: typeof AppBlogIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/admin/cursos/': {
       id: '/admin/cursos/'
       path: '/cursos'
@@ -583,10 +724,10 @@ declare module '@tanstack/react-router' {
     }
     '/app/blog/$slug': {
       id: '/app/blog/$slug'
-      path: '/$slug'
+      path: '/blog/$slug'
       fullPath: '/app/blog/$slug'
       preLoaderRoute: typeof AppBlogSlugRouteImport
-      parentRoute: typeof AppBlogRoute
+      parentRoute: typeof AppRoute
     }
     '/api/webhooks/paysuite': {
       id: '/api/webhooks/paysuite'
@@ -638,62 +779,51 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
-interface AppBlogRouteChildren {
-  AppBlogSlugRoute: typeof AppBlogSlugRoute
-}
-
-const AppBlogRouteChildren: AppBlogRouteChildren = {
-  AppBlogSlugRoute: AppBlogSlugRoute,
-}
-
-const AppBlogRouteWithChildren =
-  AppBlogRoute._addFileChildren(AppBlogRouteChildren)
-
 interface AppRouteChildren {
-  AppBlogRoute: typeof AppBlogRouteWithChildren
   AppCatalogoRoute: typeof AppCatalogoRoute
   AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppCursosRoute: typeof AppCursosRoute
   AppPerfilRoute: typeof AppPerfilRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppBlogSlugRoute: typeof AppBlogSlugRoute
   AppCursoSlugRoute: typeof AppCursoSlugRoute
   AppPlayerLessonIdRoute: typeof AppPlayerLessonIdRoute
+  AppBlogIndexRoute: typeof AppBlogIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppBlogRoute: AppBlogRouteWithChildren,
   AppCatalogoRoute: AppCatalogoRoute,
   AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppCursosRoute: AppCursosRoute,
   AppPerfilRoute: AppPerfilRoute,
   AppIndexRoute: AppIndexRoute,
+  AppBlogSlugRoute: AppBlogSlugRoute,
   AppCursoSlugRoute: AppCursoSlugRoute,
   AppPlayerLessonIdRoute: AppPlayerLessonIdRoute,
+  AppBlogIndexRoute: AppBlogIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
-
-interface BlogRouteChildren {
-  BlogSlugRoute: typeof BlogSlugRoute
-}
-
-const BlogRouteChildren: BlogRouteChildren = {
-  BlogSlugRoute: BlogSlugRoute,
-}
-
-const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AppRoute: AppRouteWithChildren,
-  BlogRoute: BlogRouteWithChildren,
+  ComoFuncionaRoute: ComoFuncionaRoute,
+  ContactoRoute: ContactoRoute,
+  CursosRoute: CursosRoute,
+  FaqRoute: FaqRoute,
   LoginRoute: LoginRoute,
+  PoliticaDePrivacidadeRoute: PoliticaDePrivacidadeRoute,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
   RegistoRoute: RegistoRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SobreNosRoute: SobreNosRoute,
+  TermosDeUsoRoute: TermosDeUsoRoute,
   ApiUploadRoute: ApiUploadRoute,
+  BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
   ApiWebhooksPaysuiteRoute: ApiWebhooksPaysuiteRoute,
 }
 export const routeTree = rootRouteImport
