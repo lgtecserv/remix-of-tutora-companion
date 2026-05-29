@@ -1,5 +1,5 @@
 
-import server from '../dist/server/server.js';
+import server from '../dist/server/index.js';
 
 export default async function(req, res) {
   try {
