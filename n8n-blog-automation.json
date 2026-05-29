@@ -16,7 +16,10 @@
       "name": "Schedule Trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1,
-      "position": [0, 0]
+      "position": [
+        0,
+        0
+      ]
     },
     {
       "parameters": {
@@ -26,7 +29,10 @@
       "name": "Set Theme and Language",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [200, 0]
+      "position": [
+        200,
+        0
+      ]
     },
     {
       "parameters": {
@@ -52,7 +58,10 @@
       "name": "SEO Intelligence",
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1,
-      "position": [400, 0],
+      "position": [
+        400,
+        0
+      ],
       "credentials": {
         "openAiApi": {
           "id": "YOUR_CREDENTIAL_ID",
@@ -68,7 +77,10 @@
       "name": "Parse SEO JSON",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [600, 0]
+      "position": [
+        600,
+        0
+      ]
     },
     {
       "parameters": {
@@ -90,7 +102,10 @@
       "name": "Search Pexels Images",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
-      "position": [800, 0]
+      "position": [
+        800,
+        0
+      ]
     },
     {
       "parameters": {
@@ -116,7 +131,10 @@
       "name": "Generate Article Content",
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1,
-      "position": [1000, 0],
+      "position": [
+        1000,
+        0
+      ],
       "credentials": {
         "openAiApi": {
           "id": "YOUR_CREDENTIAL_ID",
@@ -132,7 +150,10 @@
       "name": "Prepare Supabase Data",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1200, 0]
+      "position": [
+        1200,
+        0
+      ]
     },
     {
       "parameters": {
@@ -149,13 +170,33 @@
       "name": "Publish to Supabase",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [1400, 0],
+      "position": [
+        1400,
+        0
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "YOUR_SUPABASE_CREDENTIAL_ID",
           "name": "Supabase account"
         }
       }
+    },
+    {
+      "parameters": {
+        "url": "=https://www.bing.com/indexnow?url=https://www.imersaocompleta.info/blog/{{ encodeURIComponent($('Prepare Supabase Data').item.json.slug) }}&key=bd2c1e7a9b1248a39e8a0a9c8b7f5e3d",
+        "sendHeaders": false,
+        "options": {
+          "ignoreResponseCode": true
+        }
+      },
+      "id": "ping-bing-indexnow",
+      "name": "Ping Bing IndexNow",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1600,
+        0
+      ]
     }
   ],
   "connections": {
@@ -230,6 +271,17 @@
         [
           {
             "node": "Publish to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish to Supabase": {
+      "main": [
+        [
+          {
+            "node": "Ping Bing IndexNow",
             "type": "main",
             "index": 0
           }
