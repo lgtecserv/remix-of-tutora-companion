@@ -20,7 +20,7 @@ if (isVercel) {
 export default defineLovableConfig({
   vite: {
     ssr: {
-      noExternal: ["lucide-react", "framer-motion"],
+      noExternal: true,
     },
   },
   cloudflare: !isVercel ? {} : undefined,
