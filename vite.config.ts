@@ -18,6 +18,11 @@ if (isVercel) {
 }
 
 export default defineLovableConfig({
+  vite: {
+    ssr: {
+      noExternal: ["lucide-react", "framer-motion"],
+    },
+  },
   cloudflare: !isVercel ? {} : undefined,
   server: {
     port: 5173,
