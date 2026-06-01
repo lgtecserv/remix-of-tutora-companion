@@ -202,7 +202,7 @@ function AdminBanners() {
           {banners?.map((b) => (
             <div key={b.id} className={`flex flex-col rounded-xl border ${b.is_active ? 'border-primary/30 shadow-[0_0_15px_rgba(234,88,12,0.1)]' : 'border-border opacity-60'} bg-card overflow-hidden transition-all`}>
               <div className="h-32 bg-muted relative">
-                <img src={b.image_url.includes('drive.google.com/file/d/') ? `https://drive.google.com/thumbnail?id=${b.image_url.match(/drive\.google\.com\/file\/d\/([^/]+)/)?.[1]}&sz=w1200` : b.image_url.includes('drive.google.com/uc') ? `https://drive.google.com/thumbnail?id=${new URL(b.image_url).searchParams.get('id')}&sz=w1200` : b.image_url} alt={b.name} className="w-full h-full object-cover" />
+                <img src={b.image_url} alt={b.name} className="w-full h-full object-cover" />
                 <div className="absolute top-2 right-2 flex gap-1">
                   <span className="bg-black/70 backdrop-blur text-white text-[10px] px-2 py-1 rounded-md uppercase font-bold tracking-wider">
                     {b.placement === 'middle' ? 'MEIO' : 'FIM'}
