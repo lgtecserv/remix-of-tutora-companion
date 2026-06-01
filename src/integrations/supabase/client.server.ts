@@ -5,9 +5,24 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
+function getEnv(key: string) {
+  if (process.env[key]) return process.env[key];
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const envPath = path.resolve(process.cwd(), '.env');
+    if (fs.existsSync(envPath)) {
+      const content = fs.readFileSync(envPath, 'utf-8');
+      const match = content.match(new RegExp(`^${key}=['"]?([^'"\\n]+)['"]?`, 'm'));
+      if (match) return match[1];
+    }
+  } catch (e) {}
+  return undefined;
+}
+
 function createSupabaseAdminClient() {
-  const SUPABASE_URL = process.env.SUPABASE_URL;
-  const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const SUPABASE_URL = getEnv("SUPABASE_URL") || getEnv("VITE_SUPABASE_URL");
+  const SUPABASE_SERVICE_ROLE_KEY = getEnv("SUPABASE_SERVICE_ROLE_KEY");
 
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
     const missing = [
