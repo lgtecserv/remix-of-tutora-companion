@@ -75,7 +75,19 @@ export function ImageUpload({ bucket, value, onChange, label = "Capa", aspect = 
       ) : (
         <div className="flex gap-2">
           <LinkIcon className="mt-2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="https://..." value={value} onChange={(e) => onChange(e.target.value)} />
+          <Input 
+            placeholder="https://..." 
+            value={value} 
+            onChange={(e) => {
+              let url = e.target.value;
+              const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+              if (driveMatch && driveMatch[1]) {
+                url = `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
+                toast.success("Link do Google Drive convertido para link direto!");
+              }
+              onChange(url);
+            }} 
+          />
         </div>
       )}
     </div>
