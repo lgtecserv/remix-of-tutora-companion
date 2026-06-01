@@ -27,6 +27,17 @@ function BlogPublicArticle() {
     },
   });
 
+  const { data: banners } = useQuery({
+    queryKey: ["public-banners"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("custom_banners")
+        .select("*")
+        .eq("is_active", true);
+      return data || [];
+    },
+  });
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] selection:bg-orange-500/30 selection:text-white flex flex-col">
@@ -56,6 +67,59 @@ function BlogPublicArticle() {
   }
 
   const isHtml = (post.content ?? "").trim().startsWith("<");
+
+  // Helper para buscar o melhor banner (Categoria Específica > Global)
+  const getBanner = (placement: "middle" | "end") => {
+    if (!banners || !post) return null;
+    const placementBanners = banners.filter(b => b.placement === placement);
+    
+    // 1. Tentar categoria específica
+    const categoryBanner = placementBanners.find(b => b.target_category && b.target_category.toLowerCase().trim() === post.category?.toLowerCase().trim());
+    if (categoryBanner) return categoryBanner;
+    
+    // 2. Fallback para globais
+    const globalBanners = placementBanners.filter(b => !b.target_category || b.target_category.trim() === "");
+    if (globalBanners.length > 0) {
+      return globalBanners[Math.floor(Math.random() * globalBanners.length)];
+    }
+    return null;
+  };
+
+  const middleBanner = getBanner("middle");
+  const endBanner = getBanner("end");
+
+  // Divisão Inteligente do Texto
+  const content = post.content || "";
+  let firstHalf = content;
+  let secondHalf = "";
+
+  if (middleBanner && !isHtml) {
+    const paragraphs = content.split('\n\n');
+    if (paragraphs.length > 3) {
+      const midPoint = Math.floor(paragraphs.length / 2);
+      firstHalf = paragraphs.slice(0, midPoint).join('\n\n');
+      secondHalf = paragraphs.slice(midPoint).join('\n\n');
+    }
+  } else if (middleBanner && isHtml) {
+    const paragraphs = content.split('</p>');
+    if (paragraphs.length > 3) {
+      const midPoint = Math.floor(paragraphs.length / 2);
+      firstHalf = paragraphs.slice(0, midPoint).join('</p>') + '</p>';
+      secondHalf = paragraphs.slice(midPoint).join('</p>');
+    }
+  }
+
+  const BannerAd = ({ banner }: { banner: any }) => {
+    if (!banner) return null;
+    return (
+      <a href={banner.target_url} target="_blank" rel="noreferrer" className="block my-12 relative group overflow-hidden rounded-2xl border border-white/10 shadow-xl transition-all hover:scale-[1.02] hover:border-orange-500/50 hover:shadow-orange-500/20">
+        <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white/40 text-[9px] uppercase font-bold px-2 py-1 rounded shadow-sm z-10 pointer-events-none border border-white/5">
+          Publicidade
+        </div>
+        <img src={banner.image_url} alt={banner.name} className="w-full h-auto object-cover max-h-[250px] md:max-h-[300px]" loading="lazy" />
+      </a>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] selection:bg-orange-500/30 selection:text-white flex flex-col">
@@ -177,13 +241,21 @@ function BlogPublicArticle() {
 
             <div className="prose prose-invert prose-orange prose-lg max-w-none text-white/70">
               {isHtml ? (
-                <div dangerouslySetInnerHTML={{ __html: post.content ?? "" }} />
+                <>
+                  <div dangerouslySetInnerHTML={{ __html: firstHalf }} />
+                  {middleBanner && <BannerAd banner={middleBanner} />}
+                  {secondHalf && <div dangerouslySetInnerHTML={{ __html: secondHalf }} />}
+                </>
               ) : (
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {post.content ?? ""}
-                </ReactMarkdown>
+                <>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{firstHalf}</ReactMarkdown>
+                  {middleBanner && <BannerAd banner={middleBanner} />}
+                  {secondHalf && <ReactMarkdown remarkPlugins={[remarkGfm]}>{secondHalf}</ReactMarkdown>}
+                </>
               )}
             </div>
+            
+            {endBanner && <BannerAd banner={endBanner} />}
             
             <div className="mt-12 pt-8 border-t border-white/10">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
