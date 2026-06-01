@@ -93,9 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:description", content: "Transforme o seu futuro dominando a tecnologia com o apoio de Inteligência Artificial." },
       { name: "twitter:image", content: "https://www.imersaocompleta.info/hero.jpg" },
       // Verificação do Google Search Console
-      { name: "google-site-verification", content: "xtVa_GklrXpoxNc_KxtW_bSN2JrIHLMxjp6AptyNGKo" },
-      // Verificação do Bing Webmaster Tools
-      { name: "msvalidate.01", content: "COLOQUE_AQUI_O_SEU_CODIGO_BING" }
+      { name: "google-site-verification", content: "xtVa_GklrXpoxNc_KxtW_bSN2JrIHLMxjp6AptyNGKo" }
     ],
     links: [
       {
