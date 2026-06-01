@@ -7,12 +7,7 @@
 import { defineConfig as defineLovableConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineLovableConfig({
-  vite: {
-    ssr: {
-      noExternal: true,
-    },
-  },
-  cloudflare: {},
+  cloudflare: false,
   server: {
     port: 5173,
     strictPort: true,
