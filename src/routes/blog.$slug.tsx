@@ -74,8 +74,10 @@ function BlogPublicArticle() {
     const placementBanners = banners.filter(b => b.placement === placement);
     
     // 1. Tentar categoria específica
-    const categoryBanner = placementBanners.find(b => b.target_category && b.target_category.toLowerCase().trim() === post.category?.toLowerCase().trim());
-    if (categoryBanner) return categoryBanner;
+    const categoryBanners = placementBanners.filter(b => b.target_category && b.target_category.toLowerCase().trim() === post.category?.toLowerCase().trim());
+    if (categoryBanners.length > 0) {
+      return categoryBanners[Math.floor(Math.random() * categoryBanners.length)];
+    }
     
     // 2. Fallback para globais
     const globalBanners = placementBanners.filter(b => !b.target_category || b.target_category.trim() === "");
@@ -112,11 +114,11 @@ function BlogPublicArticle() {
   const BannerAd = ({ banner }: { banner: any }) => {
     if (!banner) return null;
     return (
-      <a href={banner.target_url} target="_blank" rel="noreferrer" className="block my-12 relative group overflow-hidden rounded-2xl border border-white/10 shadow-xl transition-all hover:scale-[1.02] hover:border-orange-500/50 hover:shadow-orange-500/20">
+      <a href={banner.target_url} target="_blank" rel="noreferrer" className="block my-12 relative group overflow-hidden rounded-2xl border border-white/10 shadow-xl transition-all hover:scale-[1.02] hover:border-orange-500/50 hover:shadow-orange-500/20 aspect-[16/9] sm:aspect-[21/9] md:aspect-[3/1] bg-muted/20">
         <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white/40 text-[9px] uppercase font-bold px-2 py-1 rounded shadow-sm z-10 pointer-events-none border border-white/5">
           Publicidade
         </div>
-        <img src={banner.image_url} alt={banner.name} className="w-full h-auto object-cover max-h-[250px] md:max-h-[300px]" loading="lazy" />
+        <img src={banner.image_url} alt={banner.name} className="w-full h-full object-cover" loading="lazy" />
       </a>
     );
   };

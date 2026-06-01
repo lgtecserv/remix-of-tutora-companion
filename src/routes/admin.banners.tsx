@@ -74,7 +74,7 @@ function AdminBanners() {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("bucket", "courses"); // Reusing courses bucket for simplicity
+      formData.append("bucket", "blog-images");
       formData.append("path", `banners/${Date.now()}-${file.name}`);
 
       const res = await fetch("/api/upload", {
