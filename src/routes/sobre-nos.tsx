@@ -23,7 +23,7 @@ function AboutUs() {
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">Sobre a Imersão Completa</h1>
             <p className="text-xl text-white/60 leading-relaxed max-w-3xl mx-auto">
-              Somos uma plataforma dedicada a transformar a forma como as pessoas aprendem e desenvolvem novas competências no mundo digital.
+              A Imersão Completa é um projeto dedicado a transformar a forma como as pessoas aprendem e desenvolvem novas competências no mundo digital. Somos orgulhosamente geridos e operados pela <a href="https://www.lgtecserv.com/sobre-nos-lg-tecserv-mocambique" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:underline">LG TecServ</a>, uma agência de soluções digitais sedeada em Moçambique.
             </p>
           </div>
 

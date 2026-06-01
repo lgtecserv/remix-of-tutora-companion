@@ -58,8 +58,8 @@ function Contact() {
                   <MapPin className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
                     <h3 className="font-bold text-white">Localização</h3>
-                    <p>Moçambique</p>
-                    <p className="text-sm text-white/50">Operamos globalmente de forma digital</p>
+                    <p>Sede: LG TecServ, Maputo, Moçambique</p>
+                    <a href="https://share.google/MSvYUlVNmdQK9JMRJ" target="_blank" rel="noopener noreferrer" className="text-sm text-orange-500 hover:underline mt-1 inline-block">Ver no Google Maps</a>
                   </div>
                 </div>
               </div>
