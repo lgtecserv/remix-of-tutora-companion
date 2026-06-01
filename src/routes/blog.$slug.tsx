@@ -123,6 +123,11 @@ function BlogPublicArticle() {
               </h1>
               
               <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-white/60">
+                <div className="flex items-center gap-2 text-white/90">
+                  <div className="h-6 w-6 rounded-full bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-[10px] font-bold text-white">IC</div>
+                  <span>Por Equipa Imersão Completa</span>
+                </div>
+                <span className="h-1 w-1 rounded-full bg-white/30" />
                 <span suppressHydrationWarning>{new Date(post.published_at || post.created_at).toLocaleDateString("pt-PT", { day: "numeric", month: "long", year: "numeric" })}</span>
                 {post.reading_minutes && (
                   <>

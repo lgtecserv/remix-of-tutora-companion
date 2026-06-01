@@ -82,6 +82,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "A Imersão Completa é a plataforma definitiva em Moçambique para aprender programação, desenvolvimento web, Inteligência Artificial e Marketing Digital do zero." },
       { name: "keywords", content: "curso de programação, criar sites, aprender inteligência artificial, marketing digital, renda online, plataforma de ensino online, cursos online, Moçambique" },
       { name: "author", content: "Imersão Completa" },
+      { name: "robots", content: "max-image-preview:large" },
       { property: "og:title", content: "Imersão Completa | Aprenda. Crie. Fature." },
       { property: "og:description", content: "Aprenda desenvolvimento web, sistemas, IA e negócios digitais. A plataforma definitiva para transformar conhecimento em faturamento." },
       { property: "og:type", content: "website" },
