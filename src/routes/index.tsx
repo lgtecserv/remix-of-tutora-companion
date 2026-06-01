@@ -95,7 +95,7 @@ function Hero() {
           </p>
           <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
             <Link to="/registo" className="rounded-full bg-orange-600 px-8 py-4 text-lg font-semibold text-white shadow-[0_0_30px_-5px_rgba(234,88,12,0.6)] transition hover:scale-105 hover:bg-orange-500">
-              Fazer Pré-Inscrição
+              Criar Conta Gratuita
             </Link>
             <a href="#cursos" className="rounded-full border border-white/30 bg-white/10 px-8 py-4 text-lg font-semibold text-white backdrop-blur transition hover:bg-white/20">
               Ver cursos
