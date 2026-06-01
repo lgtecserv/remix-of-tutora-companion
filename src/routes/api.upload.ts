@@ -28,7 +28,7 @@ export const Route = createFileRoute("/api/upload")({
             return new Response(JSON.stringify({ error: error.message }), { status: 500 });
           }
 
-          const { data: publicUrlData } = supabaseAdmin.storage.from(bucket).getPublicUrl(path);
+          const { data: publicUrlData } = supabaseAdmin.storage.from(bucket).getPublicUrl(data.path);
 
           return new Response(JSON.stringify({ 
             success: true, 
@@ -36,7 +36,8 @@ export const Route = createFileRoute("/api/upload")({
             publicUrl: publicUrlData.publicUrl 
           }), { status: 200, headers: { "Content-Type": "application/json" } });
         } catch (err: any) {
-          return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+          console.error("UPLOAD ERROR:", err);
+          return new Response(JSON.stringify({ error: err.message, stack: err.stack }), { status: 500 });
         }
       },
     },
