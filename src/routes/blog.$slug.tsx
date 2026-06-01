@@ -59,27 +59,27 @@ function BlogPublicArticle() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] selection:bg-orange-500/30 selection:text-white flex flex-col">
-      {post.llm_summary && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Article",
-              "headline": post.title,
-              "image": post.cover_url ? [post.cover_url] : [],
-              "datePublished": post.published_at || post.created_at,
-              "dateModified": post.updated_at || post.published_at || post.created_at,
-              "abstract": post.llm_summary,
-              "author": [{
-                "@type": "Organization",
-                "name": "Imersão Completa",
-                "url": "https://lgtecserv.com"
-              }]
-            })
-          }}
-        />
-      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": post.title,
+            "image": [
+              post.cover_url || `https://image.pollinations.ai/prompt/${encodeURIComponent(post.title)}?width=1200&height=600&nologo=true`
+            ],
+            "datePublished": post.published_at || post.created_at,
+            "dateModified": post.updated_at || post.published_at || post.created_at,
+            "abstract": post.llm_summary || post.excerpt || "",
+            "author": [{
+              "@type": "Organization",
+              "name": "Imersão Completa",
+              "url": "https://lgtecserv.com"
+            }]
+          })
+        }}
+      />
       <Header />
       
       <main className="flex-1 pb-20">
