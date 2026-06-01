@@ -1,6 +1,12 @@
 
 import server from '../dist/server/server.js';
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 export default async function(req, res) {
   try {
     const protocol = req.headers['x-forwarded-proto'] || 'https';
@@ -15,18 +21,16 @@ export default async function(req, res) {
       }
     }
     
-    const init = { method: req.method, headers };
+    let body = undefined;
     if (req.method !== 'GET' && req.method !== 'HEAD') {
-      init.body = new ReadableStream({
-        start(controller) {
-          req.on('data', chunk => controller.enqueue(chunk));
-          req.on('end', () => controller.close());
-          req.on('error', err => controller.error(err));
-        }
-      });
-      init.duplex = 'half';
+      const chunks = [];
+      for await (const chunk of req) {
+        chunks.push(chunk);
+      }
+      body = Buffer.concat(chunks);
     }
     
+    const init = { method: req.method, headers, body };
     const request = new Request(url.href, init);
     const response = await server.fetch(request, process.env, {});
     
