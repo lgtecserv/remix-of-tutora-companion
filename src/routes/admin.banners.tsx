@@ -135,6 +135,16 @@ function AdminBanners() {
     setTargetCategory(b.target_category || "");
   }
 
+  const { data: blogCategories } = useQuery({
+    queryKey: ["blog-categories"],
+    queryFn: async () => {
+      const { data } = await supabase.from("blog_posts").select("category").eq("is_published", true);
+      if (!data) return [];
+      const unique = Array.from(new Set(data.map(p => p.category).filter(Boolean)));
+      return unique as string[];
+    }
+  });
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -158,8 +168,17 @@ function AdminBanners() {
               <Input placeholder="Ex: Banner Curso IA Black Friday" value={name} onChange={(e) => setName(e.target.value)} />
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground mb-1 block">Categoria Alvo (Deixe vazio para aparecer em todos)</label>
-              <Input placeholder="Ex: Inteligência Artificial" value={targetCategory} onChange={(e) => setTargetCategory(e.target.value)} />
+              <label className="text-sm font-medium text-muted-foreground mb-1 block">Categoria Alvo</label>
+              <select 
+                value={targetCategory} 
+                onChange={(e) => setTargetCategory(e.target.value)}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              >
+                <option value="">Todas as Categorias (Banner Global)</option>
+                {blogCategories?.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
             </div>
             <div className="md:col-span-2">
               <label className="text-sm font-medium text-muted-foreground mb-1 block">Imagem do Banner</label>
