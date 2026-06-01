@@ -100,6 +100,10 @@ function SignupPage() {
           </button>
         </form>
         
+        <p className="mt-4 text-center text-[11px] text-white/40 leading-relaxed">
+          Ao registar-se, concorda com os nossos <Link to="/termos-de-uso" className="underline hover:text-white">Termos de Uso</Link> e <Link to="/politica-de-privacidade" className="underline hover:text-white">Política de Privacidade</Link>.
+        </p>
+        
         <p className="mt-6 text-center text-sm font-medium text-white/70">
           Já tem conta? <Link to="/login" className="font-bold text-white transition-colors hover:text-orange-400">Entrar</Link>
         </p>
