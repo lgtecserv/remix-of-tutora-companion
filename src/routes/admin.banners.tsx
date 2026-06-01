@@ -35,6 +35,8 @@ function AdminBanners() {
     },
   });
 
+  const [isUploading, setIsUploading] = useState(false);
+
   const saveMutation = useMutation({
     mutationFn: async () => {
       const payload = {
@@ -63,6 +65,34 @@ function AdminBanners() {
       toast.error(`Erro ao salvar: ${err.message}`);
     },
   });
+
+  async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("bucket", "courses"); // Reusing courses bucket for simplicity
+      formData.append("path", `banners/${Date.now()}-${file.name}`);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Erro no upload");
+      
+      setImageUrl(data.publicUrl);
+      toast.success("Imagem carregada com sucesso!");
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setIsUploading(false);
+    }
+  }
 
   const toggleMutation = useMutation({
     mutationFn: async ({ id, is_active }: { id: string; is_active: boolean }) => {
@@ -132,8 +162,17 @@ function AdminBanners() {
               <Input placeholder="Ex: Inteligência Artificial" value={targetCategory} onChange={(e) => setTargetCategory(e.target.value)} />
             </div>
             <div className="md:col-span-2">
-              <label className="text-sm font-medium text-muted-foreground mb-1 block">URL da Imagem (Pode usar link do Imgur, Unsplash ou Supabase Storage)</label>
-              <Input placeholder="https://..." value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
+              <label className="text-sm font-medium text-muted-foreground mb-1 block">Imagem do Banner</label>
+              <div className="flex gap-2">
+                <Input placeholder="https://..." value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} className="flex-1" />
+                <div className="relative overflow-hidden inline-block">
+                  <Input type="file" accept="image/*" onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" disabled={isUploading} />
+                  <Button type="button" variant="secondary" className="pointer-events-none" disabled={isUploading}>
+                    {isUploading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <ImageIcon className="h-4 w-4 mr-2" />}
+                    {isUploading ? "A enviar..." : "Fazer Upload"}
+                  </Button>
+                </div>
+              </div>
             </div>
             <div className="md:col-span-2">
               <label className="text-sm font-medium text-muted-foreground mb-1 block">Link de Destino (Onde o utilizador vai parar se clicar)</label>
