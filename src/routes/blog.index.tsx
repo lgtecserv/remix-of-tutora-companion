@@ -3,12 +3,14 @@ import { Header, Footer } from "@/components/public-layout";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
+import { useState, useMemo } from "react";
 
 export const Route = createFileRoute("/blog/")({
   component: BlogPublicPage,
 });
 
 function BlogPublicPage() {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { data: posts, isLoading } = useQuery({
     queryKey: ["public-blog-posts"],
     queryFn: async () => {
@@ -26,7 +28,25 @@ function BlogPublicPage() {
   const leftFeatured = featuredPosts.slice(1, 3);
   const rightFeatured = featuredPosts.slice(3, 5);
   
-  const recentPosts = posts?.slice(5) || [];
+  // Extrair categorias reais e respetivas contagens do Supabase
+  const categories = useMemo(() => {
+    if (!posts) return [];
+    const counts: Record<string, number> = {};
+    posts.forEach((p) => {
+      if (p.category) {
+        counts[p.category] = (counts[p.category] || 0) + 1;
+      }
+    });
+    return Object.entries(counts)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count);
+  }, [posts]);
+
+  const allRecentPosts = posts?.slice(5) || [];
+  // Filtrar artigos recentes pela categoria selecionada
+  const recentPosts = selectedCategory 
+    ? allRecentPosts.filter((p) => p.category === selectedCategory)
+    : allRecentPosts;
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] selection:bg-orange-500/30 selection:text-white">
@@ -71,7 +91,9 @@ function BlogPublicPage() {
           {/* Main Content (70%) */}
           <div className="flex-1">
             <div className="mb-8 border-b border-white/10 pb-4">
-              <h2 className="text-2xl font-bold text-white">Artigos Recentes</h2>
+              <h2 className="text-2xl font-bold text-white">
+                {selectedCategory ? `Artigos de ${selectedCategory}` : "Artigos Recentes"}
+              </h2>
             </div>
             
             <div className="space-y-8">
@@ -126,20 +148,35 @@ function BlogPublicPage() {
               </p>
             </div>
             
-            {/* Widget: Categorias */}
+            {/* Widget: Categorias Reais */}
             <div>
-              <h3 className="mb-6 border-b border-white/10 pb-2 text-lg font-bold text-white">Categorias</h3>
+              <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-2">
+                <h3 className="text-lg font-bold text-white">Categorias</h3>
+                {selectedCategory && (
+                  <button onClick={() => setSelectedCategory(null)} className="text-xs text-orange-500 hover:underline">
+                    Limpar filtro
+                  </button>
+                )}
+              </div>
               <ul className="space-y-3">
-                {["Inteligência Artificial", "Desenvolvimento Web", "Negócios Digitais", "Empreendedorismo", "Carreira"].map((cat) => (
-                  <li key={cat}>
-                    <a href="#" className="group flex items-center justify-between text-sm text-white/70 transition-colors hover:text-orange-500">
-                      <span>{cat}</span>
-                      <span className="rounded bg-white/5 px-2 py-0.5 text-xs text-white/40 group-hover:bg-orange-500/10 group-hover:text-orange-500">
-                        {cat.length * 2 + 1}
+                {categories.length > 0 ? categories.map((cat) => (
+                  <li key={cat.name}>
+                    <button 
+                      onClick={() => {
+                        setSelectedCategory(selectedCategory === cat.name ? null : cat.name);
+                        window.scrollTo({ top: 500, behavior: "smooth" });
+                      }} 
+                      className={`group flex w-full items-center justify-between text-sm transition-colors ${selectedCategory === cat.name ? "text-orange-500 font-bold" : "text-white/70 hover:text-orange-500"}`}
+                    >
+                      <span className="text-left">{cat.name}</span>
+                      <span className={`rounded px-2 py-0.5 text-xs ${selectedCategory === cat.name ? "bg-orange-500/20 text-orange-500" : "bg-white/5 text-white/40 group-hover:bg-orange-500/10 group-hover:text-orange-500"}`}>
+                        {cat.count}
                       </span>
-                    </a>
+                    </button>
                   </li>
-                ))}
+                )) : (
+                  <li className="text-sm text-white/40">Sem categorias disponíveis</li>
+                )}
               </ul>
             </div>
           </aside>
