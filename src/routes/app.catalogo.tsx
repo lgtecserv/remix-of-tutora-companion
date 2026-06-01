@@ -90,7 +90,7 @@ function Catalog() {
           const enrolled = enrolledIds.has(c.id);
           return (
             <div key={c.id} className="overflow-hidden flex flex-col rounded-2xl border border-border bg-card transition hover:border-primary/40">
-              {c.cover_url ? <img src={c.cover_url} alt={c.title} className="h-28 sm:h-44 w-full object-cover" /> : <div className="h-28 sm:h-44 bg-muted" />}
+              {c.cover_url ? <img src={c.cover_url} alt={c.title} loading="lazy" className="h-28 sm:h-44 w-full object-cover" /> : <div className="h-28 sm:h-44 bg-muted" />}
               <div className="p-3 sm:p-5 flex flex-col flex-1">
                 <div className="flex items-center justify-between text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">
                   <span className="line-clamp-1 mr-1">{c.category ?? "Curso"}</span>

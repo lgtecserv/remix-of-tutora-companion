@@ -109,6 +109,7 @@ function BlogPublicPage() {
                     <img 
                       src={post.cover_url || "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=2070"} 
                       alt={post.title}
+                      loading="lazy"
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     {post.category && (
