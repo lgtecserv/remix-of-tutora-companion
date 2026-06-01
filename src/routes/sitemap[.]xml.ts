@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { supabase } from "@/integrations/supabase/client";
 
 // URL base da plataforma
 const BASE_URL = "https://www.imersaocompleta.info";
@@ -22,31 +22,34 @@ export const Route = createFileRoute("/sitemap.xml")({
 
         try {
           // 1. Buscar posts de blog publicados dinamicamente
-          const { data: posts } = await supabaseAdmin
+          const { data: posts, error: postsError } = await supabase
             .from("blog_posts")
             .select("slug")
             .eq("is_published", true);
 
+          if (postsError) console.error("Erro Sitemap (Blog):", postsError);
+
           if (posts) {
             posts.forEach(post => {
-              paths.push(`/blog/${post.slug}`);
+              if (post.slug) paths.push(`/blog/${post.slug}`);
             });
           }
 
           // 2. Buscar cursos publicados dinamicamente
-          const { data: courses } = await supabaseAdmin
+          const { data: courses, error: coursesError } = await supabase
             .from("courses")
             .select("slug")
             .eq("is_published", true);
+            
+          if (coursesError) console.error("Erro Sitemap (Cursos):", coursesError);
 
           if (courses) {
             courses.forEach(course => {
-              // Assumindo que os cursos têm uma página pública em /curso/:slug
-              paths.push(`/curso/${course.slug}`);
+              if (course.slug) paths.push(`/curso/${course.slug}`);
             });
           }
         } catch (error) {
-          console.error("Erro ao gerar sitemap dinâmico:", error);
+          console.error("Erro fatal ao gerar sitemap dinâmico:", error);
         }
 
         const urls = paths
