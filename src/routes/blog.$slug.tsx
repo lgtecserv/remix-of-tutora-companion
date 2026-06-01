@@ -118,7 +118,7 @@ function BlogPublicArticle() {
         <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white/40 text-[9px] uppercase font-bold px-2 py-1 rounded shadow-sm z-10 pointer-events-none border border-white/5">
           Publicidade
         </div>
-        <img src={banner.image_url} alt={banner.name} className="w-full h-full object-cover" loading="lazy" />
+        <img src={banner.image_url?.includes('drive.google.com/file/d/') ? `https://drive.google.com/thumbnail?id=${banner.image_url.match(/drive\.google\.com\/file\/d\/([^/]+)/)?.[1]}&sz=w1200` : banner.image_url?.includes('drive.google.com/uc') ? `https://drive.google.com/thumbnail?id=${new URL(banner.image_url).searchParams.get('id')}&sz=w1200` : banner.image_url} alt={banner.name} className="w-full h-full object-cover" loading="lazy" />
       </a>
     );
   };
