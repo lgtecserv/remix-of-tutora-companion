@@ -15,10 +15,12 @@ export const Route = createFileRoute("/api/upload")({
             return new Response(JSON.stringify({ error: "Parâmetros incompletos" }), { status: 400 });
           }
 
+          const buffer = await file.arrayBuffer();
+
           const { data, error } = await supabaseAdmin.storage
             .from(bucket)
-            .upload(path, file, {
-              contentType: file.type,
+            .upload(path, buffer, {
+              contentType: file.type || "application/octet-stream",
               upsert: true,
             });
 
