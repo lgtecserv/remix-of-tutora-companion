@@ -522,8 +522,9 @@ function AdminComments() {
                   )}
                 >
                   {/* Row Content */}
-                  <div className="flex items-start gap-4 w-full">
-                    {/* Select Checkbox */}
+                  <div className="flex flex-col md:flex-row items-start gap-4 w-full">
+                    <div className="flex items-start gap-3 w-full flex-1">
+                      {/* Select Checkbox */}
                   <button
                     onClick={() => toggleSelectOne(c.id)}
                     className="mt-1 text-neutral-600 hover:text-white transition-colors"
@@ -600,10 +601,10 @@ function AdminComments() {
                         </span>
                       )}
                     </div>
-                  </div>
+                    </div>
 
                   {/* Actions column */}
-                  <div className="flex gap-1.5 self-center">
+                  <div className="flex gap-1.5 self-start md:self-center ml-[2.75rem] md:ml-0 mt-2 md:mt-0">
                     <Button
                       variant="outline"
                       size="sm"
