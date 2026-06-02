@@ -18,25 +18,27 @@ export const Route = createFileRoute("/blog/$slug")({
       .maybeSingle();
     return { post };
   },
-  meta: ({ loaderData }) => {
+  head: ({ loaderData }) => {
     if (!loaderData?.post) {
-      return [{ title: "Artigo não encontrado | Imersão Completa" }];
+      return { meta: [{ title: "Artigo não encontrado | Imersão Completa" }] };
     }
     const { post } = loaderData;
     const fallbackImage = "https://www.imersaocompleta.info/favicon.ico";
     const coverImage = post.cover_url || fallbackImage;
-    return [
-      { title: `${post.title} | Imersão Completa` },
-      { name: "description", content: post.excerpt || "Leia este artigo na Imersão Completa." },
-      { property: "og:title", content: post.title },
-      { property: "og:description", content: post.excerpt || "Leia este artigo na Imersão Completa." },
-      { key: "og-image", property: "og:image", content: coverImage },
-      { property: "og:type", content: "article" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: post.title },
-      { name: "twitter:description", content: post.excerpt || "Leia este artigo na Imersão Completa." },
-      { key: "tw-image", name: "twitter:image", content: coverImage },
-    ];
+    return {
+      meta: [
+        { title: `${post.title} | Imersão Completa` },
+        { name: "description", content: post.excerpt || "Leia este artigo na Imersão Completa." },
+        { property: "og:title", content: post.title },
+        { property: "og:description", content: post.excerpt || "Leia este artigo na Imersão Completa." },
+        { key: "og-image", property: "og:image", content: coverImage },
+        { property: "og:type", content: "article" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: post.title },
+        { name: "twitter:description", content: post.excerpt || "Leia este artigo na Imersão Completa." },
+        { key: "tw-image", name: "twitter:image", content: coverImage },
+      ]
+    };
   },
   component: BlogPublicArticle,
 });
