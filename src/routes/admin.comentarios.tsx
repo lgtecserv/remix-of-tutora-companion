@@ -602,6 +602,7 @@ function AdminComments() {
                       )}
                     </div>
                     </div>
+                  </div>
 
                   {/* Actions column */}
                   <div className="flex gap-1.5 self-start md:self-center ml-[2.75rem] md:ml-0 mt-2 md:mt-0">
