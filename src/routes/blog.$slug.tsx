@@ -124,7 +124,7 @@ function BlogPublicArticle() {
     const banner = pool[currentIndex];
 
     return (
-      <div className="block my-12 relative group overflow-hidden rounded-2xl border border-white/10 shadow-xl aspect-[16/9] sm:aspect-[21/9] md:aspect-[3/1] bg-muted/20">
+      <div className="block my-12 relative group overflow-hidden rounded-2xl border border-white/10 shadow-xl aspect-[16/9] sm:aspect-[21/9] md:aspect-[3/1] bg-black/40">
         <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white/40 text-[9px] uppercase font-bold px-2 py-1 rounded shadow-sm z-20 pointer-events-none border border-white/5">
           Publicidade
         </div>
@@ -140,7 +140,7 @@ function BlogPublicArticle() {
             transition={{ duration: 0.8 }}
             className="absolute inset-0 block w-full h-full transition-all hover:scale-[1.02] hover:border-orange-500/50 hover:shadow-orange-500/20"
           >
-            <img src={banner.image_url} alt={banner.name} className="w-full h-full object-cover" loading="lazy" />
+            <img src={banner.image_url} alt={banner.name} className="w-full h-full object-contain" loading="lazy" />
           </motion.a>
         </AnimatePresence>
       </div>
@@ -148,7 +148,7 @@ function BlogPublicArticle() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] selection:bg-orange-500/30 selection:text-white flex flex-col">
+    <div className="min-h-screen bg-[#0a0a0a] selection:bg-orange-500/30 selection:text-white flex flex-col overflow-x-hidden max-w-[100vw]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
