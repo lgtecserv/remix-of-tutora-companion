@@ -8,9 +8,11 @@ import { defineConfig as defineLovableConfig } from "@lovable.dev/vite-tanstack-
 
 export default defineLovableConfig({
   cloudflare: false,
-  server: {
-    port: 5173,
-    strictPort: true,
+  vite: {
+    server: {
+      port: 5173,
+      strictPort: true,
+    },
   },
   tanstackStart: {
     server: {

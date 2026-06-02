@@ -1,4 +1,5 @@
-import { useEditor, EditorContent, Editor, BubbleMenu } from "@tiptap/react";
+import { useEditor, EditorContent, Editor } from "@tiptap/react";
+import { BubbleMenu } from "@tiptap/react/menus";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
@@ -105,7 +106,7 @@ export function RichEditor({ value, onChange, placeholder = "Comece a escrever..
       <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && uploadImage(e.target.files[0])} />
       
       {editor && (
-        <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }} className="flex bg-zinc-900 shadow-xl rounded-lg border border-white/10 overflow-hidden px-1 py-1 gap-1">
+        <BubbleMenu editor={editor} className="flex bg-zinc-900 shadow-xl rounded-lg border border-white/10 overflow-hidden px-1 py-1 gap-1">
           <button type="button" onClick={() => editor.chain().focus().toggleBold().run()} className={`p-1.5 rounded hover:bg-white/10 transition ${editor.isActive('bold') ? 'bg-white/20 text-white' : 'text-zinc-400'}`}>
             <Bold className="w-4 h-4" />
           </button>

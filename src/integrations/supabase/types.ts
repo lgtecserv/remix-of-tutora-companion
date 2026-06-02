@@ -92,6 +92,39 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_banners: {
+        Row: {
+          id: string
+          name: string
+          image_url: string
+          target_url: string
+          placement: string
+          target_category: string | null
+          is_active: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          image_url: string
+          target_url: string
+          placement: string
+          target_category?: string | null
+          is_active?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          image_url?: string
+          target_url?: string
+          placement?: string
+          target_category?: string | null
+          is_active?: boolean
+          created_at?: string
+        }
+        Relationships: []
+      }
       comments: {
         Row: {
           content: string
