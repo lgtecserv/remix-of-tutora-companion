@@ -33,8 +33,8 @@ function AdminStudents() {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-foreground">Alunos</h1>
       {isLoading && <div className="text-muted-foreground">A carregar...</div>}
-      <div className="overflow-hidden rounded-2xl border border-border bg-card">
-        <table className="w-full text-sm">
+      <div className="overflow-x-auto rounded-2xl border border-border bg-card">
+        <table className="w-full text-sm whitespace-nowrap">
           <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
             <tr><th className="px-4 py-3">Nome</th><th className="px-4 py-3">Bio</th><th className="px-4 py-3">Cursos</th><th className="px-4 py-3">Aulas concluídas</th><th className="px-4 py-3">Último acesso</th></tr>
           </thead>

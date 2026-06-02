@@ -44,8 +44,8 @@ function AdminBlog() {
           <button key={k} onClick={() => setFilter(k)} className={`rounded-full px-3 py-1 text-sm ${filter === k ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"}`}>{l}</button>
         ))}
       </div>
-      <div className="overflow-hidden rounded-2xl border border-border bg-card">
-        <table className="w-full text-sm">
+      <div className="overflow-x-auto rounded-2xl border border-border bg-card">
+        <table className="w-full text-sm whitespace-nowrap">
           <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground"><tr><th className="px-4 py-3">Título</th><th className="px-4 py-3">Categoria</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Ações</th></tr></thead>
           <tbody>
             {filtered.map((p: any) => (

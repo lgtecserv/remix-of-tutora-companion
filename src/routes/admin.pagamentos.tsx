@@ -42,8 +42,8 @@ function AdminPayments() {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-foreground">Pagamentos</h1>
       <p className="text-sm text-muted-foreground">Métodos disponíveis: M-Pesa, e-Mola, Transferência bancária. Aprovação manual libera o curso automaticamente.</p>
-      <div className="overflow-hidden rounded-2xl border border-border bg-card">
-        <table className="w-full text-sm">
+      <div className="overflow-x-auto rounded-2xl border border-border bg-card">
+        <table className="w-full text-sm whitespace-nowrap">
           <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground"><tr><th className="px-4 py-3">Aluno</th><th className="px-4 py-3">Curso</th><th className="px-4 py-3">Método</th><th className="px-4 py-3">Valor</th><th className="px-4 py-3">Referência</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Ações</th></tr></thead>
           <tbody>
             {(data ?? []).map((p: any) => (
