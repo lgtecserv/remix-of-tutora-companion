@@ -25,7 +25,8 @@ export const Route = createFileRoute("/sitemap.xml")({
           const { data: posts, error: postsError } = await supabase
             .from("blog_posts")
             .select("slug")
-            .eq("is_published", true);
+            .eq("is_published", true)
+            .or(`scheduled_at.is.null,scheduled_at.lte.${new Date().toISOString()}`);
 
           if (postsError) console.error("Erro Sitemap (Blog):", postsError);
 

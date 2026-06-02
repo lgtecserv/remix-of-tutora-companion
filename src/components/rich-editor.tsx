@@ -1,17 +1,83 @@
-import { useEditor, EditorContent, Editor } from "@tiptap/react";
+import { useEditor, EditorContent, Editor, BubbleMenu } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import Youtube from "@tiptap/extension-youtube";
 import TextAlign from "@tiptap/extension-text-align";
-import { Bold, Italic, List, ListOrdered, Quote, Code, Heading1, Heading2, Heading3, Link as LinkIcon, Image as ImageIcon, Youtube as YoutubeIcon, AlignLeft, AlignCenter, AlignRight, Undo, Redo } from "lucide-react";
+import { Bold, Italic, List, ListOrdered, Quote, Code, Heading1, Heading2, Heading3, Link as LinkIcon, Image as ImageIcon, Youtube as YoutubeIcon, AlignLeft, AlignCenter, AlignRight, Undo, Redo, Strikethrough } from "lucide-react";
 import { useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Extension } from "@tiptap/core";
+import { Plugin, PluginKey } from "prosemirror-state";
 
 export function RichEditor({ value, onChange, placeholder = "Comece a escrever..." }: { value: string; onChange: (html: string) => void; placeholder?: string }) {
   const fileRef = useRef<HTMLInputElement>(null);
+
+  async function uploadImage(file: File, view?: any, event?: any) {
+    if (file.size > 5 * 1024 * 1024) return toast.error("Máx. 5 MB");
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${file.name.split(".").pop()}`;
+    
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("bucket", "blog-images");
+    formData.append("path", path);
+
+    const loadingToast = toast.loading("A carregar imagem...");
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const json = await res.json();
+      
+      if (!res.ok || json.error) {
+        toast.dismiss(loadingToast);
+        return toast.error(json.error || "Erro no upload");
+      }
+
+      toast.dismiss(loadingToast);
+      
+      if (view && event) {
+        const coordinates = view.posAtCoords({ left: event.clientX, top: event.clientY });
+        if (coordinates) {
+          editor?.chain().focus().insertContentAt(coordinates.pos, { type: 'image', attrs: { src: json.publicUrl } }).run();
+          return;
+        }
+      }
+      
+      editor?.chain().focus().setImage({ src: json.publicUrl }).run();
+    } catch (err: any) {
+      toast.dismiss(loadingToast);
+      toast.error(err.message || "Erro de conexão");
+    }
+  }
+
+  const ImageDropExtension = Extension.create({
+    name: "imageDrop",
+    addProseMirrorPlugins() {
+      return [
+        new Plugin({
+          key: new PluginKey("imageDrop"),
+          props: {
+            handleDrop(view, event, slice, moved) {
+              if (!moved && event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0]) {
+                const file = event.dataTransfer.files[0];
+                if (file.type.startsWith("image/")) {
+                  event.preventDefault();
+                  uploadImage(file, view, event);
+                  return true;
+                }
+              }
+              return false;
+            }
+          }
+        })
+      ];
+    }
+  });
 
   const editor = useEditor({
     extensions: [
@@ -21,6 +87,7 @@ export function RichEditor({ value, onChange, placeholder = "Comece a escrever..
       Placeholder.configure({ placeholder }),
       Youtube.configure({ width: 640, height: 360, HTMLAttributes: { class: "rounded-xl" } }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
+      ImageDropExtension,
     ],
     content: value || "",
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
@@ -32,36 +99,32 @@ export function RichEditor({ value, onChange, placeholder = "Comece a escrever..
 
   if (!editor) return <div className="min-h-[400px] rounded-md border border-input bg-background" />;
 
-  async function uploadImage(file: File) {
-    if (file.size > 5 * 1024 * 1024) return toast.error("Máx. 5 MB");
-    const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${file.name.split(".").pop()}`;
-    
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("bucket", "blog-images");
-    formData.append("path", path);
-
-    try {
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const json = await res.json();
-      
-      if (!res.ok || json.error) {
-        return toast.error(json.error || "Erro no upload");
-      }
-
-      editor!.chain().focus().setImage({ src: json.publicUrl }).run();
-    } catch (err: any) {
-      toast.error(err.message || "Erro de conexão");
-    }
-  }
-
   return (
-    <div className="overflow-hidden rounded-md border border-input bg-background">
+    <div className="overflow-hidden rounded-md border border-input bg-background relative">
       <Toolbar editor={editor} onImageClick={() => fileRef.current?.click()} />
       <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && uploadImage(e.target.files[0])} />
+      
+      {editor && (
+        <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }} className="flex bg-zinc-900 shadow-xl rounded-lg border border-white/10 overflow-hidden px-1 py-1 gap-1">
+          <button type="button" onClick={() => editor.chain().focus().toggleBold().run()} className={`p-1.5 rounded hover:bg-white/10 transition ${editor.isActive('bold') ? 'bg-white/20 text-white' : 'text-zinc-400'}`}>
+            <Bold className="w-4 h-4" />
+          </button>
+          <button type="button" onClick={() => editor.chain().focus().toggleItalic().run()} className={`p-1.5 rounded hover:bg-white/10 transition ${editor.isActive('italic') ? 'bg-white/20 text-white' : 'text-zinc-400'}`}>
+            <Italic className="w-4 h-4" />
+          </button>
+          <button type="button" onClick={() => editor.chain().focus().toggleStrike().run()} className={`p-1.5 rounded hover:bg-white/10 transition ${editor.isActive('strike') ? 'bg-white/20 text-white' : 'text-zinc-400'}`}>
+            <Strikethrough className="w-4 h-4" />
+          </button>
+          <div className="w-px h-5 bg-white/10 my-auto mx-1" />
+          <button type="button" onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={`p-1.5 rounded hover:bg-white/10 transition ${editor.isActive('heading', { level: 2 }) ? 'bg-white/20 text-white' : 'text-zinc-400'}`}>
+            <Heading2 className="w-4 h-4" />
+          </button>
+          <button type="button" onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} className={`p-1.5 rounded hover:bg-white/10 transition ${editor.isActive('heading', { level: 3 }) ? 'bg-white/20 text-white' : 'text-zinc-400'}`}>
+            <Heading3 className="w-4 h-4" />
+          </button>
+        </BubbleMenu>
+      )}
+
       <EditorContent editor={editor} />
     </div>
   );
