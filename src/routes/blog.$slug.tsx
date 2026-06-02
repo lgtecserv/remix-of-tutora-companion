@@ -9,6 +9,34 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 export const Route = createFileRoute("/blog/$slug")({
+  loader: async ({ params }) => {
+    const { data: post } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .eq("slug", params.slug)
+      .eq("is_published", true)
+      .maybeSingle();
+    return { post };
+  },
+  meta: ({ loaderData }) => {
+    if (!loaderData?.post) {
+      return [{ title: "Artigo não encontrado | Imersão Completa" }];
+    }
+    const { post } = loaderData;
+    const fallbackImage = `https://image.pollinations.ai/prompt/${encodeURIComponent(post.title)}?width=1200&height=600&nologo=true`;
+    return [
+      { title: `${post.title} | Imersão Completa` },
+      { name: "description", content: post.excerpt || "Leia este artigo na Imersão Completa." },
+      { property: "og:title", content: post.title },
+      { property: "og:description", content: post.excerpt || "Leia este artigo na Imersão Completa." },
+      { property: "og:image", content: post.cover_url || fallbackImage },
+      { property: "og:type", content: "article" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: post.title },
+      { name: "twitter:description", content: post.excerpt || "Leia este artigo na Imersão Completa." },
+      { name: "twitter:image", content: post.cover_url || fallbackImage },
+    ];
+  },
   component: BlogPublicArticle,
 });
 
@@ -26,6 +54,7 @@ function BlogPublicArticle() {
         .maybeSingle();
       return data;
     },
+    initialData: Route.useLoaderData()?.post,
   });
 
   const { data: banners } = useQuery({
