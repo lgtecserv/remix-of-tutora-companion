@@ -1,3 +1,4 @@
+import React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header, Footer } from "@/components/public-layout";
 import { useQuery } from "@tanstack/react-query";
@@ -68,27 +69,29 @@ function BlogPublicArticle() {
 
   const isHtml = (post.content ?? "").trim().startsWith("<");
 
-  // Helper para buscar o melhor banner (Categoria Específica > Global)
-  const getBanner = (placement: "middle" | "end") => {
+  // Helper para buscar o melhor banner (Mistura Categoria Específica + Globais para rotação)
+  const getBanner = React.useCallback((placement: "middle" | "end") => {
     if (!banners || !post) return null;
     const placementBanners = banners.filter(b => b.placement === placement);
     
-    // 1. Tentar categoria específica
+    // Banners da categoria do artigo
     const categoryBanners = placementBanners.filter(b => b.target_category && b.target_category.toLowerCase().trim() === post.category?.toLowerCase().trim());
-    if (categoryBanners.length > 0) {
-      return categoryBanners[Math.floor(Math.random() * categoryBanners.length)];
-    }
     
-    // 2. Fallback para globais
+    // Banners globais (sem categoria)
     const globalBanners = placementBanners.filter(b => !b.target_category || b.target_category.trim() === "");
-    if (globalBanners.length > 0) {
-      return globalBanners[Math.floor(Math.random() * globalBanners.length)];
+    
+    // Juntar todos num "pote" para que a rotação aconteça entre todos os válidos
+    const pool = [...categoryBanners, ...globalBanners];
+    
+    if (pool.length > 0) {
+      return pool[Math.floor(Math.random() * pool.length)];
     }
     return null;
-  };
+  }, [banners, post]);
 
-  const middleBanner = getBanner("middle");
-  const endBanner = getBanner("end");
+  // Usamos useMemo para que o banner não mude sozinho se o utilizador fizer scroll ou interagir com a página
+  const middleBanner = React.useMemo(() => getBanner("middle"), [getBanner]);
+  const endBanner = React.useMemo(() => getBanner("end"), [getBanner]);
 
   // Divisão Inteligente do Texto
   const content = post.content || "";
