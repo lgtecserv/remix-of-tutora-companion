@@ -145,6 +145,15 @@ function EditPost() {
         toast.success("Artigo guardado com sucesso!"); 
         qc.invalidateQueries({ queryKey: ["admin-post", id] }); 
         qc.invalidateQueries({ queryKey: ["admin-blog"] });
+        
+        // Se estiver a publicar, avisa motores de busca
+        if (payload.is_published && (!data?.is_published || true)) {
+          import('@/actions/seo').then(({ pingSearchEngines }) => {
+            pingSearchEngines({ data: `/blog/${payload.slug}` }).then((res: any) => {
+              if (res.success) toast.success("Google & Bing notificados!");
+            });
+          });
+        }
       }
     } catch (e: any) {
       toast.error(e.message);

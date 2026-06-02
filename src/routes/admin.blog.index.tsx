@@ -21,7 +21,18 @@ function AdminBlog() {
     if (error) return toast.error(error.message);
     navigate({ to: "/admin/blog/$id", params: { id: created.id } });
   }
-  async function togglePub(p: any) { await supabase.from("blog_posts").update({ is_published: !p.is_published, published_at: !p.is_published ? new Date().toISOString() : null }).eq("id", p.id); qc.invalidateQueries({ queryKey: ["admin-blog"] }); }
+  async function togglePub(p: any) { 
+    const isPublishing = !p.is_published;
+    await supabase.from("blog_posts").update({ is_published: isPublishing, published_at: isPublishing ? new Date().toISOString() : null }).eq("id", p.id); 
+    qc.invalidateQueries({ queryKey: ["admin-blog"] }); 
+    if (isPublishing) {
+      import('@/actions/seo').then(({ pingSearchEngines }) => {
+        pingSearchEngines({ data: `/blog/${p.slug}` }).then((res: any) => {
+          if (res.success) toast.success("Google & Bing notificados!");
+        });
+      });
+    }
+  }
   async function remove(p: any) { if (!confirm("Excluir?")) return; await supabase.from("blog_posts").delete().eq("id", p.id); qc.invalidateQueries({ queryKey: ["admin-blog"] }); }
 
   const filtered = (data ?? []).filter((p: any) => {
