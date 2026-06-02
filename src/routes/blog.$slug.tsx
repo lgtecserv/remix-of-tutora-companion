@@ -54,11 +54,13 @@ function BlogPublicArticle() {
   const { data: post, isLoading } = useQuery({
     queryKey: ["public-blog-post", slug],
     queryFn: async () => {
+      const now = new Date().toISOString();
       const { data } = await supabase
         .from("blog_posts")
         .select("*")
         .eq("slug", slug)
         .eq("is_published", true)
+        .or(`scheduled_at.is.null,scheduled_at.lte.${now}`)
         .maybeSingle();
       return data;
     },
