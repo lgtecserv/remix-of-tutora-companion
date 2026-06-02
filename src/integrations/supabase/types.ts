@@ -39,6 +39,8 @@ export type Database = {
           seo_score: number | null
           key_takeaways: string[] | null
           cover_alt: string | null
+          views_count: number
+          clicks_count: number
         }
         Insert: {
           author_id?: string | null
@@ -64,6 +66,8 @@ export type Database = {
           seo_score?: number | null
           key_takeaways?: string[] | null
           cover_alt?: string | null
+          views_count?: number
+          clicks_count?: number
         }
         Update: {
           author_id?: string | null
@@ -89,6 +93,8 @@ export type Database = {
           seo_score?: number | null
           key_takeaways?: string[] | null
           cover_alt?: string | null
+          views_count?: number
+          clicks_count?: number
         }
         Relationships: []
       }
@@ -102,6 +108,8 @@ export type Database = {
           target_category: string | null
           is_active: boolean
           created_at: string
+          views_count: number
+          clicks_count: number
         }
         Insert: {
           id?: string
@@ -112,6 +120,8 @@ export type Database = {
           target_category?: string | null
           is_active?: boolean
           created_at?: string
+          views_count?: number
+          clicks_count?: number
         }
         Update: {
           id?: string
@@ -122,6 +132,8 @@ export type Database = {
           target_category?: string | null
           is_active?: boolean
           created_at?: string
+          views_count?: number
+          clicks_count?: number
         }
         Relationships: []
       }

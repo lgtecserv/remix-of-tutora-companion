@@ -38,6 +38,7 @@ import { Route as AdminPagamentosRouteImport } from './routes/admin.pagamentos'
 import { Route as AdminConfiguracoesRouteImport } from './routes/admin.configuracoes'
 import { Route as AdminComentariosRouteImport } from './routes/admin.comentarios'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
+import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as AdminAlunosRouteImport } from './routes/admin.alunos'
 import { Route as AppBlogIndexRouteImport } from './routes/app.blog.index'
 import { Route as AdminCursosIndexRouteImport } from './routes/admin.cursos.index'
@@ -194,6 +195,11 @@ const AdminBannersRoute = AdminBannersRouteImport.update({
   path: '/banners',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAlunosRoute = AdminAlunosRouteImport.update({
   id: '/alunos',
   path: '/alunos',
@@ -263,6 +269,7 @@ export interface FileRoutesByFullPath {
   '/sobre-nos': typeof SobreNosRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/admin/alunos': typeof AdminAlunosRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
@@ -302,6 +309,7 @@ export interface FileRoutesByTo {
   '/sobre-nos': typeof SobreNosRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/admin/alunos': typeof AdminAlunosRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
@@ -344,6 +352,7 @@ export interface FileRoutesById {
   '/sobre-nos': typeof SobreNosRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/admin/alunos': typeof AdminAlunosRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/comentarios': typeof AdminComentariosRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
@@ -387,6 +396,7 @@ export interface FileRouteTypes {
     | '/sobre-nos'
     | '/termos-de-uso'
     | '/admin/alunos'
+    | '/admin/analytics'
     | '/admin/banners'
     | '/admin/comentarios'
     | '/admin/configuracoes'
@@ -426,6 +436,7 @@ export interface FileRouteTypes {
     | '/sobre-nos'
     | '/termos-de-uso'
     | '/admin/alunos'
+    | '/admin/analytics'
     | '/admin/banners'
     | '/admin/comentarios'
     | '/admin/configuracoes'
@@ -467,6 +478,7 @@ export interface FileRouteTypes {
     | '/sobre-nos'
     | '/termos-de-uso'
     | '/admin/alunos'
+    | '/admin/analytics'
     | '/admin/banners'
     | '/admin/comentarios'
     | '/admin/configuracoes'
@@ -719,6 +731,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBannersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/alunos': {
       id: '/admin/alunos'
       path: '/alunos'
@@ -794,6 +813,7 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAlunosRoute: typeof AdminAlunosRoute
+  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminBannersRoute: typeof AdminBannersRoute
   AdminComentariosRoute: typeof AdminComentariosRoute
   AdminConfiguracoesRoute: typeof AdminConfiguracoesRoute
@@ -807,6 +827,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAlunosRoute: AdminAlunosRoute,
+  AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminBannersRoute: AdminBannersRoute,
   AdminComentariosRoute: AdminComentariosRoute,
   AdminConfiguracoesRoute: AdminConfiguracoesRoute,

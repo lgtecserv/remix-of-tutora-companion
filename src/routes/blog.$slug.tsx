@@ -1,4 +1,5 @@
 import React from "react";
+import { useTracking } from "@/hooks/useTracking";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header, Footer } from "@/components/public-layout";
 import { useQuery } from "@tanstack/react-query";
@@ -78,6 +79,8 @@ function BlogPublicArticle() {
     },
   });
 
+  const { elementRef: postRef } = useTracking("post", post?.id || "", { threshold: 0.1, delay: 3000 });
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] selection:bg-orange-500/30 selection:text-white flex flex-col">
@@ -148,6 +151,28 @@ function BlogPublicArticle() {
     }
   }
 
+  const BannerItem = ({ banner }: { banner: any }) => {
+    const { elementRef, trackClick } = useTracking("banner", banner.id, { threshold: 0.5, delay: 2000 });
+    
+    return (
+      <motion.a
+        ref={elementRef as any}
+        key={banner.id}
+        href={banner.target_url}
+        target="_blank"
+        rel="noreferrer"
+        onClick={trackClick}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.8 }}
+        className="absolute inset-0 block w-full h-full transition-all hover:scale-[1.02] hover:border-orange-500/50 hover:shadow-orange-500/20"
+      >
+        <img src={banner.image_url} alt={banner.name} className="w-full h-full object-contain" loading="lazy" />
+      </motion.a>
+    );
+  };
+
   const BannerAd = ({ pool }: { pool: any[] }) => {
     const [currentIndex, setCurrentIndex] = React.useState(0);
 
@@ -168,19 +193,7 @@ function BlogPublicArticle() {
           Publicidade
         </div>
         <AnimatePresence mode="wait">
-          <motion.a
-            key={banner.id}
-            href={banner.target_url}
-            target="_blank"
-            rel="noreferrer"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
-            className="absolute inset-0 block w-full h-full transition-all hover:scale-[1.02] hover:border-orange-500/50 hover:shadow-orange-500/20"
-          >
-            <img src={banner.image_url} alt={banner.name} className="w-full h-full object-contain" loading="lazy" />
-          </motion.a>
+          <BannerItem key={banner.id} banner={banner} />
         </AnimatePresence>
       </div>
     );
@@ -280,7 +293,7 @@ function BlogPublicArticle() {
         </div>
 
         {/* Article Content */}
-        <div className="container mx-auto px-4 mt-8">
+        <div ref={postRef as any} className="container mx-auto px-4 mt-8">
           <div className="max-w-3xl mx-auto">
             {post.excerpt && (
               <p className="text-xl md:text-2xl text-white/80 leading-relaxed font-light mb-12 border-l-4 border-orange-500 pl-6">
