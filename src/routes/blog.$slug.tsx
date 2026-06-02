@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header, Footer } from "@/components/public-layout";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle2, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -69,9 +69,9 @@ function BlogPublicArticle() {
 
   const isHtml = (post.content ?? "").trim().startsWith("<");
 
-  // Helper para buscar o melhor banner (Mistura Categoria Específica + Globais para rotação)
-  const getBanner = React.useCallback((placement: "middle" | "end") => {
-    if (!banners || !post) return null;
+  // Helper para buscar o pool de banners
+  const getBannerPool = React.useCallback((placement: "middle" | "end") => {
+    if (!banners || !post) return [];
     const placementBanners = banners.filter(b => b.placement === placement);
     
     // Banners da categoria do artigo
@@ -81,31 +81,26 @@ function BlogPublicArticle() {
     const globalBanners = placementBanners.filter(b => !b.target_category || b.target_category.trim() === "");
     
     // Juntar todos num "pote" para que a rotação aconteça entre todos os válidos
-    const pool = [...categoryBanners, ...globalBanners];
-    
-    if (pool.length > 0) {
-      return pool[Math.floor(Math.random() * pool.length)];
-    }
-    return null;
+    return [...categoryBanners, ...globalBanners];
   }, [banners, post]);
 
-  // Usamos useMemo para que o banner não mude sozinho se o utilizador fizer scroll ou interagir com a página
-  const middleBanner = React.useMemo(() => getBanner("middle"), [getBanner]);
-  const endBanner = React.useMemo(() => getBanner("end"), [getBanner]);
+  // Usamos useMemo para manter o array de banners estável
+  const middleBanners = React.useMemo(() => getBannerPool("middle"), [getBannerPool]);
+  const endBanners = React.useMemo(() => getBannerPool("end"), [getBannerPool]);
 
   // Divisão Inteligente do Texto
   const content = post.content || "";
   let firstHalf = content;
   let secondHalf = "";
 
-  if (middleBanner && !isHtml) {
+  if (middleBanners.length > 0 && !isHtml) {
     const paragraphs = content.split('\n\n');
     if (paragraphs.length > 3) {
       const midPoint = Math.floor(paragraphs.length / 2);
       firstHalf = paragraphs.slice(0, midPoint).join('\n\n');
       secondHalf = paragraphs.slice(midPoint).join('\n\n');
     }
-  } else if (middleBanner && isHtml) {
+  } else if (middleBanners.length > 0 && isHtml) {
     const paragraphs = content.split('</p>');
     if (paragraphs.length > 3) {
       const midPoint = Math.floor(paragraphs.length / 2);
@@ -114,15 +109,41 @@ function BlogPublicArticle() {
     }
   }
 
-  const BannerAd = ({ banner }: { banner: any }) => {
-    if (!banner) return null;
+  const BannerAd = ({ pool }: { pool: any[] }) => {
+    const [currentIndex, setCurrentIndex] = React.useState(0);
+
+    React.useEffect(() => {
+      if (!pool || pool.length <= 1) return;
+      const interval = setInterval(() => {
+        setCurrentIndex((prev) => (prev + 1) % pool.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }, [pool]);
+
+    if (!pool || pool.length === 0) return null;
+    const banner = pool[currentIndex];
+
     return (
-      <a href={banner.target_url} target="_blank" rel="noreferrer" className="block my-12 relative group overflow-hidden rounded-2xl border border-white/10 shadow-xl transition-all hover:scale-[1.02] hover:border-orange-500/50 hover:shadow-orange-500/20 aspect-[16/9] sm:aspect-[21/9] md:aspect-[3/1] bg-muted/20">
-        <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white/40 text-[9px] uppercase font-bold px-2 py-1 rounded shadow-sm z-10 pointer-events-none border border-white/5">
+      <div className="block my-12 relative group overflow-hidden rounded-2xl border border-white/10 shadow-xl aspect-[16/9] sm:aspect-[21/9] md:aspect-[3/1] bg-muted/20">
+        <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white/40 text-[9px] uppercase font-bold px-2 py-1 rounded shadow-sm z-20 pointer-events-none border border-white/5">
           Publicidade
         </div>
-        <img src={banner.image_url} alt={banner.name} className="w-full h-full object-cover" loading="lazy" />
-      </a>
+        <AnimatePresence mode="wait">
+          <motion.a
+            key={banner.id}
+            href={banner.target_url}
+            target="_blank"
+            rel="noreferrer"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            className="absolute inset-0 block w-full h-full transition-all hover:scale-[1.02] hover:border-orange-500/50 hover:shadow-orange-500/20"
+          >
+            <img src={banner.image_url} alt={banner.name} className="w-full h-full object-cover" loading="lazy" />
+          </motion.a>
+        </AnimatePresence>
+      </div>
     );
   };
 
@@ -248,19 +269,19 @@ function BlogPublicArticle() {
               {isHtml ? (
                 <>
                   <div dangerouslySetInnerHTML={{ __html: firstHalf }} />
-                  {middleBanner && <BannerAd banner={middleBanner} />}
+                  {middleBanners.length > 0 && <BannerAd pool={middleBanners} />}
                   {secondHalf && <div dangerouslySetInnerHTML={{ __html: secondHalf }} />}
                 </>
               ) : (
                 <>
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>{firstHalf}</ReactMarkdown>
-                  {middleBanner && <BannerAd banner={middleBanner} />}
+                  {middleBanners.length > 0 && <BannerAd pool={middleBanners} />}
                   {secondHalf && <ReactMarkdown remarkPlugins={[remarkGfm]}>{secondHalf}</ReactMarkdown>}
                 </>
               )}
             </div>
             
-            {endBanner && <BannerAd banner={endBanner} />}
+            {endBanners.length > 0 && <BannerAd pool={endBanners} />}
             
             <div className="mt-12 pt-8 border-t border-white/10">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
