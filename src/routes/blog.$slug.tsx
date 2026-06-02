@@ -23,18 +23,19 @@ export const Route = createFileRoute("/blog/$slug")({
       return [{ title: "Artigo não encontrado | Imersão Completa" }];
     }
     const { post } = loaderData;
-    const fallbackImage = `https://image.pollinations.ai/prompt/${encodeURIComponent(post.title)}?width=1200&height=600&nologo=true`;
+    const fallbackImage = "https://www.imersaocompleta.info/favicon.ico";
+    const coverImage = post.cover_url || fallbackImage;
     return [
       { title: `${post.title} | Imersão Completa` },
       { name: "description", content: post.excerpt || "Leia este artigo na Imersão Completa." },
       { property: "og:title", content: post.title },
       { property: "og:description", content: post.excerpt || "Leia este artigo na Imersão Completa." },
-      { property: "og:image", content: post.cover_url || fallbackImage },
+      { key: "og-image", property: "og:image", content: coverImage },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: post.title },
       { name: "twitter:description", content: post.excerpt || "Leia este artigo na Imersão Completa." },
-      { name: "twitter:image", content: post.cover_url || fallbackImage },
+      { key: "tw-image", name: "twitter:image", content: coverImage },
     ];
   },
   component: BlogPublicArticle,

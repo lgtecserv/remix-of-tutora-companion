@@ -87,12 +87,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Aprenda desenvolvimento web, sistemas, IA e negócios digitais. A plataforma definitiva para transformar conhecimento em faturamento." },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Imersão Completa" },
-      { property: "og:image", content: "https://image.pollinations.ai/prompt/Imersao%20Completa%20Plataforma%20de%20Cursos?width=1200&height=630&nologo=true" },
+      { key: "og-image", property: "og:image", content: "https://www.imersaocompleta.info/favicon.ico" },
       { property: "og:url", content: "https://www.imersaocompleta.info/" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Imersão Completa | Cursos de Tecnologia e Negócios" },
       { name: "twitter:description", content: "Transforme o seu futuro dominando a tecnologia com o apoio de Inteligência Artificial." },
-      { name: "twitter:image", content: "https://image.pollinations.ai/prompt/Imersao%20Completa%20Plataforma%20de%20Cursos?width=1200&height=630&nologo=true" },
+      { key: "tw-image", name: "twitter:image", content: "https://www.imersaocompleta.info/favicon.ico" },
       // Verificação do Google Search Console
       { name: "google-site-verification", content: "xtVa_GklrXpoxNc_KxtW_bSN2JrIHLMxjp6AptyNGKo" }
     ],
