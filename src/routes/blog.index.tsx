@@ -14,10 +14,12 @@ function BlogPublicPage() {
   const { data: posts, isLoading } = useQuery({
     queryKey: ["public-blog-posts"],
     queryFn: async () => {
+      const now = new Date().toISOString();
       const { data } = await supabase
         .from("blog_posts")
         .select("*")
         .eq("is_published", true)
+        .or(`scheduled_at.is.null,scheduled_at.lte.${now}`)
         .order("published_at", { ascending: false });
       return data || [];
     },

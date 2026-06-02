@@ -10,11 +10,13 @@ import remarkGfm from "remark-gfm";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ params }) => {
+    const now = new Date().toISOString();
     const { data: post } = await supabase
       .from("blog_posts")
       .select("*")
       .eq("slug", params.slug)
       .eq("is_published", true)
+      .or(`scheduled_at.is.null,scheduled_at.lte.${now}`)
       .maybeSingle();
     return { post };
   },
@@ -25,17 +27,20 @@ export const Route = createFileRoute("/blog/$slug")({
     const { post } = loaderData;
     const fallbackImage = "https://www.imersaocompleta.info/favicon.ico";
     const coverImage = post.cover_url || fallbackImage;
+    const finalTitle = post.seo_title || post.title;
+    const finalDesc = post.seo_description || post.excerpt || "Leia este artigo na Imersão Completa.";
+    
     return {
       meta: [
-        { title: `${post.title} | Imersão Completa` },
-        { name: "description", content: post.excerpt || "Leia este artigo na Imersão Completa." },
-        { property: "og:title", content: post.title },
-        { property: "og:description", content: post.excerpt || "Leia este artigo na Imersão Completa." },
+        { title: `${finalTitle} | Imersão Completa` },
+        { name: "description", content: finalDesc },
+        { property: "og:title", content: finalTitle },
+        { property: "og:description", content: finalDesc },
         { key: "og-image", property: "og:image", content: coverImage },
         { property: "og:type", content: "article" },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: post.title },
-        { name: "twitter:description", content: post.excerpt || "Leia este artigo na Imersão Completa." },
+        { name: "twitter:title", content: finalTitle },
+        { name: "twitter:description", content: finalDesc },
         { key: "tw-image", name: "twitter:image", content: coverImage },
       ]
     };
