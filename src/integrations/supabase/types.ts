@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      analytics_events: {
+        Row: {
+          id: string
+          entity_type: string
+          entity_id: string
+          event_type: string
+          created_at: string
+          session_id: string | null
+          referrer: string | null
+          device_type: string | null
+        }
+        Insert: {
+          id?: string
+          entity_type: string
+          entity_id: string
+          event_type: string
+          created_at?: string
+          session_id?: string | null
+          referrer?: string | null
+          device_type?: string | null
+        }
+        Update: {
+          id?: string
+          entity_type?: string
+          entity_id?: string
+          event_type?: string
+          created_at?: string
+          session_id?: string | null
+          referrer?: string | null
+          device_type?: string | null
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author_id: string | null

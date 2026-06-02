@@ -14,6 +14,24 @@ export function useTracking(
     return `tracking_${type}_${id}_${action}_${date}`;
   };
 
+  const getDeviceType = () => {
+    if (typeof window === "undefined") return "unknown";
+    const ua = navigator.userAgent.toLowerCase();
+    if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) return "tablet";
+    if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) return "mobile";
+    return "desktop";
+  };
+
+  const getSessionId = () => {
+    if (typeof window === "undefined") return "anon";
+    let sid = sessionStorage.getItem("analytics_session_id");
+    if (!sid) {
+      sid = Math.random().toString(36).substring(2, 15);
+      sessionStorage.setItem("analytics_session_id", sid);
+    }
+    return sid;
+  };
+
   const trackEvent = useCallback(async (action: "view" | "click") => {
     if (!entityId) return;
 
@@ -21,12 +39,16 @@ export function useTracking(
     if (localStorage.getItem(storageKey)) return; // Já reportado hoje
 
     try {
-      const rpcName = entityType === "post" ? "increment_post_stat" : "increment_banner_stat";
-      const params = entityType === "post" 
-        ? { p_post_id: entityId, p_stat_type: action }
-        : { p_banner_id: entityId, p_stat_type: action };
+      const params = {
+        p_entity_type: entityType,
+        p_entity_id: entityId,
+        p_event_type: action,
+        p_session_id: getSessionId(),
+        p_referrer: typeof document !== "undefined" ? document.referrer : "",
+        p_device_type: getDeviceType()
+      };
 
-      const { error } = await supabase.rpc(rpcName as any, params as any);
+      const { error } = await supabase.rpc("log_analytics_event" as any, params as any);
       
       if (!error) {
         localStorage.setItem(storageKey, "true");
