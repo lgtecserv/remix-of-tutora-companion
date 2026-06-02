@@ -562,7 +562,7 @@ function AdminComments() {
                         to="/app/player/$lessonId"
                         params={{ lessonId: c.lesson_id }}
                         hash={`comment-${c.id}`}
-                        className="text-[10px] text-neutral-400 bg-neutral-950 px-2.5 py-0.5 rounded-full border border-neutral-800 hover:border-neutral-600 hover:text-white font-medium transition-colors cursor-pointer flex items-center"
+                        className="text-[10px] text-neutral-400 bg-neutral-950 px-2.5 py-1 rounded-md border border-neutral-800 hover:border-neutral-600 hover:text-white font-medium transition-colors cursor-pointer flex items-center leading-tight"
                         title="Ir para a aula comentar"
                       >
                         {courseTitle} → {lessonTitle}
@@ -587,7 +587,7 @@ function AdminComments() {
                     </div>
 
                     {/* Content text */}
-                    <p className="mt-2 text-sm text-neutral-300 whitespace-pre-wrap leading-relaxed">
+                    <p className="mt-2 text-sm text-neutral-300 whitespace-pre-wrap break-words leading-relaxed">
                       {c.content}
                     </p>
 

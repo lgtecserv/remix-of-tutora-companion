@@ -537,7 +537,7 @@ function CommentCard({
     <div id={`comment-${c.id}`} className={cn("group", depth > 0 && "ml-3 pl-2 md:ml-8 md:pl-4 border-l-2 border-neutral-800/60 transition-all duration-300 rounded-xl")}>
       <div
         className={cn(
-          "rounded-xl p-4 transition-all",
+          "rounded-xl p-3 md:p-4 transition-all",
           c.is_pinned && "bg-amber-500/5 border border-amber-500/20",
           c.is_instructor && !c.is_pinned && "bg-emerald-500/5 border border-emerald-500/15",
           !c.is_pinned && !c.is_instructor && "bg-neutral-900/30 border border-neutral-800/50 hover:bg-neutral-900/50"
@@ -598,7 +598,7 @@ function CommentCard({
         </div>
 
         {/* Content */}
-        <div className="mt-2.5 text-sm text-neutral-300 whitespace-pre-wrap leading-relaxed">
+        <div className="mt-2.5 text-sm text-neutral-300 whitespace-pre-wrap break-words leading-relaxed">
           {c.content}
         </div>
 
