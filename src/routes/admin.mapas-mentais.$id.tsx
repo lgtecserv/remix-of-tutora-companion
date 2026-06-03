@@ -69,6 +69,7 @@ function CustomNode({ id, data, isConnectable, selected }: any) {
   };
 
   const hasChildren = getEdges().some((e: Edge) => e.source === id);
+  const isRoot = !getEdges().some((e: Edge) => e.target === id);
   const isExpanded = data.isExpanded !== false; // true por omissão
 
   const toggleCollapse = (e: React.MouseEvent, forceExpand: boolean = false) => {
@@ -111,31 +112,41 @@ function CustomNode({ id, data, isConnectable, selected }: any) {
 
   return (
     <div 
-      className={`group relative px-4 py-3 rounded-lg border-2 min-w-[140px] max-w-[280px] shadow-sm transition-shadow ${selected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
+      className={`group relative px-4 py-3 rounded-xl min-w-[140px] max-w-[280px] shadow-sm transition-all duration-300 ${
+        selected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background scale-105' : ''
+      } ${
+        isRoot ? 'border-4 font-black shadow-lg scale-110' : 'border-2'
+      }`}
       style={{ backgroundColor: data.bgColor || "#ffffff", borderColor: data.bgColor || "#e2e8f0", color: data.textColor || "#1e293b" }}
     >
-      <Handle type="target" position={Position.Left} isConnectable={isConnectable} className="w-2 h-4 rounded-sm bg-muted-foreground border-none -ml-1" />
-      <div className="text-sm font-semibold text-center whitespace-pre-wrap break-words leading-tight">
+      {!isRoot && (
+        <Handle type="target" position={Position.Left} isConnectable={isConnectable} className="w-2 h-4 rounded-sm bg-muted-foreground border-none -ml-1" />
+      )}
+      
+      <div className={`text-center whitespace-pre-wrap break-words leading-tight ${isRoot ? 'text-base uppercase tracking-wide' : 'text-sm font-semibold'}`}>
         {data.label}
       </div>
+      
       <Handle type="source" position={Position.Right} isConnectable={isConnectable} className="w-2 h-4 rounded-sm bg-muted-foreground border-none -mr-1" />
       
+      {/* Botão de Expandir / Recolher - Fundo/Centro */}
       {hasChildren && (
         <button
           onClick={(e) => toggleCollapse(e)}
-          className="absolute -right-3 top-1 bg-secondary text-secondary-foreground w-5 h-5 rounded-full flex items-center justify-center text-xs shadow-md border border-border hover:bg-secondary/80 transition-colors z-20"
+          className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-secondary text-secondary-foreground w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold shadow-md border-2 border-background hover:bg-secondary/80 hover:scale-110 transition-all z-20"
           title={isExpanded ? "Recolher" : "Expandir"}
         >
           {isExpanded ? "-" : "+"}
         </button>
       )}
 
+      {/* Botão de Adicionar Ramificação - Direita/Meio */}
       <button 
         onClick={addChild}
-        className="absolute -right-3 bottom-1 bg-primary text-primary-foreground w-5 h-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity text-xs shadow-md border border-border hover:scale-110 z-20"
+        className="absolute -right-3 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:opacity-100 transition-all text-sm font-bold shadow-md border-2 border-background hover:scale-110 z-20"
         title="Adicionar ramificação"
       >
-        <Plus className="w-3 h-3" />
+        <Plus className="w-4 h-4" />
       </button>
     </div>
   );
