@@ -11,6 +11,7 @@ import "@xyflow/react/dist/style.css";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { v4 as uuidv4 } from "uuid";
+import { ImageUpload } from "@/components/image-upload";
 
 export const Route = createFileRoute("/admin/mapas-mentais/$id")({
   component: MapaMentalEditor,
@@ -145,6 +146,12 @@ function CustomNode({ id, data, isConnectable, selected }: any) {
         <Handle type="target" position={Position.Left} isConnectable={isConnectable} className="w-2 h-4 rounded-sm bg-muted-foreground border-none -ml-1" />
       )}
       
+      {data.imageUrl && (
+        <div className="mb-2 w-full rounded-md overflow-hidden bg-black/10">
+          <img src={data.imageUrl} alt="Node reference" className="w-full h-auto object-contain max-h-40" />
+        </div>
+      )}
+      
       <div className={`text-center whitespace-pre-wrap break-words leading-tight ${isRoot ? 'text-base uppercase font-black tracking-wide' : 'text-sm font-semibold'}`}>
         {data.label}
       </div>
@@ -165,7 +172,7 @@ function CustomNode({ id, data, isConnectable, selected }: any) {
       {/* Botão de Adicionar Ramificação - Direita/Meio */}
       <button 
         onClick={addChild}
-        className="absolute -right-3 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:opacity-100 transition-all text-sm font-bold shadow-md border-2 border-background hover:scale-110 z-20"
+        className="add-child-btn absolute -right-3 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:opacity-100 transition-all text-sm font-bold shadow-md border-2 border-background hover:scale-110 z-20"
         title="Adicionar ramificação"
       >
         <Plus className="w-4 h-4" />
@@ -322,7 +329,7 @@ function MapaMentalEditor() {
   const selectedNode = nodes.find(n => n.id === selectedNodeId);
 
   return (
-    <div className={`flex flex-col ${presentationMode ? 'fixed inset-0 z-50 bg-background' : 'h-[calc(100vh-64px)]'}`}>
+    <div className={`flex flex-col ${presentationMode ? 'presentation-mode fixed inset-0 z-50 bg-background' : 'h-[calc(100vh-64px)]'}`}>
       {/* Header Toolbar */}
       {!presentationMode && (
         <div className="flex flex-wrap items-center justify-between p-4 border-b border-border bg-card">
@@ -366,7 +373,7 @@ function MapaMentalEditor() {
 
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
-        {/* CSS para corrigir botões de controle brancos */}
+        {/* CSS para corrigir botões de controle brancos e esconder botões na apresentação */}
         <style>{`
           .react-flow__controls-button {
             background-color: #1e293b !important;
@@ -375,6 +382,9 @@ function MapaMentalEditor() {
           }
           .react-flow__controls-button:hover {
             background-color: #334155 !important;
+          }
+          .presentation-mode .add-child-btn {
+            display: none !important;
           }
         `}</style>
         {/* React Flow Canvas */}
@@ -421,6 +431,25 @@ function MapaMentalEditor() {
                 <Input 
                   value={selectedNode.data.label as string} 
                   onChange={(e) => updateSelectedNodeText(e.target.value)} 
+                />
+              </div>
+
+              <div>
+                <ImageUpload
+                  bucket="blog-images"
+                  label="Imagem de Referência (Opcional)"
+                  value={(selectedNode.data.imageUrl as string) || ""}
+                  onChange={(url) => {
+                    setNodes((nds) =>
+                      nds.map((n) => {
+                        if (n.id === selectedNodeId) {
+                          return { ...n, data: { ...n.data, imageUrl: url } };
+                        }
+                        return n;
+                      })
+                    );
+                  }}
+                  aspect="aspect-auto"
                 />
               </div>
 
