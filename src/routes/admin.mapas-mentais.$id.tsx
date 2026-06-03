@@ -1,12 +1,12 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Save, Download, Maximize2, Minimize2, Plus, Type, Palette, Layout, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { ReactFlow, MiniMap, Controls, Background, useNodesState, useEdgesState, addEdge, BackgroundVariant, Panel, Node, Edge } from "@xyflow/react";
+import { ReactFlow, MiniMap, Controls, Background, useNodesState, useEdgesState, addEdge, BackgroundVariant, Panel, Node, Edge, Handle, Position, useReactFlow } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -27,6 +27,64 @@ const colorPresets = [
   "#1e293b", // dark
 ];
 
+function CustomNode({ id, data, isConnectable, selected }: any) {
+  const { setNodes, setEdges, getNodes } = useReactFlow();
+
+  const addChild = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const nodes = getNodes();
+    const parentNode = nodes.find((n) => n.id === id);
+    if (!parentNode) return;
+
+    const newId = uuidv4();
+    const newNode: Node = {
+      id: newId,
+      type: "custom",
+      position: { 
+        x: parentNode.position.x + 280, 
+        y: parentNode.position.y + (Math.random() * 100 - 50) 
+      },
+      data: { 
+        label: "Nova Ideia",
+        bgColor: parentNode.data.bgColor || "#ffffff",
+        textColor: parentNode.data.textColor || "#1e293b",
+      }
+    };
+
+    const newEdge: Edge = {
+      id: uuidv4(),
+      source: id,
+      target: newId,
+      animated: true,
+      style: { stroke: "#64748b", strokeWidth: 2 }
+    };
+
+    setNodes((nds) => [...nds, newNode]);
+    setEdges((eds: any) => [...eds, newEdge]);
+  };
+
+  return (
+    <div 
+      className={`group relative px-4 py-3 rounded-lg border-2 min-w-[140px] max-w-[280px] shadow-sm transition-shadow ${selected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
+      style={{ backgroundColor: data.bgColor || "#ffffff", borderColor: data.bgColor || "#e2e8f0", color: data.textColor || "#1e293b" }}
+    >
+      <Handle type="target" position={Position.Left} isConnectable={isConnectable} className="w-2 h-4 rounded-sm bg-muted-foreground border-none -ml-1" />
+      <div className="text-sm font-semibold text-center whitespace-pre-wrap break-words leading-tight">
+        {data.label}
+      </div>
+      <Handle type="source" position={Position.Right} isConnectable={isConnectable} className="w-2 h-4 rounded-sm bg-muted-foreground border-none -mr-1" />
+      
+      <button 
+        onClick={addChild}
+        className="absolute -right-3 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity text-xs shadow-md hover:scale-110 z-10"
+        title="Adicionar ramificação"
+      >
+        <Plus className="w-4 h-4" />
+      </button>
+    </div>
+  );
+}
+
 function MapaMentalEditor() {
   const { id } = Route.useParams();
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
@@ -35,6 +93,9 @@ function MapaMentalEditor() {
   const [presentationMode, setPresentationMode] = useState(false);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const flowRef = useRef<HTMLDivElement>(null);
+  
+  // Custom node types memorizados
+  const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
 
   const { data: mapa, isLoading } = useQuery({
     queryKey: ["mind-map", id],
@@ -48,7 +109,20 @@ function MapaMentalEditor() {
   useEffect(() => {
     if (mapa) {
       setTitle(mapa.title || "Sem Título");
-      if (mapa.nodes) setNodes(mapa.nodes as Node[]);
+      // Migração de dados antigos para o novo formato
+      if (mapa.nodes) {
+        const migratedNodes = (mapa.nodes as any[]).map(n => ({
+          ...n,
+          type: "custom",
+          data: {
+            ...n.data,
+            bgColor: n.data.bgColor || n.style?.background || "#ffffff",
+            textColor: n.data.textColor || n.style?.color || "#1e293b",
+          },
+          style: undefined // Remove inline styles antigos
+        }));
+        setNodes(migratedNodes as Node[]);
+      }
       if (mapa.edges) setEdges(mapa.edges as Edge[]);
     }
   }, [mapa, setNodes, setEdges]);
@@ -104,16 +178,12 @@ function MapaMentalEditor() {
   const addNode = () => {
     const newNode: Node = {
       id: uuidv4(),
-      type: "default",
+      type: "custom",
       position: { x: Math.random() * 200 + 100, y: Math.random() * 200 + 100 },
-      data: { label: "Nova Ideia" },
-      style: {
-        background: "#ffffff",
-        color: "#1e293b",
-        border: "2px solid #e2e8f0",
-        borderRadius: "8px",
-        padding: "10px 20px",
-        fontWeight: "bold"
+      data: { 
+        label: "Nova Ideia",
+        bgColor: "#ffffff",
+        textColor: "#1e293b",
       }
     };
     setNodes((nds) => [...nds, newNode]);
@@ -122,16 +192,15 @@ function MapaMentalEditor() {
   const updateSelectedNodeColor = (color: string) => {
     if (!selectedNodeId) return;
     const isDark = ["#1e293b", "#f43f5e", "#8b5cf6", "#3b82f6", "#10b981", "#f59e0b"].includes(color);
-    setNodes((nds) =>
-      nds.map((n) => {
+    setNodes((nds: any) =>
+      nds.map((n: any) => {
         if (n.id === selectedNodeId) {
           return {
             ...n,
-            style: {
-              ...n.style,
-              background: color,
-              color: isDark ? "#ffffff" : "#1e293b",
-              border: `2px solid ${color}`,
+            data: {
+              ...n.data,
+              bgColor: color,
+              textColor: isDark ? "#ffffff" : "#1e293b",
             },
           };
         }
@@ -210,23 +279,25 @@ function MapaMentalEditor() {
       <div className="flex-1 flex overflow-hidden">
         {/* React Flow Canvas */}
         <div className="flex-1 relative" ref={flowRef}>
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            onNodeClick={(_, node) => setSelectedNodeId(node.id)}
-            onPaneClick={() => setSelectedNodeId(null)}
-            fitView
-            attributionPosition="bottom-right"
-          >
-            <Background variant={BackgroundVariant.Dots} gap={24} size={2} color="#cbd5e1" />
-            <Controls />
-            {!presentationMode && <MiniMap zoomable pannable />}
-            
-            {!presentationMode && (
-              <Panel position="top-left" className="bg-card border border-border rounded-lg shadow-sm p-2 flex gap-2">
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              onConnect={onConnect}
+              onNodeClick={(_, node) => setSelectedNodeId(node.id)}
+              onPaneClick={() => setSelectedNodeId(null)}
+              nodeTypes={nodeTypes}
+              fitView
+              attributionPosition="bottom-right"
+              className="bg-muted/30"
+            >
+              <Background variant={BackgroundVariant.Dots} gap={24} size={2} color="#64748b" />
+              <Controls className="bg-card border-border fill-foreground" />
+              {!presentationMode && <MiniMap zoomable pannable style={{ backgroundColor: '#1e293b' }} nodeColor={(n: any) => n.data?.bgColor || '#ffffff'} maskColor="#0f172a99" />}
+              
+              {!presentationMode && (
+                <Panel position="top-left" className="bg-card border border-border rounded-lg shadow-sm p-2 flex gap-2">
                 <Button variant="secondary" size="sm" onClick={addNode}>
                   <Plus className="h-4 w-4 mr-2" /> Novo Bloco
                 </Button>
@@ -262,7 +333,7 @@ function MapaMentalEditor() {
                     <button
                       key={color}
                       onClick={() => updateSelectedNodeColor(color)}
-                      className={`w-8 h-8 rounded-full border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 ${selectedNode.style?.background === color ? 'border-primary ring-2 ring-primary ring-offset-background' : 'border-border/50'}`}
+                      className={`w-8 h-8 rounded-full border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 ${selectedNode.data?.bgColor === color ? 'border-primary ring-2 ring-primary ring-offset-background' : 'border-border/50'}`}
                       style={{ backgroundColor: color }}
                     />
                   ))}

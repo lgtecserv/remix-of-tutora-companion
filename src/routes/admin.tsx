@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { BookOpen, Users, MessageSquare, Newspaper, DollarSign, LayoutDashboard, Settings, LogOut, GraduationCap, Menu, Image, BarChart3, Network } from "lucide-react";
+import { BookOpen, Users, MessageSquare, Newspaper, DollarSign, LayoutDashboard, Settings, LogOut, GraduationCap, Menu, Image, BarChart3, Network, ChevronLeft, ChevronRight } from "lucide-react";
 import logoImg from "@/assets/logo-imersao.png";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from "@/components/ui/sheet";
@@ -18,7 +18,7 @@ function AdminLayout() {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [isClient, setIsClient] = useState(false);
-
+  const [isCollapsed, setIsCollapsed] = useState(false);
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -95,11 +95,20 @@ function AdminLayout() {
       </header>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden w-64 flex-col border-r border-border bg-secondary text-secondary-foreground md:flex">
-        <div className="border-b border-border/20 p-5">
-          <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-20 w-auto object-contain invert dark:invert-0 hue-rotate-180 dark:hue-rotate-0" /></Link>
-          <div className="mt-2 text-xs font-medium uppercase tracking-wider text-primary">Painel Admin</div>
+      <aside className={cn(
+        "hidden flex-col border-r border-border bg-secondary text-secondary-foreground md:flex transition-all duration-300",
+        isCollapsed ? "w-20" : "w-64"
+      )}>
+        <div className="border-b border-border/20 p-5 flex items-center justify-center">
+          <Link to="/">
+            {isCollapsed ? (
+              <img src={logoImg} alt="Imersão Completa" className="h-10 w-auto object-contain invert dark:invert-0 hue-rotate-180 dark:hue-rotate-0" />
+            ) : (
+              <img src={logoImg} alt="Imersão Completa" className="h-20 w-auto object-contain invert dark:invert-0 hue-rotate-180 dark:hue-rotate-0" />
+            )}
+          </Link>
         </div>
+        {!isCollapsed && <div className="mt-2 px-5 text-xs font-medium uppercase tracking-wider text-primary">Painel Admin</div>}
         <nav className="flex-1 space-y-1 p-3">
           {nav.map((n) => {
             const active = n.exact ? pathname === n.to : pathname.startsWith(n.to);
@@ -114,17 +123,30 @@ function AdminLayout() {
                 {active && (
                   <div className="absolute left-0 top-1/2 -mt-2 h-4 w-1 rounded-r-full bg-primary" />
                 )}
-                <n.icon className={cn("relative z-10 h-5 w-5 transition-transform duration-300", active ? "scale-110" : "group-hover:scale-110 group-hover:text-primary")} />
-                <span className="relative z-10">{n.label}</span>
+                <n.icon className={cn("relative z-10 h-5 w-5 transition-transform duration-300 shrink-0", active ? "scale-110" : "group-hover:scale-110 group-hover:text-primary")} />
+                {!isCollapsed && <span className="relative z-10 truncate">{n.label}</span>}
               </Link>
             );
           })}
         </nav>
-        <button onClick={() => signOut().then(() => navigate({ to: "/" }))} className="m-3 flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-secondary-foreground/70 hover:bg-white/5 hover:text-secondary-foreground">
-          <LogOut className="h-4 w-4" />Sair
-        </button>
+        <div className="mt-auto border-t border-border/20 p-3 flex flex-col gap-2">
+          <button onClick={() => setIsCollapsed(!isCollapsed)} className={cn(
+            "flex items-center rounded-lg px-3 py-2 text-sm text-secondary-foreground/70 hover:bg-white/5 hover:text-secondary-foreground",
+            isCollapsed ? "justify-center" : "gap-2"
+          )}>
+            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+            {!isCollapsed && <span>Recolher</span>}
+          </button>
+          <button onClick={() => signOut().then(() => navigate({ to: "/" }))} className={cn(
+            "flex items-center rounded-lg px-3 py-2 text-sm text-secondary-foreground/70 hover:bg-white/5 hover:text-secondary-foreground",
+            isCollapsed ? "justify-center" : "gap-2"
+          )}>
+            <LogOut className="h-4 w-4" />
+            {!isCollapsed && <span>Sair</span>}
+          </button>
+        </div>
       </aside>
-      <main className="flex-1 overflow-x-hidden p-6 md:p-10">
+      <main className="flex-1 overflow-x-hidden overflow-y-auto p-0 md:p-0 flex flex-col">
         <AnimatePresence mode="wait">
           <motion.div
             key={pathname}
@@ -132,6 +154,7 @@ function AdminLayout() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
+            className={pathname.includes("/admin/mapas-mentais/") ? "flex-1 flex flex-col h-[calc(100vh-64px)] md:h-screen" : "p-6 md:p-10"}
           >
             <Outlet />
           </motion.div>
