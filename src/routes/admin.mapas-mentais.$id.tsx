@@ -28,13 +28,18 @@ const colorPresets = [
 ];
 
 function CustomNode({ id, data, isConnectable, selected }: any) {
-  const { setNodes, setEdges, getNodes } = useReactFlow();
+  const { setNodes, setEdges, getNodes, getEdges } = useReactFlow();
 
   const addChild = (e: React.MouseEvent) => {
     e.stopPropagation();
     const nodes = getNodes();
     const parentNode = nodes.find((n) => n.id === id);
     if (!parentNode) return;
+
+    // Se o nó estiver colapsado, expandimos antes de adicionar o filho
+    if (data.isExpanded === false) {
+      toggleCollapse(e, true);
+    }
 
     const newId = uuidv4();
     const newNode: Node = {
@@ -63,6 +68,47 @@ function CustomNode({ id, data, isConnectable, selected }: any) {
     setEdges((eds: any) => [...eds, newEdge]);
   };
 
+  const hasChildren = getEdges().some((e: Edge) => e.source === id);
+  const isExpanded = data.isExpanded !== false; // true por omissão
+
+  const toggleCollapse = (e: React.MouseEvent, forceExpand: boolean = false) => {
+    e.stopPropagation();
+    const allNodes = getNodes();
+    const allEdges = getEdges();
+    
+    const newExpandedState = forceExpand ? true : !isExpanded;
+    
+    let updatedNodes = allNodes.map(n => 
+      n.id === id ? { ...n, data: { ...n.data, isExpanded: newExpandedState } } : n
+    );
+
+    const parentToChildren: Record<string, string[]> = {};
+    allEdges.forEach((edge: Edge) => {
+      if (!parentToChildren[edge.source]) parentToChildren[edge.source] = [];
+      parentToChildren[edge.source].push(edge.target);
+    });
+
+    const applyHidden = (nodeId: string, hide: boolean) => {
+      const children = parentToChildren[nodeId] || [];
+      children.forEach(childId => {
+        const childNode = updatedNodes.find(n => n.id === childId);
+        if (childNode) {
+          childNode.hidden = hide;
+          const childExpanded = childNode.data.isExpanded !== false;
+          applyHidden(childId, hide || !childExpanded);
+        }
+      });
+    };
+
+    applyHidden(id, !newExpandedState);
+
+    setNodes([...updatedNodes]);
+    setEdges(allEdges.map((edge: any) => {
+      const targetNode = updatedNodes.find(n => n.id === edge.target);
+      return { ...edge, hidden: targetNode ? targetNode.hidden : false };
+    }));
+  };
+
   return (
     <div 
       className={`group relative px-4 py-3 rounded-lg border-2 min-w-[140px] max-w-[280px] shadow-sm transition-shadow ${selected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
@@ -74,12 +120,22 @@ function CustomNode({ id, data, isConnectable, selected }: any) {
       </div>
       <Handle type="source" position={Position.Right} isConnectable={isConnectable} className="w-2 h-4 rounded-sm bg-muted-foreground border-none -mr-1" />
       
+      {hasChildren && (
+        <button
+          onClick={(e) => toggleCollapse(e)}
+          className="absolute -right-3 top-1 bg-secondary text-secondary-foreground w-5 h-5 rounded-full flex items-center justify-center text-xs shadow-md border border-border hover:bg-secondary/80 transition-colors z-20"
+          title={isExpanded ? "Recolher" : "Expandir"}
+        >
+          {isExpanded ? "-" : "+"}
+        </button>
+      )}
+
       <button 
         onClick={addChild}
-        className="absolute -right-3 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity text-xs shadow-md hover:scale-110 z-10"
+        className="absolute -right-3 bottom-1 bg-primary text-primary-foreground w-5 h-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity text-xs shadow-md border border-border hover:scale-110 z-20"
         title="Adicionar ramificação"
       >
-        <Plus className="w-4 h-4" />
+        <Plus className="w-3 h-3" />
       </button>
     </div>
   );
@@ -277,6 +333,17 @@ function MapaMentalEditor() {
 
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
+        {/* CSS para corrigir botões de controle brancos */}
+        <style>{`
+          .react-flow__controls-button {
+            background-color: #1e293b !important;
+            fill: #f8fafc !important;
+            border-bottom: 1px solid #334155 !important;
+          }
+          .react-flow__controls-button:hover {
+            background-color: #334155 !important;
+          }
+        `}</style>
         {/* React Flow Canvas */}
         <div className="flex-1 relative" ref={flowRef}>
             <ReactFlow

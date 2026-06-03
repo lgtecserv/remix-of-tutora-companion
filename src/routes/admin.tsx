@@ -97,7 +97,8 @@ function AdminLayout() {
       {/* Desktop Sidebar */}
       <aside className={cn(
         "hidden flex-col border-r border-border bg-secondary text-secondary-foreground md:flex transition-all duration-300",
-        isCollapsed ? "w-20" : "w-64"
+        isCollapsed ? "w-20" : "w-64",
+        pathname.match(/\/admin\/mapas-mentais\/.+/) ? "!hidden" : ""
       )}>
         <div className="border-b border-border/20 p-5 flex items-center justify-center">
           <Link to="/">
