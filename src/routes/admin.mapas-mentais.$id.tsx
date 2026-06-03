@@ -30,16 +30,14 @@ const colorPresets = [
 function CustomNode({ id, data, isConnectable, selected }: any) {
   const { setNodes, setEdges, getNodes, getEdges } = useReactFlow();
 
+  const isRoot = !getEdges().some((e: Edge) => e.target === id);
+  const isMinimized = data.isMinimized === true;
+
   const addChild = (e: React.MouseEvent) => {
     e.stopPropagation();
     const nodes = getNodes();
     const parentNode = nodes.find((n) => n.id === id);
     if (!parentNode) return;
-
-    // Se o nó estiver colapsado, expandimos antes de adicionar o filho
-    if (data.isExpanded === false) {
-      toggleCollapse(e, true);
-    }
 
     const newId = uuidv4();
     const newNode: Node = {
@@ -68,19 +66,15 @@ function CustomNode({ id, data, isConnectable, selected }: any) {
     setEdges((eds: any) => [...eds, newEdge]);
   };
 
-  const hasChildren = getEdges().some((e: Edge) => e.source === id);
-  const isRoot = !getEdges().some((e: Edge) => e.target === id);
-  const isExpanded = data.isExpanded !== false; // true por omissão
-
-  const toggleCollapse = (e: React.MouseEvent, forceExpand: boolean = false) => {
+  const toggleMinimize = (e: React.MouseEvent, forceExpand: boolean = false) => {
     e.stopPropagation();
     const allNodes = getNodes();
     const allEdges = getEdges();
     
-    const newExpandedState = forceExpand ? true : !isExpanded;
+    const newState = forceExpand ? false : !isMinimized;
     
     let updatedNodes = allNodes.map(n => 
-      n.id === id ? { ...n, data: { ...n.data, isExpanded: newExpandedState } } : n
+      n.id === id ? { ...n, data: { ...n.data, isMinimized: newState } } : n
     );
 
     const parentToChildren: Record<string, string[]> = {};
@@ -89,33 +83,61 @@ function CustomNode({ id, data, isConnectable, selected }: any) {
       parentToChildren[edge.source].push(edge.target);
     });
 
-    const applyHidden = (nodeId: string, hide: boolean) => {
+    const hiddenSet = new Set<string>();
+
+    const traverseAndHide = (nodeId: string, hideChildren: boolean) => {
       const children = parentToChildren[nodeId] || [];
       children.forEach(childId => {
-        const childNode = updatedNodes.find(n => n.id === childId);
-        if (childNode) {
-          childNode.hidden = hide;
-          const childExpanded = childNode.data.isExpanded !== false;
-          applyHidden(childId, hide || !childExpanded);
+        if (hideChildren) {
+          hiddenSet.add(childId);
+          traverseAndHide(childId, true);
+        } else {
+          const childNode = updatedNodes.find(n => n.id === childId);
+          const childIsMinimized = childNode?.data.isMinimized === true;
+          traverseAndHide(childId, childIsMinimized);
         }
       });
     };
 
-    applyHidden(id, !newExpandedState);
+    const allTargets = new Set(allEdges.map((e: Edge) => e.target));
+    const roots = allNodes.filter(n => !allTargets.has(n.id));
 
-    setNodes([...updatedNodes]);
-    setEdges(allEdges.map((edge: any) => {
-      const targetNode = updatedNodes.find(n => n.id === edge.target);
-      return { ...edge, hidden: targetNode ? targetNode.hidden : false };
-    }));
+    roots.forEach(root => {
+      const isMin = root.data.isMinimized === true;
+      traverseAndHide(root.id, isMin);
+    });
+
+    setNodes(updatedNodes.map(n => ({
+      ...n,
+      hidden: hiddenSet.has(n.id)
+    })));
+    setEdges(allEdges.map((edge: any) => ({
+      ...edge,
+      hidden: hiddenSet.has(edge.target)
+    })));
   };
+
+  if (isMinimized && !isRoot) {
+    return (
+      <div 
+        className="group relative flex items-center justify-center w-8 h-8 rounded-full border-2 shadow-md cursor-pointer hover:scale-110 transition-all bg-secondary text-secondary-foreground"
+        style={{ borderColor: data.bgColor || "#e2e8f0" }}
+        onClick={(e) => toggleMinimize(e, true)}
+        title="Revelar Ideia"
+      >
+        <Handle type="target" position={Position.Left} isConnectable={isConnectable} className="opacity-0" />
+        <Plus className="w-4 h-4" />
+        <Handle type="source" position={Position.Right} isConnectable={isConnectable} className="opacity-0" />
+      </div>
+    );
+  }
 
   return (
     <div 
       className={`group relative px-4 py-3 rounded-xl min-w-[140px] max-w-[280px] shadow-sm transition-all duration-300 ${
         selected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background scale-105' : ''
       } ${
-        isRoot ? 'border-4 font-black shadow-lg scale-110' : 'border-2'
+        isRoot ? 'border-[3px] shadow-lg scale-110' : 'border-2'
       }`}
       style={{ backgroundColor: data.bgColor || "#ffffff", borderColor: data.bgColor || "#e2e8f0", color: data.textColor || "#1e293b" }}
     >
@@ -123,20 +145,20 @@ function CustomNode({ id, data, isConnectable, selected }: any) {
         <Handle type="target" position={Position.Left} isConnectable={isConnectable} className="w-2 h-4 rounded-sm bg-muted-foreground border-none -ml-1" />
       )}
       
-      <div className={`text-center whitespace-pre-wrap break-words leading-tight ${isRoot ? 'text-base uppercase tracking-wide' : 'text-sm font-semibold'}`}>
+      <div className={`text-center whitespace-pre-wrap break-words leading-tight ${isRoot ? 'text-base uppercase font-black tracking-wide' : 'text-sm font-semibold'}`}>
         {data.label}
       </div>
       
       <Handle type="source" position={Position.Right} isConnectable={isConnectable} className="w-2 h-4 rounded-sm bg-muted-foreground border-none -mr-1" />
       
-      {/* Botão de Expandir / Recolher - Fundo/Centro */}
-      {hasChildren && (
+      {/* Botão de Ocultar/Minimizar - Fundo/Centro */}
+      {!isRoot && (
         <button
-          onClick={(e) => toggleCollapse(e)}
+          onClick={(e) => toggleMinimize(e)}
           className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-secondary text-secondary-foreground w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold shadow-md border-2 border-background hover:bg-secondary/80 hover:scale-110 transition-all z-20"
-          title={isExpanded ? "Recolher" : "Expandir"}
+          title="Ocultar Ideia"
         >
-          {isExpanded ? "-" : "+"}
+          -
         </button>
       )}
 
