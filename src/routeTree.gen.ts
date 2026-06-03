@@ -41,12 +41,14 @@ import { Route as AdminBannersRouteImport } from './routes/admin.banners'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as AdminAlunosRouteImport } from './routes/admin.alunos'
 import { Route as AppBlogIndexRouteImport } from './routes/app.blog.index'
+import { Route as AdminMapasMentaisIndexRouteImport } from './routes/admin.mapas-mentais.index'
 import { Route as AdminCursosIndexRouteImport } from './routes/admin.cursos.index'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin.blog.index'
 import { Route as AppPlayerLessonIdRouteImport } from './routes/app.player.$lessonId'
 import { Route as AppCursoSlugRouteImport } from './routes/app.curso.$slug'
 import { Route as AppBlogSlugRouteImport } from './routes/app.blog.$slug'
 import { Route as ApiWebhooksPaysuiteRouteImport } from './routes/api.webhooks.paysuite'
+import { Route as AdminMapasMentaisIdRouteImport } from './routes/admin.mapas-mentais.$id'
 import { Route as AdminCursosIdRouteImport } from './routes/admin.cursos.$id'
 import { Route as AdminBlogIdRouteImport } from './routes/admin.blog.$id'
 
@@ -210,6 +212,11 @@ const AppBlogIndexRoute = AppBlogIndexRouteImport.update({
   path: '/blog/',
   getParentRoute: () => AppRoute,
 } as any)
+const AdminMapasMentaisIndexRoute = AdminMapasMentaisIndexRouteImport.update({
+  id: '/mapas-mentais/',
+  path: '/mapas-mentais/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCursosIndexRoute = AdminCursosIndexRouteImport.update({
   id: '/cursos/',
   path: '/cursos/',
@@ -239,6 +246,11 @@ const ApiWebhooksPaysuiteRoute = ApiWebhooksPaysuiteRouteImport.update({
   id: '/api/webhooks/paysuite',
   path: '/api/webhooks/paysuite',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminMapasMentaisIdRoute = AdminMapasMentaisIdRouteImport.update({
+  id: '/mapas-mentais/$id',
+  path: '/mapas-mentais/$id',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminCursosIdRoute = AdminCursosIdRouteImport.update({
   id: '/cursos/$id',
@@ -285,12 +297,14 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof BlogIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/cursos/$id': typeof AdminCursosIdRoute
+  '/admin/mapas-mentais/$id': typeof AdminMapasMentaisIdRoute
   '/api/webhooks/paysuite': typeof ApiWebhooksPaysuiteRoute
   '/app/blog/$slug': typeof AppBlogSlugRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
   '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/cursos/': typeof AdminCursosIndexRoute
+  '/admin/mapas-mentais/': typeof AdminMapasMentaisIndexRoute
   '/app/blog/': typeof AppBlogIndexRoute
 }
 export interface FileRoutesByTo {
@@ -325,12 +339,14 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/cursos/$id': typeof AdminCursosIdRoute
+  '/admin/mapas-mentais/$id': typeof AdminMapasMentaisIdRoute
   '/api/webhooks/paysuite': typeof ApiWebhooksPaysuiteRoute
   '/app/blog/$slug': typeof AppBlogSlugRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
   '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/cursos': typeof AdminCursosIndexRoute
+  '/admin/mapas-mentais': typeof AdminMapasMentaisIndexRoute
   '/app/blog': typeof AppBlogIndexRoute
 }
 export interface FileRoutesById {
@@ -368,12 +384,14 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/cursos/$id': typeof AdminCursosIdRoute
+  '/admin/mapas-mentais/$id': typeof AdminMapasMentaisIdRoute
   '/api/webhooks/paysuite': typeof ApiWebhooksPaysuiteRoute
   '/app/blog/$slug': typeof AppBlogSlugRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
   '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/cursos/': typeof AdminCursosIndexRoute
+  '/admin/mapas-mentais/': typeof AdminMapasMentaisIndexRoute
   '/app/blog/': typeof AppBlogIndexRoute
 }
 export interface FileRouteTypes {
@@ -412,12 +430,14 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/admin/blog/$id'
     | '/admin/cursos/$id'
+    | '/admin/mapas-mentais/$id'
     | '/api/webhooks/paysuite'
     | '/app/blog/$slug'
     | '/app/curso/$slug'
     | '/app/player/$lessonId'
     | '/admin/blog/'
     | '/admin/cursos/'
+    | '/admin/mapas-mentais/'
     | '/app/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -452,12 +472,14 @@ export interface FileRouteTypes {
     | '/blog'
     | '/admin/blog/$id'
     | '/admin/cursos/$id'
+    | '/admin/mapas-mentais/$id'
     | '/api/webhooks/paysuite'
     | '/app/blog/$slug'
     | '/app/curso/$slug'
     | '/app/player/$lessonId'
     | '/admin/blog'
     | '/admin/cursos'
+    | '/admin/mapas-mentais'
     | '/app/blog'
   id:
     | '__root__'
@@ -494,12 +516,14 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/admin/blog/$id'
     | '/admin/cursos/$id'
+    | '/admin/mapas-mentais/$id'
     | '/api/webhooks/paysuite'
     | '/app/blog/$slug'
     | '/app/curso/$slug'
     | '/app/player/$lessonId'
     | '/admin/blog/'
     | '/admin/cursos/'
+    | '/admin/mapas-mentais/'
     | '/app/blog/'
   fileRoutesById: FileRoutesById
 }
@@ -752,6 +776,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBlogIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/mapas-mentais/': {
+      id: '/admin/mapas-mentais/'
+      path: '/mapas-mentais'
+      fullPath: '/admin/mapas-mentais/'
+      preLoaderRoute: typeof AdminMapasMentaisIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/cursos/': {
       id: '/admin/cursos/'
       path: '/cursos'
@@ -794,6 +825,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiWebhooksPaysuiteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/mapas-mentais/$id': {
+      id: '/admin/mapas-mentais/$id'
+      path: '/mapas-mentais/$id'
+      fullPath: '/admin/mapas-mentais/$id'
+      preLoaderRoute: typeof AdminMapasMentaisIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/cursos/$id': {
       id: '/admin/cursos/$id'
       path: '/cursos/$id'
@@ -821,8 +859,10 @@ interface AdminRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   AdminBlogIdRoute: typeof AdminBlogIdRoute
   AdminCursosIdRoute: typeof AdminCursosIdRoute
+  AdminMapasMentaisIdRoute: typeof AdminMapasMentaisIdRoute
   AdminBlogIndexRoute: typeof AdminBlogIndexRoute
   AdminCursosIndexRoute: typeof AdminCursosIndexRoute
+  AdminMapasMentaisIndexRoute: typeof AdminMapasMentaisIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -835,8 +875,10 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   AdminBlogIdRoute: AdminBlogIdRoute,
   AdminCursosIdRoute: AdminCursosIdRoute,
+  AdminMapasMentaisIdRoute: AdminMapasMentaisIdRoute,
   AdminBlogIndexRoute: AdminBlogIndexRoute,
   AdminCursosIndexRoute: AdminCursosIndexRoute,
+  AdminMapasMentaisIndexRoute: AdminMapasMentaisIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
