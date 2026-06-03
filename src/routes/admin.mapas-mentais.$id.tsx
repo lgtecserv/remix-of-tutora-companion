@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Save, Download, Maximize2, Minimize2, Plus, Type, Palette, Layout, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { ReactFlow, MiniMap, Controls, Background, useNodesState, useEdgesState, addEdge, BackgroundVariant, Panel, Node, Edge, Handle, Position, useReactFlow } from "@xyflow/react";
+import { ReactFlow, MiniMap, Controls, Background, useNodesState, useEdgesState, addEdge, BackgroundVariant, Panel, Node, Edge, Handle, Position, useReactFlow, getNodesBounds, getViewportForBounds } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import html2canvas from "html2canvas";
+import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
 import { v4 as uuidv4 } from "uuid";
 import { ImageUpload } from "@/components/image-upload";
@@ -246,21 +246,50 @@ function MapaMentalEditor() {
     if (!flowRef.current) return;
     toast.info("A gerar PDF...");
     try {
-      // Ocultar Controlos temporariamente
-      const controls = flowRef.current.querySelectorAll('.react-flow__controls, .react-flow__panel');
-      controls.forEach((c: any) => c.style.display = 'none');
+      const nodesBounds = getNodesBounds(nodes);
+      // Calcula dimensões com padding para acomodar a espessura da linha e nós arredondados
+      const padding = 100;
+      const imageWidth = nodesBounds.width + padding * 2;
+      const imageHeight = nodesBounds.height + padding * 2;
 
-      const canvas = await html2canvas(flowRef.current, {
-        scale: 2,
-        backgroundColor: "#f8fafc",
+      // viewport para os limites dos nós
+      const viewport = getViewportForBounds(
+        nodesBounds,
+        imageWidth,
+        imageHeight,
+        0.5,
+        2,
+        0
+      );
+
+      // Elemento viewport real usado pelo React Flow
+      const viewportElement = flowRef.current.querySelector('.react-flow__viewport') as HTMLElement;
+      if (!viewportElement) throw new Error("Viewport não encontrado");
+
+      // Gerar PNG usando html-to-image
+      const imgData = await toPng(viewportElement, {
+        backgroundColor: '#111827', // um dark mais consistente
+        width: imageWidth,
+        height: imageHeight,
+        style: {
+          width: `${imageWidth}px`,
+          height: `${imageHeight}px`,
+          transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`,
+        },
+        // O xyflow usa oklch que as vezes falha no html-to-image mas bem menos que html2canvas.
+        // O filter é essencial para omitir elementos problemáticos que possam falhar no SVG foreignObject
+        filter: (node: HTMLElement) => {
+          // Ignorar painéis de controle
+          if (node.classList?.contains('react-flow__minimap') || node.classList?.contains('react-flow__controls') || node.classList?.contains('react-flow__panel')) {
+            return false;
+          }
+          return true;
+        },
       });
 
-      controls.forEach((c: any) => c.style.display = '');
-
-      const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("landscape", "mm", "a4");
       const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      const pdfHeight = (imageHeight * pdfWidth) / imageWidth;
       
       pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
       pdf.save(`${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`);
