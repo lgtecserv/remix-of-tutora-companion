@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tan
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import logoImg from "@/assets/logo-imersao.png";
-import { Home, BookOpen, Newspaper, User, Settings, LogOut, Shield, Compass, Sun, Moon } from "lucide-react";
+import { Home, BookOpen, Newspaper, User, Settings, LogOut, Shield, Compass, Sun, Moon, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import NotificationBell from "@/components/notification-bell";
@@ -39,6 +39,7 @@ function AppLayout() {
     { to: "/app", label: "Início", icon: Home, exact: true },
     { to: "/app/catalogo", label: "Catálogo", icon: Compass },
     { to: "/app/cursos", label: "Meus Cursos", icon: BookOpen },
+    { to: "/app/comunidade", label: "Comunidade", icon: Users },
     { to: "/app/blog", label: "Blog", icon: Newspaper },
     { to: "/app/perfil", label: "Perfil", icon: User },
     { to: "/app/configuracoes", label: "Configurações", icon: Settings },
@@ -121,7 +122,7 @@ function AppLayout() {
 
       {/* Mobile Bottom Navigation */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-border bg-card/70 backdrop-blur-2xl px-1 pb-safe pt-2 shadow-[0_-4px_25px_rgba(0,0,0,0.5)]">
-        {nav.filter(n => ["Início", "Catálogo", "Meus Cursos", "Perfil"].includes(n.label)).map((n) => {
+        {nav.filter(n => ["Início", "Catálogo", "Meus Cursos", "Comunidade"].includes(n.label)).map((n) => {
           const active = n.exact ? pathname === n.to : pathname.startsWith(n.to);
           return (
             <Link key={n.label} to={n.to as string} className={cn(

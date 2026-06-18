@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { BookOpen, Users, MessageSquare, Newspaper, DollarSign, LayoutDashboard, Settings, LogOut, GraduationCap, Menu, Image, BarChart3, Network, ChevronLeft, ChevronRight } from "lucide-react";
+import { BookOpen, Users, MessageSquare, Newspaper, DollarSign, LayoutDashboard, Settings, LogOut, GraduationCap, Menu, Image, BarChart3, Network, ChevronLeft, ChevronRight, ShieldCheck } from "lucide-react";
 import logoImg from "@/assets/logo-imersao.png";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from "@/components/ui/sheet";
@@ -53,6 +53,7 @@ function AdminLayout() {
     { to: "/admin/analytics", label: "Analytics", icon: BarChart3 },
     { to: "/admin/mapas-mentais", label: "Mapas Mentais", icon: Network },
     { to: "/admin/pagamentos", label: "Pagamentos", icon: DollarSign },
+    { to: "/admin/comunidade", label: "Moderação", icon: ShieldCheck },
     { to: "/admin/configuracoes", label: "Configurações", icon: Settings },
   ];
 
