@@ -189,7 +189,7 @@ function AdminEbooks() {
           <div className="lg:col-span-2 space-y-6">
             <form onSubmit={saveEdits} className="space-y-6 rounded-xl border border-border bg-card p-6">
               <Tabs defaultValue="basico" className="w-full">
-                <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 mb-6 bg-muted p-1 rounded-lg">
+                <TabsList className="grid w-full h-auto grid-cols-1 md:grid-cols-3 gap-1 mb-6 bg-muted p-1 rounded-lg">
                   <TabsTrigger value="basico">Básico & Suporte</TabsTrigger>
                   <TabsTrigger value="vendas">Preço & Afiliados</TabsTrigger>
                   <TabsTrigger value="marketing">Marketing & Upsell</TabsTrigger>
@@ -205,7 +205,7 @@ function AdminEbooks() {
                     <Label>Descrição (HTML suportado)</Label>
                     <Textarea className="h-32" value={editingEbook.description || ""} onChange={e => setEditingEbook({...editingEbook, description: e.target.value})} />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label>Categoria</Label>
                       <Input value={editingEbook.category || ""} onChange={e => setEditingEbook({...editingEbook, category: e.target.value})} />
@@ -215,7 +215,7 @@ function AdminEbooks() {
                       <Input type="email" placeholder="ex: suporte@teusite.com" value={editingEbook.support_email || ""} onChange={e => setEditingEbook({...editingEbook, support_email: e.target.value})} />
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <Label>Garantia (Dias)</Label>
                       <Input type="number" value={editingEbook.guarantee_days || 7} onChange={e => setEditingEbook({...editingEbook, guarantee_days: Number(e.target.value)})} />
@@ -233,7 +233,7 @@ function AdminEbooks() {
 
                 {/* Tab: Vendas e Afiliados */}
                 <TabsContent value="vendas" className="space-y-6">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label>Preço (MT)</Label>
                       <Input type="number" value={editingEbook.price_mzn} onChange={e => setEditingEbook({...editingEbook, price_mzn: Number(e.target.value)})} />
@@ -255,7 +255,7 @@ function AdminEbooks() {
                     {editingEbook.allow_affiliates && (
                       <div className="pt-2">
                         <Label>Percentagem de Comissão (%)</Label>
-                        <Input type="number" className="w-1/3 mt-1" value={editingEbook.affiliate_percentage || 0} onChange={e => setEditingEbook({...editingEbook, affiliate_percentage: Number(e.target.value)})} />
+                        <Input type="number" className="w-full sm:w-1/3 mt-1" value={editingEbook.affiliate_percentage || 0} onChange={e => setEditingEbook({...editingEbook, affiliate_percentage: Number(e.target.value)})} />
                         <p className="text-xs text-muted-foreground mt-2">
                           Se venderes por {editingEbook.price_mzn || 0} MT, o afiliado ganha {((editingEbook.price_mzn || 0) * ((editingEbook.affiliate_percentage || 0) / 100)).toFixed(2)} MT por venda.
                         </p>
@@ -268,7 +268,7 @@ function AdminEbooks() {
                     <p className="text-sm text-muted-foreground">Divide as tuas comissões automaticamente com um parceiro de negócio.</p>
                     <div>
                       <Label>Comissão do Coprodutor (%)</Label>
-                      <Input type="number" className="w-1/3 mt-1" value={editingEbook.coproducer_percentage || 0} onChange={e => setEditingEbook({...editingEbook, coproducer_percentage: Number(e.target.value)})} />
+                      <Input type="number" className="w-full sm:w-1/3 mt-1" value={editingEbook.coproducer_percentage || 0} onChange={e => setEditingEbook({...editingEbook, coproducer_percentage: Number(e.target.value)})} />
                     </div>
                   </div>
                 </TabsContent>
@@ -280,7 +280,7 @@ function AdminEbooks() {
                     <p className="text-sm text-muted-foreground">Oferece um produto adicional com desconto diretamente na janela de pagamento.</p>
                     <div>
                       <Label>Preço do Order Bump (MT)</Label>
-                      <Input type="number" className="w-1/3 mt-1" value={editingEbook.order_bump_price || 0} onChange={e => setEditingEbook({...editingEbook, order_bump_price: Number(e.target.value)})} />
+                      <Input type="number" className="w-full sm:w-1/3 mt-1" value={editingEbook.order_bump_price || 0} onChange={e => setEditingEbook({...editingEbook, order_bump_price: Number(e.target.value)})} />
                     </div>
                   </div>
                   <div className="rounded-xl border border-border p-4 space-y-4">
