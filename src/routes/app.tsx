@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tan
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import logoImg from "@/assets/logo-imersao.png";
-import { Home, BookOpen, Newspaper, User, Settings, LogOut, Shield, Compass, Sun, Moon, Users, X, BookText, Library } from "lucide-react";
+import { Home, BookOpen, Newspaper, User, Settings, LogOut, Shield, Compass, Sun, Moon, Users, X, BookText, Library, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import NotificationBell from "@/components/notification-bell";
@@ -10,6 +10,8 @@ import { RouteErrorBoundary } from "@/components/route-error-boundary";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/app")({
   head: () => ({ meta: [{ title: "Painel do Aluno — Imersão Completa" }, { name: "robots", content: "noindex" }] }),
@@ -110,11 +112,56 @@ function AppLayout() {
         {/* Mobile Top Bar */}
         <header className="md:hidden sticky top-0 left-0 right-0 h-16 z-40 flex items-center justify-between border-b border-border bg-card/75 backdrop-blur-xl px-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)] w-full">
           <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-12 w-auto object-contain invert dark:invert-0 hue-rotate-180 dark:hue-rotate-0" /></Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <NotificationBell />
-            <button onClick={() => signOut().then(() => navigate({ to: "/" }))} className="p-2 text-muted-foreground hover:bg-muted hover:text-foreground rounded-full transition-colors" title="Sair">
-              <LogOut className="h-5 w-5" />
-            </button>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted hover:text-foreground rounded-full">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="bg-card text-card-foreground border-border w-72 p-0 flex flex-col h-[100dvh]">
+                <SheetHeader className="p-5 text-left border-b border-border/50 bg-muted/30">
+                  <SheetTitle className="text-foreground">Painel do Aluno</SheetTitle>
+                </SheetHeader>
+                <div className="flex-1 overflow-y-auto">
+                  <nav className="space-y-1 p-3">
+                    {nav.map((n) => {
+                      const active = n.exact ? pathname === n.to : pathname.startsWith(n.to);
+                      return (
+                        <Link key={n.label} to={n.to as string} className={cn(
+                          "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
+                          active ? "bg-primary/10 text-primary" : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                        )}>
+                          <n.icon className={cn("h-5 w-5", active ? "text-primary scale-110" : "")} />
+                          {n.label}
+                        </Link>
+                      );
+                    })}
+                    {isAdmin && (
+                      <Link to="/admin" className="mt-4 flex items-center gap-3 rounded-lg bg-primary/10 px-3 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary/20">
+                        <Shield className="h-5 w-5" />Ir para Painel Admin
+                      </Link>
+                    )}
+                    {!isAdmin && profile?.is_tutor && (
+                      <Link to="/tutor-panel" className="mt-4 flex items-center gap-3 rounded-lg bg-blue-500/10 px-3 py-2.5 text-sm font-semibold text-blue-500 transition hover:bg-blue-500/20">
+                        <BookOpen className="h-5 w-5" />Ir para Painel Tutor
+                      </Link>
+                    )}
+                  </nav>
+                </div>
+                <div className="border-t border-border p-3 space-y-1 bg-muted/30">
+                  <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-all">
+                    {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                    <span>Tema {theme === 'dark' ? 'Claro' : 'Escuro'}</span>
+                  </button>
+                  <button onClick={() => signOut().then(() => navigate({ to: "/" }))} className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-500 hover:bg-red-500/10 transition-all">
+                    <LogOut className="h-5 w-5" />Sair
+                  </button>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </header>
 
