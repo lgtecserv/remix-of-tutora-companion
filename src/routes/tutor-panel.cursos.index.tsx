@@ -72,7 +72,7 @@ function AdminCourses() {
         <h1 className="text-3xl font-bold text-foreground">Cursos</h1>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild><Button><Plus className="h-4 w-4" />Novo curso</Button></DialogTrigger>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogHeader><DialogTitle>Criar curso</DialogTitle></DialogHeader>
             <div><Label>Título do curso *</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex.: Marketing Digital para Iniciantes" /></div>
             <p className="text-xs text-muted-foreground">Vais completar os detalhes (capa, preço, currículo) no próximo ecrã.</p>

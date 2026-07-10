@@ -144,7 +144,7 @@ function AdminTutors() {
 
       {selectedApp && (
         <Dialog open onOpenChange={(open) => !open && setSelectedApp(null)}>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>Rever Candidatura de Tutor</DialogTitle>
             </DialogHeader>
