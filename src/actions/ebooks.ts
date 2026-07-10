@@ -174,7 +174,7 @@ export const getEbookSignedUrl = createServerFn({ method: "POST" })
       .eq("ebook_id", ebookId)
       .maybeSingle();
 
-    const { data: ebook } = await supabase
+    const { data: ebook } = await supabaseAdmin
       .from("ebooks")
       .select("file_path, author_id")
       .eq("id", ebookId)
@@ -204,7 +204,8 @@ export const getEbookSignedUrl = createServerFn({ method: "POST" })
       .createSignedUrl(ebook.file_path, 3600);
 
     if (error || !signedData?.signedUrl) {
-      throw new Error("Falha ao gerar o link de download.");
+      console.error("Storage Error:", error);
+      throw new Error("Falha ao gerar o link de download. Verifica se o PDF foi carregado corretamente.");
     }
 
     return { signedUrl: signedData.signedUrl };

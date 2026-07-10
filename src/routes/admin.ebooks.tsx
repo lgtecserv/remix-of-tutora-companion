@@ -373,7 +373,12 @@ function AdminEbooks() {
         <Dialog open={openCreate} onOpenChange={setOpenCreate}>
           <DialogTrigger asChild><Button><Plus className="h-4 w-4 mr-2" />Adicionar E-book</Button></DialogTrigger>
           <DialogContent>
-            <DialogHeader><DialogTitle>Adicionar Novo E-book</DialogTitle></DialogHeader>
+            <DialogHeader>
+              <DialogTitle>Adicionar Novo E-book</DialogTitle>
+              <DialogDescription>
+                Introduza o título do seu novo E-book para começar.
+              </DialogDescription>
+            </DialogHeader>
             <div><Label>Título do Livro *</Label><Input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="Ex.: Como Ganhar Dinheiro na Internet" /></div>
             <DialogFooter><Button onClick={handleCreate}>Criar e continuar</Button></DialogFooter>
           </DialogContent>
