@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { createCheckoutSession } from "@/actions/checkout";
+import { createEbookCheckoutSession } from "@/actions/ebooks";
 import { uploadPaymentReceipt } from "@/actions/uploadReceipt";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -11,7 +12,9 @@ import { Smartphone, Building2, CreditCard, Upload, CheckCircle2, Copy, ArrowLef
 interface PaymentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  courseId: string;
+  courseId?: string;
+  itemId?: string;
+  type?: "course" | "ebook";
   courseTitle: string;
   price: number;
   userId: string;
@@ -21,14 +24,14 @@ interface PaymentDialogProps {
 type Step = "choose-method" | "processing" | "manual-instructions" | "upload-receipt" | "done";
 
 const PAYMENT_METHODS = [
-  { id: "paysuite" as const, label: "Pagamento Automático", icon: CreditCard, color: "text-emerald-500", description: "Pagar via M-Pesa, e-Mola ou Cartão pelo PaySuite. Acesso imediato." },
+  { id: "zumbopay" as const, label: "Pagamento Automático", icon: CreditCard, color: "text-emerald-500", description: "Pagar via M-Pesa, e-Mola ou Cartão pelo ZumboPay. Acesso imediato." },
   { id: "manual" as const, label: "Pagamento Manual", icon: Upload, color: "text-blue-500", description: "Transferência ou depósito direto. Requer envio de comprovativo." },
 ];
 
-export function PaymentDialog({ open, onOpenChange, courseId, courseTitle, price, userId, onSuccess }: PaymentDialogProps) {
+export function PaymentDialog({ open, onOpenChange, courseId, itemId, type = "course", courseTitle, price, userId, onSuccess }: PaymentDialogProps) {
   const qc = useQueryClient();
   const [step, setStep] = useState<Step>("choose-method");
-  const [selectedMethod, setSelectedMethod] = useState<"paysuite" | "manual" | "mpesa" | "emola" | "transferencia" | null>(null);
+  const [selectedMethod, setSelectedMethod] = useState<"zumbopay" | "manual" | "mpesa" | "emola" | "transferencia" | null>(null);
   const [paymentRef, setPaymentRef] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
@@ -48,25 +51,31 @@ export function PaymentDialog({ open, onOpenChange, courseId, courseTitle, price
     onOpenChange(val);
   };
 
-  const handleSelectMethod = async (methodId: "paysuite" | "manual") => {
+  const handleSelectMethod = async (methodId: "zumbopay" | "manual") => {
     setSelectedMethod(methodId);
     setStep("processing");
     setLoading(true);
 
     try {
-      // "paysuite" means we want the gateway. "manual" defaults to "transferencia" in the backend.
-      const apiMethod = methodId === "paysuite" ? "credit_card" : "transferencia";
-      const result = await createCheckoutSession({ data: { courseId, method: apiMethod } });
+      // "zumbopay" means we want the gateway. "manual" defaults to "transferencia" in the backend.
+      const apiMethod = methodId === "zumbopay" ? "credit_card" : "transferencia";
+      
+      let result;
+      if (type === "ebook") {
+        result = await createEbookCheckoutSession({ data: { ebookId: (itemId || courseId)!, method: apiMethod } });
+      } else {
+        result = await createCheckoutSession({ data: { courseId: (courseId || itemId)!, method: apiMethod } });
+      }
 
-      if (methodId === "paysuite" && result.checkoutUrl) {
-        // Redirect to PaySuite
+      if (methodId === "zumbopay" && result.checkoutUrl) {
+        // Redirect to ZumboPay
         window.location.href = result.checkoutUrl;
         return;
       }
 
-      // If manual or if PaySuite fell back to manual
+      // If manual or if ZumboPay fell back to manual
       if (result.fallbackReason) {
-        toast.error("PaySuite indisponível: " + result.fallbackReason);
+        toast.error("ZumboPay indisponível: " + result.fallbackReason);
       }
       setPaymentRef(result.reference);
       setStep("manual-instructions");

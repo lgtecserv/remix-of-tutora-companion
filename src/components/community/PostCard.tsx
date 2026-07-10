@@ -19,6 +19,7 @@ export interface Post {
   course_id: string | null;
   created_at: string;
   user_id: string;
+  is_pinned?: boolean;
   profiles: {
     full_name: string | null;
     avatar_url: string | null;
@@ -125,8 +126,13 @@ export function PostCard({ post }: { post: Post }) {
         </DropdownMenu>
       </div>
 
-      {(post.category || post.courses?.title) && (
+      {(post.is_pinned || post.category || post.courses?.title) && (
         <div className="flex items-center gap-2 mb-3">
+          {post.is_pinned && (
+            <span className="inline-flex items-center gap-1 rounded-md bg-primary px-2 py-1 text-xs font-semibold text-primary-foreground">
+              📌 Fixado
+            </span>
+          )}
           {post.category && (
             <span className="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary ring-1 ring-inset ring-primary/20">
               {post.category}
@@ -144,7 +150,7 @@ export function PostCard({ post }: { post: Post }) {
         <p className="text-sm text-foreground whitespace-pre-wrap break-words">{post.content}</p>
         {post.image_url && (
           <div className="mt-3 overflow-hidden rounded-lg border border-border">
-            <img src={post.image_url} alt="Post content" className="w-full max-h-96 object-cover" />
+            <img src={post.image_url} alt="Post content" loading="lazy" className="w-full max-h-96 object-cover" />
           </div>
         )}
       </div>

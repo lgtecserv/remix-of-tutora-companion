@@ -27,9 +27,16 @@ export function Header() {
             <a key={n.label} href={n.href} className="text-sm font-semibold text-white/70 transition-colors hover:text-orange-500">{n.label}</a>
           ))}
         </nav>
-        <div className="flex items-center gap-4">
-          <Link to="/login" aria-label="Entrar na sua conta" className="rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10">Entrar</Link>
-          <Link to="/registo" aria-label="Começar agora e criar conta" className="rounded-full bg-gradient-to-r from-orange-500 to-red-600 px-6 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_-5px_rgba(234,88,12,0.6)] transition-all hover:scale-105 hover:shadow-[0_0_30px_-5px_rgba(234,88,12,0.8)] border-0">Começar agora</Link>
+        <div className="flex items-center gap-2 md:gap-4">
+          <Link to="/tutor/registro" className="text-xs md:text-sm font-semibold text-orange-500 hover:text-orange-400 transition-colors mr-1 md:mr-2 text-center leading-tight">
+            <span className="hidden sm:inline">Seja um Tutor</span>
+            <span className="sm:hidden">Ser<br/>Tutor</span>
+          </Link>
+          <Link to="/login" aria-label="Entrar na sua conta" className="rounded-full border border-white/20 px-3 md:px-5 py-2 md:py-2.5 text-xs md:text-sm font-semibold text-white transition-colors hover:bg-white/10">Entrar</Link>
+          <Link to="/registo" aria-label="Começar agora e criar conta" className="rounded-full bg-gradient-to-r from-orange-500 to-red-600 px-3 md:px-6 py-2 md:py-2.5 text-xs md:text-sm font-bold text-white shadow-[0_0_20px_-5px_rgba(234,88,12,0.6)] transition-all hover:scale-105 hover:shadow-[0_0_30px_-5px_rgba(234,88,12,0.8)] border-0">
+            <span className="hidden sm:inline">Começar agora</span>
+            <span className="sm:hidden">Começar</span>
+          </Link>
         </div>
       </div>
     </header>
@@ -60,6 +67,7 @@ export function Footer() {
           <div>
             <h4 className="mb-6 text-sm font-bold uppercase tracking-wider text-white">Legal & Empresa</h4>
             <ul className="space-y-4 text-sm">
+              <li><Link to="/tutor/registro" className="transition hover:text-orange-500 font-bold text-orange-500">Seja um Tutor</Link></li>
               <li><Link to="/sobre-nos" className="transition hover:text-orange-500">Sobre Nós</Link></li>
               <li><Link to="/contacto" className="transition hover:text-orange-500">Contacto</Link></li>
               <li><Link to="/termos-de-uso" className="transition hover:text-orange-500">Termos de Uso</Link></li>

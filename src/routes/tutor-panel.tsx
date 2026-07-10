@@ -1,63 +1,81 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { BookOpen, Users, MessageSquare, Newspaper, DollarSign, LayoutDashboard, Settings, LogOut, GraduationCap, Menu, Image, BarChart3, Network, ChevronLeft, ChevronRight, ShieldCheck, BookText } from "lucide-react";
+import { BookOpen, Users, DollarSign, LayoutDashboard, LogOut, Menu, ChevronLeft, ChevronRight } from "lucide-react";
 import logoImg from "@/assets/logo-imersao.png";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
-export const Route = createFileRoute("/admin")({
-  head: () => ({ meta: [{ title: "Admin — Imersão Completa" }, { name: "robots", content: "noindex" }] }),
-  component: AdminLayout,
+export const Route = createFileRoute("/tutor-panel")({
+  head: () => ({ meta: [{ title: "Painel do Tutor — Imersão Completa" }, { name: "robots", content: "noindex" }] }),
+  component: TutorPanelLayout,
 });
 
-function AdminLayout() {
-  const { user, isAdmin, loading, signOut } = useAuth();
+function TutorPanelLayout() {
+  const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [isClient, setIsClient] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isTutor, setIsTutor] = useState<boolean | null>(null);
+
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   useEffect(() => {
     if (!loading && !user && isClient) navigate({ to: "/login" });
-    if (!loading && user && !isAdmin && isClient) navigate({ to: "/app" });
-  }, [loading, user, isAdmin, navigate, isClient]);
+  }, [loading, user, navigate, isClient]);
 
-  // Previne Hydration Mismatch causado por extensões (força renderização apenas no lado do cliente)
-  if (!isClient) {
-    return null;
-  }
+  useEffect(() => {
+    async function checkTutorStatus() {
+      if (user) {
+        // Check profile
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("is_tutor")
+          .eq("id", user.id)
+          .single();
 
-  // Still loading auth state — show spinner
-  if (loading) {
-    return <div suppressHydrationWarning className="flex min-h-screen items-center justify-center text-muted-foreground">A carregar...</div>;
-  }
+        if (!profile?.is_tutor) {
+          toast.error("Acesso negado. Não é um tutor.");
+          navigate({ to: "/app" });
+          return;
+        }
 
-  // Not logged in or not admin — will redirect via the useEffect above, just show blank
-  if (!user || !isAdmin) {
-    return <div suppressHydrationWarning className="flex min-h-screen items-center justify-center text-muted-foreground">A redirecionar...</div>;
+        // Check payment status
+        const { data: appData } = await supabase
+          .from("tutor_applications")
+          .select("status")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        if (!appData || appData.status !== "paid") {
+          navigate({ to: "/tutor/pagamento" });
+          return;
+        }
+
+        setIsTutor(true);
+      }
+    }
+    if (user && isClient) {
+      checkTutorStatus();
+    }
+  }, [user, isClient, navigate]);
+
+  if (!isClient || loading || isTutor === null) {
+    return <div suppressHydrationWarning className="flex min-h-screen items-center justify-center text-muted-foreground">A verificar acesso...</div>;
   }
 
   const nav: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
-    { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-    { to: "/admin/cursos", label: "Cursos", icon: BookOpen },
-    { to: "/admin/ebooks", label: "E-books & PLR", icon: BookText },
-    { to: "/admin/alunos", label: "Alunos", icon: Users },
-    { to: "/admin/comentarios", label: "Comentários", icon: MessageSquare },
-    { to: "/admin/blog", label: "Blog", icon: Newspaper },
-    { to: "/admin/banners", label: "Anúncios", icon: Image },
-    { to: "/admin/analytics", label: "Analytics", icon: BarChart3 },
-    { to: "/admin/mapas-mentais", label: "Mapas Mentais", icon: Network },
-    { to: "/admin/pagamentos", label: "Pagamentos", icon: DollarSign },
-    { to: "/admin/comunidade", label: "Moderação", icon: ShieldCheck },
-    { to: "/admin/tutores", label: "Tutores", icon: Users },
-    { to: "/admin/saques", label: "Saques", icon: DollarSign },
-    { to: "/admin/configuracoes", label: "Configurações", icon: Settings },
+    { to: "/tutor-panel", label: "Dashboard", icon: LayoutDashboard, exact: true },
+    { to: "/tutor-panel/cursos", label: "Meus Cursos", icon: BookOpen },
+    { to: "/tutor-panel/alunos", label: "Meus Alunos", icon: Users },
+    { to: "/tutor-panel/financeiro", label: "Carteira", icon: DollarSign },
   ];
 
   return (
@@ -74,7 +92,7 @@ function AdminLayout() {
           </SheetTrigger>
           <SheetContent side="right" className="bg-secondary text-secondary-foreground border-border w-72 p-0">
             <SheetHeader className="p-5 text-left border-b border-border/20">
-              <SheetTitle className="text-secondary-foreground">Painel Admin</SheetTitle>
+              <SheetTitle className="text-secondary-foreground">Painel Tutor</SheetTitle>
             </SheetHeader>
             <div className="flex flex-col h-full">
               <nav className="flex-1 space-y-1 p-3">
@@ -101,8 +119,7 @@ function AdminLayout() {
       {/* Desktop Sidebar */}
       <aside className={cn(
         "hidden flex-col border-r border-border bg-secondary text-secondary-foreground md:flex transition-all duration-300",
-        isCollapsed ? "w-20" : "w-64",
-        pathname.match(/\/admin\/mapas-mentais\/.+/) ? "!hidden" : ""
+        isCollapsed ? "w-20" : "w-64"
       )}>
         <div className="border-b border-border/20 p-5 flex items-center justify-center">
           <Link to="/">
@@ -113,7 +130,7 @@ function AdminLayout() {
             )}
           </Link>
         </div>
-        {!isCollapsed && <div className="mt-2 px-5 text-xs font-medium uppercase tracking-wider text-primary">Painel Admin</div>}
+        {!isCollapsed && <div className="mt-2 px-5 text-xs font-medium uppercase tracking-wider text-primary">Painel Tutor</div>}
         <nav className="flex-1 space-y-1 p-3">
           {nav.map((n) => {
             const active = n.exact ? pathname === n.to : pathname.startsWith(n.to);
@@ -159,7 +176,7 @@ function AdminLayout() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className={pathname.includes("/admin/mapas-mentais/") ? "flex-1 flex flex-col h-[calc(100vh-64px)] md:h-screen" : "p-6 md:p-10"}
+            className="p-6 md:p-10"
           >
             <Outlet />
           </motion.div>

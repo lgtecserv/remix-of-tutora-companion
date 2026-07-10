@@ -6,7 +6,7 @@ import { Upload, X, Link as LinkIcon } from "lucide-react";
 import { toast } from "sonner";
 
 type Props = {
-  bucket: "course-covers" | "blog-covers" | "blog-images";
+  bucket: "course-covers" | "blog-covers" | "blog-images" | "community-images";
   value: string;
   onChange: (url: string) => void;
   label?: string;
@@ -18,14 +18,77 @@ export function ImageUpload({ bucket, value, onChange, label = "Capa", aspect = 
   const [busy, setBusy] = useState(false);
   const [mode, setMode] = useState<"upload" | "url">("upload");
 
+  async function compressImage(file: File): Promise<File> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            resolve(file); // Fallback to original
+            return;
+          }
+
+          // Max dimensions
+          const MAX_WIDTH = 1200;
+          const MAX_HEIGHT = 1200;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                // Return compressed file (WebP format for better compression)
+                const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, ".webp"), {
+                  type: "image/webp",
+                });
+                resolve(compressedFile);
+              } else {
+                resolve(file); // Fallback
+              }
+            },
+            "image/webp",
+            0.8 // 80% quality
+          );
+        };
+        img.onerror = () => resolve(file); // Fallback
+      };
+      reader.onerror = () => resolve(file); // Fallback
+    });
+  }
+
   async function handleFile(file: File) {
     if (file.size > 5 * 1024 * 1024) return toast.error("Máx. 5 MB");
     setBusy(true);
-    const ext = file.name.split(".").pop() ?? "jpg";
+    
+    // Compress image before upload
+    const compressedFile = await compressImage(file);
+    
+    const ext = compressedFile.name.split(".").pop() ?? "jpg";
     const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", compressedFile);
     formData.append("bucket", bucket);
     formData.append("path", path);
 

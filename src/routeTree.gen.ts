@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TutorPanelRouteImport } from './routes/tutor-panel'
 import { Route as TermosDeUsoRouteImport } from './routes/termos-de-uso'
 import { Route as SobreNosRouteImport } from './routes/sobre-nos'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -25,33 +26,52 @@ import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TutorPanelIndexRouteImport } from './routes/tutor-panel.index'
+import { Route as EbooksIndexRouteImport } from './routes/ebooks.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as TutorRegistroRouteImport } from './routes/tutor.registro'
+import { Route as TutorPagamentoRouteImport } from './routes/tutor.pagamento'
+import { Route as TutorPanelFinanceiroRouteImport } from './routes/tutor-panel.financeiro'
+import { Route as TutorPanelAlunosRouteImport } from './routes/tutor-panel.alunos'
+import { Route as EbooksSlugRouteImport } from './routes/ebooks.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AppPerfilRouteImport } from './routes/app.perfil'
 import { Route as AppCursosRouteImport } from './routes/app.cursos'
 import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes'
+import { Route as AppComunidadeRouteImport } from './routes/app.comunidade'
 import { Route as AppCatalogoRouteImport } from './routes/app.catalogo'
+import { Route as AppBibliotecaRouteImport } from './routes/app.biblioteca'
 import { Route as ApiUploadRouteImport } from './routes/api.upload'
+import { Route as AdminTutoresRouteImport } from './routes/admin.tutores'
+import { Route as AdminSaquesRouteImport } from './routes/admin.saques'
 import { Route as AdminPagamentosRouteImport } from './routes/admin.pagamentos'
+import { Route as AdminEbooksRouteImport } from './routes/admin.ebooks'
 import { Route as AdminConfiguracoesRouteImport } from './routes/admin.configuracoes'
+import { Route as AdminComunidadeRouteImport } from './routes/admin.comunidade'
 import { Route as AdminComentariosRouteImport } from './routes/admin.comentarios'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as AdminAlunosRouteImport } from './routes/admin.alunos'
+import { Route as TutorPanelCursosIndexRouteImport } from './routes/tutor-panel.cursos.index'
 import { Route as AppBlogIndexRouteImport } from './routes/app.blog.index'
 import { Route as AdminMapasMentaisIndexRouteImport } from './routes/admin.mapas-mentais.index'
 import { Route as AdminCursosIndexRouteImport } from './routes/admin.cursos.index'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin.blog.index'
+import { Route as TutorPanelCursosIdRouteImport } from './routes/tutor-panel.cursos.$id'
 import { Route as AppPlayerLessonIdRouteImport } from './routes/app.player.$lessonId'
 import { Route as AppCursoSlugRouteImport } from './routes/app.curso.$slug'
 import { Route as AppBlogSlugRouteImport } from './routes/app.blog.$slug'
-import { Route as ApiWebhooksPaysuiteRouteImport } from './routes/api.webhooks.paysuite'
 import { Route as AdminMapasMentaisIdRouteImport } from './routes/admin.mapas-mentais.$id'
 import { Route as AdminCursosIdRouteImport } from './routes/admin.cursos.$id'
 import { Route as AdminBlogIdRouteImport } from './routes/admin.blog.$id'
 
+const TutorPanelRoute = TutorPanelRouteImport.update({
+  id: '/tutor-panel',
+  path: '/tutor-panel',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermosDeUsoRoute = TermosDeUsoRouteImport.update({
   id: '/termos-de-uso',
   path: '/termos-de-uso',
@@ -132,6 +152,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TutorPanelIndexRoute = TutorPanelIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TutorPanelRoute,
+} as any)
+const EbooksIndexRoute = EbooksIndexRouteImport.update({
+  id: '/ebooks/',
+  path: '/ebooks/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -146,6 +176,31 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
+} as any)
+const TutorRegistroRoute = TutorRegistroRouteImport.update({
+  id: '/tutor/registro',
+  path: '/tutor/registro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TutorPagamentoRoute = TutorPagamentoRouteImport.update({
+  id: '/tutor/pagamento',
+  path: '/tutor/pagamento',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TutorPanelFinanceiroRoute = TutorPanelFinanceiroRouteImport.update({
+  id: '/financeiro',
+  path: '/financeiro',
+  getParentRoute: () => TutorPanelRoute,
+} as any)
+const TutorPanelAlunosRoute = TutorPanelAlunosRouteImport.update({
+  id: '/alunos',
+  path: '/alunos',
+  getParentRoute: () => TutorPanelRoute,
+} as any)
+const EbooksSlugRoute = EbooksSlugRouteImport.update({
+  id: '/ebooks/$slug',
+  path: '/ebooks/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
@@ -167,9 +222,19 @@ const AppConfiguracoesRoute = AppConfiguracoesRouteImport.update({
   path: '/configuracoes',
   getParentRoute: () => AppRoute,
 } as any)
+const AppComunidadeRoute = AppComunidadeRouteImport.update({
+  id: '/comunidade',
+  path: '/comunidade',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCatalogoRoute = AppCatalogoRouteImport.update({
   id: '/catalogo',
   path: '/catalogo',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBibliotecaRoute = AppBibliotecaRouteImport.update({
+  id: '/biblioteca',
+  path: '/biblioteca',
   getParentRoute: () => AppRoute,
 } as any)
 const ApiUploadRoute = ApiUploadRouteImport.update({
@@ -177,14 +242,34 @@ const ApiUploadRoute = ApiUploadRouteImport.update({
   path: '/api/upload',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminTutoresRoute = AdminTutoresRouteImport.update({
+  id: '/tutores',
+  path: '/tutores',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSaquesRoute = AdminSaquesRouteImport.update({
+  id: '/saques',
+  path: '/saques',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPagamentosRoute = AdminPagamentosRouteImport.update({
   id: '/pagamentos',
   path: '/pagamentos',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminEbooksRoute = AdminEbooksRouteImport.update({
+  id: '/ebooks',
+  path: '/ebooks',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminConfiguracoesRoute = AdminConfiguracoesRouteImport.update({
   id: '/configuracoes',
   path: '/configuracoes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminComunidadeRoute = AdminComunidadeRouteImport.update({
+  id: '/comunidade',
+  path: '/comunidade',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminComentariosRoute = AdminComentariosRouteImport.update({
@@ -207,6 +292,11 @@ const AdminAlunosRoute = AdminAlunosRouteImport.update({
   path: '/alunos',
   getParentRoute: () => AdminRoute,
 } as any)
+const TutorPanelCursosIndexRoute = TutorPanelCursosIndexRouteImport.update({
+  id: '/cursos/',
+  path: '/cursos/',
+  getParentRoute: () => TutorPanelRoute,
+} as any)
 const AppBlogIndexRoute = AppBlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -227,6 +317,11 @@ const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
   path: '/blog/',
   getParentRoute: () => AdminRoute,
 } as any)
+const TutorPanelCursosIdRoute = TutorPanelCursosIdRouteImport.update({
+  id: '/cursos/$id',
+  path: '/cursos/$id',
+  getParentRoute: () => TutorPanelRoute,
+} as any)
 const AppPlayerLessonIdRoute = AppPlayerLessonIdRouteImport.update({
   id: '/player/$lessonId',
   path: '/player/$lessonId',
@@ -241,11 +336,6 @@ const AppBlogSlugRoute = AppBlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
   getParentRoute: () => AppRoute,
-} as any)
-const ApiWebhooksPaysuiteRoute = ApiWebhooksPaysuiteRouteImport.update({
-  id: '/api/webhooks/paysuite',
-  path: '/api/webhooks/paysuite',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminMapasMentaisIdRoute = AdminMapasMentaisIdRouteImport.update({
   id: '/mapas-mentais/$id',
@@ -280,32 +370,47 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre-nos': typeof SobreNosRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
+  '/tutor-panel': typeof TutorPanelRouteWithChildren
   '/admin/alunos': typeof AdminAlunosRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/comentarios': typeof AdminComentariosRoute
+  '/admin/comunidade': typeof AdminComunidadeRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
+  '/admin/ebooks': typeof AdminEbooksRoute
   '/admin/pagamentos': typeof AdminPagamentosRoute
+  '/admin/saques': typeof AdminSaquesRoute
+  '/admin/tutores': typeof AdminTutoresRoute
   '/api/upload': typeof ApiUploadRoute
+  '/app/biblioteca': typeof AppBibliotecaRoute
   '/app/catalogo': typeof AppCatalogoRoute
+  '/app/comunidade': typeof AppComunidadeRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/perfil': typeof AppPerfilRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/ebooks/$slug': typeof EbooksSlugRoute
+  '/tutor-panel/alunos': typeof TutorPanelAlunosRoute
+  '/tutor-panel/financeiro': typeof TutorPanelFinanceiroRoute
+  '/tutor/pagamento': typeof TutorPagamentoRoute
+  '/tutor/registro': typeof TutorRegistroRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/ebooks/': typeof EbooksIndexRoute
+  '/tutor-panel/': typeof TutorPanelIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/cursos/$id': typeof AdminCursosIdRoute
   '/admin/mapas-mentais/$id': typeof AdminMapasMentaisIdRoute
-  '/api/webhooks/paysuite': typeof ApiWebhooksPaysuiteRoute
   '/app/blog/$slug': typeof AppBlogSlugRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
   '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
+  '/tutor-panel/cursos/$id': typeof TutorPanelCursosIdRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/cursos/': typeof AdminCursosIndexRoute
   '/admin/mapas-mentais/': typeof AdminMapasMentaisIndexRoute
   '/app/blog/': typeof AppBlogIndexRoute
+  '/tutor-panel/cursos/': typeof TutorPanelCursosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -326,28 +431,42 @@ export interface FileRoutesByTo {
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/comentarios': typeof AdminComentariosRoute
+  '/admin/comunidade': typeof AdminComunidadeRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
+  '/admin/ebooks': typeof AdminEbooksRoute
   '/admin/pagamentos': typeof AdminPagamentosRoute
+  '/admin/saques': typeof AdminSaquesRoute
+  '/admin/tutores': typeof AdminTutoresRoute
   '/api/upload': typeof ApiUploadRoute
+  '/app/biblioteca': typeof AppBibliotecaRoute
   '/app/catalogo': typeof AppCatalogoRoute
+  '/app/comunidade': typeof AppComunidadeRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/perfil': typeof AppPerfilRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/ebooks/$slug': typeof EbooksSlugRoute
+  '/tutor-panel/alunos': typeof TutorPanelAlunosRoute
+  '/tutor-panel/financeiro': typeof TutorPanelFinanceiroRoute
+  '/tutor/pagamento': typeof TutorPagamentoRoute
+  '/tutor/registro': typeof TutorRegistroRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
   '/blog': typeof BlogIndexRoute
+  '/ebooks': typeof EbooksIndexRoute
+  '/tutor-panel': typeof TutorPanelIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/cursos/$id': typeof AdminCursosIdRoute
   '/admin/mapas-mentais/$id': typeof AdminMapasMentaisIdRoute
-  '/api/webhooks/paysuite': typeof ApiWebhooksPaysuiteRoute
   '/app/blog/$slug': typeof AppBlogSlugRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
   '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
+  '/tutor-panel/cursos/$id': typeof TutorPanelCursosIdRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/cursos': typeof AdminCursosIndexRoute
   '/admin/mapas-mentais': typeof AdminMapasMentaisIndexRoute
   '/app/blog': typeof AppBlogIndexRoute
+  '/tutor-panel/cursos': typeof TutorPanelCursosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -367,32 +486,47 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre-nos': typeof SobreNosRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
+  '/tutor-panel': typeof TutorPanelRouteWithChildren
   '/admin/alunos': typeof AdminAlunosRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/comentarios': typeof AdminComentariosRoute
+  '/admin/comunidade': typeof AdminComunidadeRoute
   '/admin/configuracoes': typeof AdminConfiguracoesRoute
+  '/admin/ebooks': typeof AdminEbooksRoute
   '/admin/pagamentos': typeof AdminPagamentosRoute
+  '/admin/saques': typeof AdminSaquesRoute
+  '/admin/tutores': typeof AdminTutoresRoute
   '/api/upload': typeof ApiUploadRoute
+  '/app/biblioteca': typeof AppBibliotecaRoute
   '/app/catalogo': typeof AppCatalogoRoute
+  '/app/comunidade': typeof AppComunidadeRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/cursos': typeof AppCursosRoute
   '/app/perfil': typeof AppPerfilRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/ebooks/$slug': typeof EbooksSlugRoute
+  '/tutor-panel/alunos': typeof TutorPanelAlunosRoute
+  '/tutor-panel/financeiro': typeof TutorPanelFinanceiroRoute
+  '/tutor/pagamento': typeof TutorPagamentoRoute
+  '/tutor/registro': typeof TutorRegistroRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/ebooks/': typeof EbooksIndexRoute
+  '/tutor-panel/': typeof TutorPanelIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/cursos/$id': typeof AdminCursosIdRoute
   '/admin/mapas-mentais/$id': typeof AdminMapasMentaisIdRoute
-  '/api/webhooks/paysuite': typeof ApiWebhooksPaysuiteRoute
   '/app/blog/$slug': typeof AppBlogSlugRoute
   '/app/curso/$slug': typeof AppCursoSlugRoute
   '/app/player/$lessonId': typeof AppPlayerLessonIdRoute
+  '/tutor-panel/cursos/$id': typeof TutorPanelCursosIdRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/cursos/': typeof AdminCursosIndexRoute
   '/admin/mapas-mentais/': typeof AdminMapasMentaisIndexRoute
   '/app/blog/': typeof AppBlogIndexRoute
+  '/tutor-panel/cursos/': typeof TutorPanelCursosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -413,32 +547,47 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sobre-nos'
     | '/termos-de-uso'
+    | '/tutor-panel'
     | '/admin/alunos'
     | '/admin/analytics'
     | '/admin/banners'
     | '/admin/comentarios'
+    | '/admin/comunidade'
     | '/admin/configuracoes'
+    | '/admin/ebooks'
     | '/admin/pagamentos'
+    | '/admin/saques'
+    | '/admin/tutores'
     | '/api/upload'
+    | '/app/biblioteca'
     | '/app/catalogo'
+    | '/app/comunidade'
     | '/app/configuracoes'
     | '/app/cursos'
     | '/app/perfil'
     | '/blog/$slug'
+    | '/ebooks/$slug'
+    | '/tutor-panel/alunos'
+    | '/tutor-panel/financeiro'
+    | '/tutor/pagamento'
+    | '/tutor/registro'
     | '/admin/'
     | '/app/'
     | '/blog/'
+    | '/ebooks/'
+    | '/tutor-panel/'
     | '/admin/blog/$id'
     | '/admin/cursos/$id'
     | '/admin/mapas-mentais/$id'
-    | '/api/webhooks/paysuite'
     | '/app/blog/$slug'
     | '/app/curso/$slug'
     | '/app/player/$lessonId'
+    | '/tutor-panel/cursos/$id'
     | '/admin/blog/'
     | '/admin/cursos/'
     | '/admin/mapas-mentais/'
     | '/app/blog/'
+    | '/tutor-panel/cursos/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -459,28 +608,42 @@ export interface FileRouteTypes {
     | '/admin/analytics'
     | '/admin/banners'
     | '/admin/comentarios'
+    | '/admin/comunidade'
     | '/admin/configuracoes'
+    | '/admin/ebooks'
     | '/admin/pagamentos'
+    | '/admin/saques'
+    | '/admin/tutores'
     | '/api/upload'
+    | '/app/biblioteca'
     | '/app/catalogo'
+    | '/app/comunidade'
     | '/app/configuracoes'
     | '/app/cursos'
     | '/app/perfil'
     | '/blog/$slug'
+    | '/ebooks/$slug'
+    | '/tutor-panel/alunos'
+    | '/tutor-panel/financeiro'
+    | '/tutor/pagamento'
+    | '/tutor/registro'
     | '/admin'
     | '/app'
     | '/blog'
+    | '/ebooks'
+    | '/tutor-panel'
     | '/admin/blog/$id'
     | '/admin/cursos/$id'
     | '/admin/mapas-mentais/$id'
-    | '/api/webhooks/paysuite'
     | '/app/blog/$slug'
     | '/app/curso/$slug'
     | '/app/player/$lessonId'
+    | '/tutor-panel/cursos/$id'
     | '/admin/blog'
     | '/admin/cursos'
     | '/admin/mapas-mentais'
     | '/app/blog'
+    | '/tutor-panel/cursos'
   id:
     | '__root__'
     | '/'
@@ -499,32 +662,47 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/sobre-nos'
     | '/termos-de-uso'
+    | '/tutor-panel'
     | '/admin/alunos'
     | '/admin/analytics'
     | '/admin/banners'
     | '/admin/comentarios'
+    | '/admin/comunidade'
     | '/admin/configuracoes'
+    | '/admin/ebooks'
     | '/admin/pagamentos'
+    | '/admin/saques'
+    | '/admin/tutores'
     | '/api/upload'
+    | '/app/biblioteca'
     | '/app/catalogo'
+    | '/app/comunidade'
     | '/app/configuracoes'
     | '/app/cursos'
     | '/app/perfil'
     | '/blog/$slug'
+    | '/ebooks/$slug'
+    | '/tutor-panel/alunos'
+    | '/tutor-panel/financeiro'
+    | '/tutor/pagamento'
+    | '/tutor/registro'
     | '/admin/'
     | '/app/'
     | '/blog/'
+    | '/ebooks/'
+    | '/tutor-panel/'
     | '/admin/blog/$id'
     | '/admin/cursos/$id'
     | '/admin/mapas-mentais/$id'
-    | '/api/webhooks/paysuite'
     | '/app/blog/$slug'
     | '/app/curso/$slug'
     | '/app/player/$lessonId'
+    | '/tutor-panel/cursos/$id'
     | '/admin/blog/'
     | '/admin/cursos/'
     | '/admin/mapas-mentais/'
     | '/app/blog/'
+    | '/tutor-panel/cursos/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -544,14 +722,25 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SobreNosRoute: typeof SobreNosRoute
   TermosDeUsoRoute: typeof TermosDeUsoRoute
+  TutorPanelRoute: typeof TutorPanelRouteWithChildren
   ApiUploadRoute: typeof ApiUploadRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  EbooksSlugRoute: typeof EbooksSlugRoute
+  TutorPagamentoRoute: typeof TutorPagamentoRoute
+  TutorRegistroRoute: typeof TutorRegistroRoute
   BlogIndexRoute: typeof BlogIndexRoute
-  ApiWebhooksPaysuiteRoute: typeof ApiWebhooksPaysuiteRoute
+  EbooksIndexRoute: typeof EbooksIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tutor-panel': {
+      id: '/tutor-panel'
+      path: '/tutor-panel'
+      fullPath: '/tutor-panel'
+      preLoaderRoute: typeof TutorPanelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/termos-de-uso': {
       id: '/termos-de-uso'
       path: '/termos-de-uso'
@@ -664,6 +853,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tutor-panel/': {
+      id: '/tutor-panel/'
+      path: '/'
+      fullPath: '/tutor-panel/'
+      preLoaderRoute: typeof TutorPanelIndexRouteImport
+      parentRoute: typeof TutorPanelRoute
+    }
+    '/ebooks/': {
+      id: '/ebooks/'
+      path: '/ebooks'
+      fullPath: '/ebooks/'
+      preLoaderRoute: typeof EbooksIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
@@ -684,6 +887,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/tutor/registro': {
+      id: '/tutor/registro'
+      path: '/tutor/registro'
+      fullPath: '/tutor/registro'
+      preLoaderRoute: typeof TutorRegistroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tutor/pagamento': {
+      id: '/tutor/pagamento'
+      path: '/tutor/pagamento'
+      fullPath: '/tutor/pagamento'
+      preLoaderRoute: typeof TutorPagamentoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tutor-panel/financeiro': {
+      id: '/tutor-panel/financeiro'
+      path: '/financeiro'
+      fullPath: '/tutor-panel/financeiro'
+      preLoaderRoute: typeof TutorPanelFinanceiroRouteImport
+      parentRoute: typeof TutorPanelRoute
+    }
+    '/tutor-panel/alunos': {
+      id: '/tutor-panel/alunos'
+      path: '/alunos'
+      fullPath: '/tutor-panel/alunos'
+      preLoaderRoute: typeof TutorPanelAlunosRouteImport
+      parentRoute: typeof TutorPanelRoute
+    }
+    '/ebooks/$slug': {
+      id: '/ebooks/$slug'
+      path: '/ebooks/$slug'
+      fullPath: '/ebooks/$slug'
+      preLoaderRoute: typeof EbooksSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/blog/$slug': {
       id: '/blog/$slug'
@@ -713,11 +951,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppConfiguracoesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/comunidade': {
+      id: '/app/comunidade'
+      path: '/comunidade'
+      fullPath: '/app/comunidade'
+      preLoaderRoute: typeof AppComunidadeRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/catalogo': {
       id: '/app/catalogo'
       path: '/catalogo'
       fullPath: '/app/catalogo'
       preLoaderRoute: typeof AppCatalogoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/biblioteca': {
+      id: '/app/biblioteca'
+      path: '/biblioteca'
+      fullPath: '/app/biblioteca'
+      preLoaderRoute: typeof AppBibliotecaRouteImport
       parentRoute: typeof AppRoute
     }
     '/api/upload': {
@@ -727,6 +979,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiUploadRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/tutores': {
+      id: '/admin/tutores'
+      path: '/tutores'
+      fullPath: '/admin/tutores'
+      preLoaderRoute: typeof AdminTutoresRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/saques': {
+      id: '/admin/saques'
+      path: '/saques'
+      fullPath: '/admin/saques'
+      preLoaderRoute: typeof AdminSaquesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/pagamentos': {
       id: '/admin/pagamentos'
       path: '/pagamentos'
@@ -734,11 +1000,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPagamentosRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/ebooks': {
+      id: '/admin/ebooks'
+      path: '/ebooks'
+      fullPath: '/admin/ebooks'
+      preLoaderRoute: typeof AdminEbooksRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/configuracoes': {
       id: '/admin/configuracoes'
       path: '/configuracoes'
       fullPath: '/admin/configuracoes'
       preLoaderRoute: typeof AdminConfiguracoesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/comunidade': {
+      id: '/admin/comunidade'
+      path: '/comunidade'
+      fullPath: '/admin/comunidade'
+      preLoaderRoute: typeof AdminComunidadeRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/comentarios': {
@@ -769,6 +1049,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAlunosRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/tutor-panel/cursos/': {
+      id: '/tutor-panel/cursos/'
+      path: '/cursos'
+      fullPath: '/tutor-panel/cursos/'
+      preLoaderRoute: typeof TutorPanelCursosIndexRouteImport
+      parentRoute: typeof TutorPanelRoute
+    }
     '/app/blog/': {
       id: '/app/blog/'
       path: '/blog'
@@ -797,6 +1084,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBlogIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/tutor-panel/cursos/$id': {
+      id: '/tutor-panel/cursos/$id'
+      path: '/cursos/$id'
+      fullPath: '/tutor-panel/cursos/$id'
+      preLoaderRoute: typeof TutorPanelCursosIdRouteImport
+      parentRoute: typeof TutorPanelRoute
+    }
     '/app/player/$lessonId': {
       id: '/app/player/$lessonId'
       path: '/player/$lessonId'
@@ -817,13 +1111,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/blog/$slug'
       preLoaderRoute: typeof AppBlogSlugRouteImport
       parentRoute: typeof AppRoute
-    }
-    '/api/webhooks/paysuite': {
-      id: '/api/webhooks/paysuite'
-      path: '/api/webhooks/paysuite'
-      fullPath: '/api/webhooks/paysuite'
-      preLoaderRoute: typeof ApiWebhooksPaysuiteRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/admin/mapas-mentais/$id': {
       id: '/admin/mapas-mentais/$id'
@@ -854,8 +1141,12 @@ interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminBannersRoute: typeof AdminBannersRoute
   AdminComentariosRoute: typeof AdminComentariosRoute
+  AdminComunidadeRoute: typeof AdminComunidadeRoute
   AdminConfiguracoesRoute: typeof AdminConfiguracoesRoute
+  AdminEbooksRoute: typeof AdminEbooksRoute
   AdminPagamentosRoute: typeof AdminPagamentosRoute
+  AdminSaquesRoute: typeof AdminSaquesRoute
+  AdminTutoresRoute: typeof AdminTutoresRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminBlogIdRoute: typeof AdminBlogIdRoute
   AdminCursosIdRoute: typeof AdminCursosIdRoute
@@ -870,8 +1161,12 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminBannersRoute: AdminBannersRoute,
   AdminComentariosRoute: AdminComentariosRoute,
+  AdminComunidadeRoute: AdminComunidadeRoute,
   AdminConfiguracoesRoute: AdminConfiguracoesRoute,
+  AdminEbooksRoute: AdminEbooksRoute,
   AdminPagamentosRoute: AdminPagamentosRoute,
+  AdminSaquesRoute: AdminSaquesRoute,
+  AdminTutoresRoute: AdminTutoresRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminBlogIdRoute: AdminBlogIdRoute,
   AdminCursosIdRoute: AdminCursosIdRoute,
@@ -884,7 +1179,9 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AppRouteChildren {
+  AppBibliotecaRoute: typeof AppBibliotecaRoute
   AppCatalogoRoute: typeof AppCatalogoRoute
+  AppComunidadeRoute: typeof AppComunidadeRoute
   AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppCursosRoute: typeof AppCursosRoute
   AppPerfilRoute: typeof AppPerfilRoute
@@ -896,7 +1193,9 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppBibliotecaRoute: AppBibliotecaRoute,
   AppCatalogoRoute: AppCatalogoRoute,
+  AppComunidadeRoute: AppComunidadeRoute,
   AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppCursosRoute: AppCursosRoute,
   AppPerfilRoute: AppPerfilRoute,
@@ -908,6 +1207,26 @@ const AppRouteChildren: AppRouteChildren = {
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
+interface TutorPanelRouteChildren {
+  TutorPanelAlunosRoute: typeof TutorPanelAlunosRoute
+  TutorPanelFinanceiroRoute: typeof TutorPanelFinanceiroRoute
+  TutorPanelIndexRoute: typeof TutorPanelIndexRoute
+  TutorPanelCursosIdRoute: typeof TutorPanelCursosIdRoute
+  TutorPanelCursosIndexRoute: typeof TutorPanelCursosIndexRoute
+}
+
+const TutorPanelRouteChildren: TutorPanelRouteChildren = {
+  TutorPanelAlunosRoute: TutorPanelAlunosRoute,
+  TutorPanelFinanceiroRoute: TutorPanelFinanceiroRoute,
+  TutorPanelIndexRoute: TutorPanelIndexRoute,
+  TutorPanelCursosIdRoute: TutorPanelCursosIdRoute,
+  TutorPanelCursosIndexRoute: TutorPanelCursosIndexRoute,
+}
+
+const TutorPanelRouteWithChildren = TutorPanelRoute._addFileChildren(
+  TutorPanelRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -926,10 +1245,14 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SobreNosRoute: SobreNosRoute,
   TermosDeUsoRoute: TermosDeUsoRoute,
+  TutorPanelRoute: TutorPanelRouteWithChildren,
   ApiUploadRoute: ApiUploadRoute,
   BlogSlugRoute: BlogSlugRoute,
+  EbooksSlugRoute: EbooksSlugRoute,
+  TutorPagamentoRoute: TutorPagamentoRoute,
+  TutorRegistroRoute: TutorRegistroRoute,
   BlogIndexRoute: BlogIndexRoute,
-  ApiWebhooksPaysuiteRoute: ApiWebhooksPaysuiteRoute,
+  EbooksIndexRoute: EbooksIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

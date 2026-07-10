@@ -260,6 +260,101 @@ export type Database = {
           }
         ]
       }
+      ebooks: {
+        Row: {
+          id: string
+          title: string
+          slug: string
+          description: string | null
+          price_mzn: number
+          cover_url: string | null
+          file_path: string
+          author_id: string | null
+          is_published: boolean
+          category: string | null
+          pages_count: number | null
+          format: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          slug: string
+          description?: string | null
+          price_mzn?: number
+          cover_url?: string | null
+          file_path: string
+          author_id?: string | null
+          is_published?: boolean
+          category?: string | null
+          pages_count?: number | null
+          format?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          slug?: string
+          description?: string | null
+          price_mzn?: number
+          cover_url?: string | null
+          file_path?: string
+          author_id?: string | null
+          is_published?: boolean
+          category?: string | null
+          pages_count?: number | null
+          format?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ebooks_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      ebook_purchases: {
+        Row: {
+          id: string
+          user_id: string
+          ebook_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          ebook_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          ebook_id?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ebook_purchases_ebook_id_fkey"
+            columns: ["ebook_id"]
+            isOneToOne: false
+            referencedRelation: "ebooks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ebook_purchases_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       courses: {
         Row: {
           category: string | null
@@ -271,6 +366,7 @@ export type Database = {
           id: string
           instructor: string | null
           instructor_id: string | null
+          tutor_id: string | null
           is_free: boolean
           is_published: boolean
           language: string
@@ -295,6 +391,7 @@ export type Database = {
           id?: string
           instructor?: string | null
           instructor_id?: string | null
+          tutor_id?: string | null
           is_free?: boolean
           is_published?: boolean
           language?: string
@@ -319,6 +416,7 @@ export type Database = {
           id?: string
           instructor?: string | null
           instructor_id?: string | null
+          tutor_id?: string | null
           is_free?: boolean
           is_published?: boolean
           language?: string
@@ -513,7 +611,8 @@ export type Database = {
       payments: {
         Row: {
           amount_mzn: number
-          course_id: string
+          course_id: string | null
+          ebook_id: string | null
           created_at: string
           id: string
           method: Database["public"]["Enums"]["payment_method"]
@@ -524,7 +623,8 @@ export type Database = {
         }
         Insert: {
           amount_mzn: number
-          course_id: string
+          course_id?: string | null
+          ebook_id?: string | null
           created_at?: string
           id?: string
           method: Database["public"]["Enums"]["payment_method"]
@@ -535,7 +635,8 @@ export type Database = {
         }
         Update: {
           amount_mzn?: number
-          course_id?: string
+          course_id?: string | null
+          ebook_id?: string | null
           created_at?: string
           id?: string
           method?: Database["public"]["Enums"]["payment_method"]
@@ -552,6 +653,13 @@ export type Database = {
             referencedRelation: "courses"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "payments_ebook_id_fkey"
+            columns: ["ebook_id"]
+            isOneToOne: false
+            referencedRelation: "ebooks"
+            referencedColumns: ["id"]
+          }
         ]
       }
       notifications: {
@@ -612,6 +720,7 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          is_tutor: boolean | null
           updated_at: string
         }
         Insert: {
@@ -620,6 +729,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id: string
+          is_tutor?: boolean | null
           updated_at?: string
         }
         Update: {
@@ -628,9 +738,124 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id?: string
+          is_tutor?: boolean | null
           updated_at?: string
         }
         Relationships: []
+      }
+      tutor_applications: {
+        Row: {
+          id: string
+          user_id: string
+          status: string
+          payment_method: string | null
+          reference: string | null
+          receipt_url: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          status?: string
+          payment_method?: string | null
+          reference?: string | null
+          receipt_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          status?: string
+          payment_method?: string | null
+          reference?: string | null
+          receipt_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tutor_applications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      tutor_wallet: {
+        Row: {
+          id: string
+          tutor_id: string
+          balance: number
+          total_earned: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          tutor_id: string
+          balance?: number
+          total_earned?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          tutor_id?: string
+          balance?: number
+          total_earned?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tutor_wallet_tutor_id_fkey"
+            columns: ["tutor_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      tutor_withdrawals: {
+        Row: {
+          id: string
+          tutor_id: string
+          amount: number
+          status: string
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          tutor_id: string
+          amount: number
+          status?: string
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          tutor_id?: string
+          amount?: number
+          status?: string
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tutor_withdrawals_tutor_id_fkey"
+            columns: ["tutor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       user_roles: {
         Row: {

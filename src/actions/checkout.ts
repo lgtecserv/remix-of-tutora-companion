@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { createPaymentRequest } from "@/lib/paysuite";
+import { createPaymentLink } from "@/lib/zumbopay";
 import crypto from "crypto";
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
@@ -44,11 +44,10 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       throw new Error("Já estás matriculado neste curso.");
     }
 
-    // Generate a unique reference for the payment
+    // Generate a unique payment ID for our database
     const paymentId = crypto.randomUUID();
-    // PaySuite requires only letters and numbers for their reference
     const reference = paymentId.replace(/-/g, "");
-    const amount = Number(course.price_mzn || 0).toFixed(2);
+    const amount = Number(course.price_mzn || 0);
     const chosenMethod = method || "transferencia";
     
     // Save the pending payment to our database
@@ -82,35 +81,41 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       };
     }
 
-    // Try PaySuite gateway for digital methods
-    const baseUrl = process.env.APP_URL || "http://localhost:3000";
-
+    // Try ZumboPay gateway for digital methods
     try {
-      const paysuiteRes = await createPaymentRequest({
+      const zumboRes = await createPaymentLink({
+        title: course.title,
         amount,
-        reference,
+        currency: "MZN",
+        channels: ["mpesa", "emola", "card"],
+        wallet_id: process.env.ZUMBOPAY_WALLET_ID || "",
         description: `Pagamento do curso: ${course.title}`,
-        return_url: `${baseUrl}/app/curso/${course.slug}?payment=success`,
-        callback_url: `${baseUrl}/api/webhooks/paysuite`,
       });
 
+      // Update the payment record with ZumboPay's reference
+      if (zumboRes.data?.reference) {
+        await supabaseAdmin.from("payments").update({
+          reference: zumboRes.data.reference,
+        }).eq("id", paymentId);
+      }
+
       return {
-        checkoutUrl: paysuiteRes.data?.checkout_url,
-        reference,
+        checkoutUrl: zumboRes.data?.checkout_url,
+        reference: zumboRes.data?.reference || reference,
         manualPayment: false,
       };
     } catch (error: any) {
-      console.error("PaySuite payment request failed:", error);
-      // Fallback to manual checkout if PaySuite fails
+      console.error("ZumboPay payment request failed:", error);
+      // Fallback to manual checkout if ZumboPay fails
       return {
         checkoutUrl: null,
         reference,
         method: chosenMethod,
-        amount,
+        amount: amount.toFixed(2),
         courseTitle: course.title,
         courseSlug: course.slug,
         manualPayment: true,
-        fallbackReason: error?.message || "Unknown PaySuite error",
+        fallbackReason: error?.message || "Unknown ZumboPay error",
       };
     }
   });
