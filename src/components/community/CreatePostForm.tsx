@@ -119,45 +119,47 @@ export function CreatePostForm() {
           </div>
         )}
 
-        <div className="flex items-center justify-between pt-2 border-t border-border">
-          <label className="cursor-pointer text-muted-foreground hover:text-primary transition flex items-center gap-2 px-2 py-1 rounded-md hover:bg-muted">
-            <ImageIcon className="w-5 h-5" />
-            <span className="hidden sm:inline text-sm font-medium">Imagem</span>
-            <input 
-              type="file" 
-              accept="image/*" 
-              className="hidden" 
-              onChange={handleImageChange}
-            />
-          </label>
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-border">
+          <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap min-w-0 flex-1">
+            <label className="cursor-pointer text-muted-foreground hover:text-primary transition flex items-center gap-2 px-2 py-1 rounded-md hover:bg-muted shrink-0">
+              <ImageIcon className="w-5 h-5" />
+              <span className="hidden sm:inline text-sm font-medium">Imagem</span>
+              <input 
+                type="file" 
+                accept="image/*" 
+                className="hidden" 
+                onChange={handleImageChange}
+              />
+            </label>
 
-          <div className="flex items-center gap-2 border-l border-border pl-2">
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="text-sm bg-transparent border-none text-muted-foreground focus:ring-0 cursor-pointer outline-none max-w-[100px] truncate"
-            >
-              {CATEGORIES.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
+            <div className="flex items-center gap-2 border-l border-border pl-2 min-w-0 flex-1">
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="text-sm bg-transparent border-none text-muted-foreground focus:ring-0 cursor-pointer outline-none max-w-[100px] truncate shrink-0"
+              >
+                {CATEGORIES.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
 
-            <select
-              value={courseId}
-              onChange={(e) => setCourseId(e.target.value)}
-              className="text-sm bg-transparent border-none text-muted-foreground focus:ring-0 cursor-pointer outline-none max-w-[120px] truncate"
-            >
-              <option value="">Nenhum curso</option>
-              {courses?.map(course => (
-                <option key={course.id} value={course.id}>{course.title}</option>
-              ))}
-            </select>
+              <select
+                value={courseId}
+                onChange={(e) => setCourseId(e.target.value)}
+                className="text-sm bg-transparent border-none text-muted-foreground focus:ring-0 cursor-pointer outline-none min-w-0 flex-1 truncate"
+              >
+                <option value="">Nenhum curso</option>
+                {courses?.map(course => (
+                  <option key={course.id} value={course.id}>{course.title}</option>
+                ))}
+              </select>
+            </div>
           </div>
           
           <Button 
             type="submit" 
             disabled={(!content.trim() && !imageFile) || createPostMutation.isPending}
-            className="rounded-full px-6"
+            className="rounded-full px-6 shrink-0 w-full sm:w-auto"
           >
             {createPostMutation.isPending ? "Enviando..." : (
               <>

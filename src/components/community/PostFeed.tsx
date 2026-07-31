@@ -145,18 +145,18 @@ export function PostFeed() {
           </div>
 
           {/* Filters Bar */}
-          <div className="bg-card border border-border rounded-xl p-3 flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 text-muted-foreground mr-2">
+          <div className="bg-card border border-border rounded-xl p-3 flex flex-wrap items-center gap-3 w-full min-w-0">
+            <div className="flex items-center gap-2 text-muted-foreground mr-2 shrink-0">
               <Filter className="w-4 h-4" />
               <span className="text-sm font-medium">Filtros:</span>
             </div>
             
-            <div className="flex gap-2 overflow-x-auto pb-1 hide-scrollbar">
+            <div className="flex gap-2 overflow-x-auto pb-1 hide-scrollbar min-w-0 flex-1">
               {CATEGORIES.map(cat => (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition ${
+                  className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition shrink-0 ${
                     selectedCategory === cat 
                       ? 'bg-primary text-primary-foreground' 
                       : 'bg-muted text-muted-foreground hover:bg-muted/80'
@@ -170,7 +170,7 @@ export function PostFeed() {
             <select
               value={selectedCourse}
               onChange={(e) => setSelectedCourse(e.target.value)}
-              className="ml-auto text-sm bg-muted text-foreground border-none rounded-lg px-2 py-1 outline-none"
+              className="sm:ml-auto text-sm bg-muted text-foreground border-none rounded-lg px-2 py-1 outline-none shrink-0 w-full sm:w-auto mt-2 sm:mt-0"
             >
               <option value="Todos">Todos os Cursos</option>
               {courses?.map(c => (

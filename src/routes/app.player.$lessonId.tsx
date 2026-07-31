@@ -278,14 +278,14 @@ function CoursePlayer() {
                 </button>
                 <button 
                   onClick={() => setActiveTab("comments")} 
-                  className={`flex items-center gap-2 px-4 py-3 text-sm font-semibold rounded-xl transition-all relative whitespace-nowrap shrink-0 ${
+                  className={`flex items-center gap-2 px-4 py-3 text-sm font-semibold rounded-xl transition-all whitespace-nowrap shrink-0 ${
                     activeTab === "comments" 
-                      ? "bg-neutral-800 text-white shadow-md border-b-2 border-b-[#E50914]" 
-                      : "text-neutral-400 hover:text-white hover:bg-neutral-800/30"
+                      ? "bg-[#E50914] text-white shadow-lg" 
+                      : "text-neutral-400 hover:text-white hover:bg-neutral-800/60"
                   }`}
                 >
                   <MessageSquare className="h-4 w-4" />
-                  Comunidade & Dúvidas
+                  Dúvidas
                 </button>
               </div>
 
