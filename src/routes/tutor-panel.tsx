@@ -55,7 +55,7 @@ function TutorPanelLayout() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-muted flex-col md:flex-row pt-16 md:pt-0 max-w-[100vw] overflow-x-hidden">
+    <div className="flex min-h-screen bg-muted flex-col md:flex-row pt-16 md:pt-0 w-full overflow-x-hidden">
       {/* Mobile Top Bar */}
       <header className="md:hidden fixed top-0 left-0 right-0 h-16 z-40 flex items-center justify-between border-b border-border bg-card/75 backdrop-blur-xl px-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
         <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-16 w-auto object-contain invert dark:invert-0 hue-rotate-180 dark:hue-rotate-0" /></Link>

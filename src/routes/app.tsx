@@ -108,7 +108,7 @@ function AppLayout() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-background max-w-[100vw] overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-background w-full overflow-x-hidden">
       <div className="flex flex-1 pb-20 md:pb-0 relative flex-col md:flex-row">
         {/* Mobile Top Bar */}
         <header className="md:hidden sticky top-0 left-0 right-0 h-16 z-40 flex items-center justify-between border-b border-border bg-card/75 backdrop-blur-xl px-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)] w-full">

@@ -176,16 +176,16 @@ function CoursePlayer() {
     <div className="min-h-screen bg-[#070709] text-neutral-100 rounded-2xl border border-neutral-800/60 shadow-2xl overflow-hidden flex flex-col">
       {/* Top Header Cinema Bar */}
       <div className="bg-[#0c0c0e] border-b border-neutral-800/80 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Link to="/app/cursos" className="group flex items-center justify-center h-10 w-10 rounded-xl bg-neutral-900 border border-neutral-800 hover:border-[#E50914] transition-all text-neutral-400 hover:text-white">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <Link to="/app/cursos" className="group flex items-center justify-center h-10 w-10 shrink-0 rounded-xl bg-neutral-900 border border-neutral-800 hover:border-[#E50914] transition-all text-neutral-400 hover:text-white">
             <ArrowLeft className="h-5 w-5 transition-transform group-hover:-translate-x-1" />
           </Link>
-          <div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-[#E50914] uppercase tracking-widest">
-              <Tv className="h-3.5 w-3.5" />
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 text-xs font-semibold text-[#E50914] uppercase tracking-widest truncate">
+              <Tv className="h-3.5 w-3.5 shrink-0" />
               <span>Netflix Style Player</span>
             </div>
-            <h1 className="text-lg font-bold text-white leading-tight line-clamp-1">{data.course.title}</h1>
+            <h1 className="text-lg font-bold text-white leading-tight truncate">{data.course.title}</h1>
           </div>
         </div>
 
@@ -225,8 +225,8 @@ function CoursePlayer() {
               />
               
               {/* Cinema control panel */}
-              <div className="flex flex-wrap items-center justify-between gap-3 bg-[#0c0c0e] border border-neutral-800/60 p-4 rounded-2xl">
-                <Button onClick={() => prev && navigate({ to: "/app/player/$lessonId", params: { lessonId: prev.id } })} disabled={!prev} variant="outline" size="sm" className="h-11 rounded-xl text-neutral-300 hover:text-white hover:bg-neutral-800/50 border border-neutral-800/40 gap-2">
+              <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-between gap-3 bg-[#0c0c0e] border border-neutral-800/60 p-4 rounded-2xl">
+                <Button onClick={() => prev && navigate({ to: "/app/player/$lessonId", params: { lessonId: prev.id } })} disabled={!prev} variant="outline" size="sm" className="w-full sm:w-auto h-11 rounded-xl text-neutral-300 hover:text-white hover:bg-neutral-800/50 border border-neutral-800/40 gap-2">
                   <ChevronLeft className="h-4 w-4" /> Anterior
                 </Button>
                 
@@ -248,7 +248,7 @@ function CoursePlayer() {
                   )}
                 </div>
 
-                <Button onClick={() => next && navigate({ to: "/app/player/$lessonId", params: { lessonId: next.id } })} disabled={!next} className="h-11 rounded-xl bg-[#E50914] hover:bg-[#b80710] disabled:bg-neutral-800 disabled:text-neutral-500 text-white font-semibold gap-2 border-none">
+                <Button onClick={() => next && navigate({ to: "/app/player/$lessonId", params: { lessonId: next.id } })} disabled={!next} className="w-full sm:w-auto h-11 rounded-xl bg-[#E50914] hover:bg-[#b80710] disabled:bg-neutral-800 disabled:text-neutral-500 text-white font-semibold gap-2 border-none">
                   Próxima <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
@@ -264,10 +264,10 @@ function CoursePlayer() {
           {current && (
             <div className="bg-[#0c0c0e] border border-neutral-800/60 rounded-2xl overflow-hidden shadow-xl">
               {/* Tab Header */}
-              <div className="flex border-b border-neutral-800/80 bg-neutral-900/40 p-2 gap-2">
+              <div className="flex border-b border-neutral-800/80 bg-neutral-900/40 p-2 gap-2 overflow-x-auto hide-scrollbar">
                 <button 
                   onClick={() => setActiveTab("about")} 
-                  className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold rounded-xl transition-all ${
+                  className={`flex items-center gap-2 px-4 py-3 text-sm font-semibold rounded-xl transition-all whitespace-nowrap shrink-0 ${
                     activeTab === "about" 
                       ? "bg-neutral-800 text-white shadow-md border-b-2 border-b-[#E50914]" 
                       : "text-neutral-400 hover:text-white hover:bg-neutral-800/30"
@@ -278,7 +278,7 @@ function CoursePlayer() {
                 </button>
                 <button 
                   onClick={() => setActiveTab("comments")} 
-                  className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold rounded-xl transition-all relative ${
+                  className={`flex items-center gap-2 px-4 py-3 text-sm font-semibold rounded-xl transition-all relative whitespace-nowrap shrink-0 ${
                     activeTab === "comments" 
                       ? "bg-neutral-800 text-white shadow-md border-b-2 border-b-[#E50914]" 
                       : "text-neutral-400 hover:text-white hover:bg-neutral-800/30"

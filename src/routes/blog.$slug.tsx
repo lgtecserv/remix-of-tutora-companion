@@ -200,7 +200,7 @@ function BlogPublicArticle() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] selection:bg-orange-500/30 selection:text-white flex flex-col overflow-x-hidden max-w-[100vw]">
+    <div className="min-h-screen bg-[#0a0a0a] selection:bg-orange-500/30 selection:text-white flex flex-col overflow-x-hidden w-full">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

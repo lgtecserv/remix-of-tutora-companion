@@ -176,7 +176,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="overflow-x-hidden max-w-[100vw]" suppressHydrationWarning>
+      <body className="overflow-x-hidden w-full" suppressHydrationWarning>
         {children}
         <Scripts />
       </body>

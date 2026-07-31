@@ -234,7 +234,7 @@ export default function LessonComments({
   return (
     <div className="space-y-5" ref={scrollRef}>
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h3 className="text-sm font-bold text-white flex items-center gap-2">
           <MessageSquare className="h-4 w-4 text-[#E50914]" />
           Comunidade
@@ -413,7 +413,7 @@ function CommentInput({
       </div>
 
       {/* Input area */}
-      <div className="flex-1 space-y-2">
+      <div className="flex-1 min-w-0 space-y-2">
         <Textarea
           ref={textareaRef}
           value={text}
@@ -552,14 +552,14 @@ function CommentCard({
 
         {/* Header */}
         <div className="flex items-start justify-between gap-2">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
             {/* Avatar */}
             {avatarUrl ? (
-              <img src={avatarUrl} alt={name} className={cn("rounded-full object-cover border", c.is_instructor ? "h-9 w-9 border-emerald-500/50" : "h-8 w-8 border-neutral-700")} />
+              <img src={avatarUrl} alt={name} className={cn("rounded-full object-cover border shrink-0", c.is_instructor ? "h-9 w-9 border-emerald-500/50" : "h-8 w-8 border-neutral-700")} />
             ) : (
               <div
                 className={cn(
-                  "rounded-full flex items-center justify-center text-white text-xs font-bold",
+                  "rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0",
                   c.is_instructor ? "h-9 w-9 bg-gradient-to-br from-emerald-500 to-teal-600 border border-emerald-500/50" : "h-8 w-8 bg-gradient-to-br from-neutral-700 to-neutral-800 border border-neutral-600"
                 )}
               >
@@ -567,9 +567,9 @@ function CommentCard({
               </div>
             )}
 
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className={cn("text-sm font-semibold", c.is_instructor ? "text-emerald-400" : "text-neutral-200")}>
+                <span className={cn("text-sm font-semibold truncate", c.is_instructor ? "text-emerald-400" : "text-neutral-200")}>
                   {name}
                 </span>
 
