@@ -232,7 +232,7 @@ export default function LessonComments({
   }, [rawComments, sort]);
 
   return (
-    <div className="space-y-5" ref={scrollRef}>
+    <div className="space-y-5 w-full min-w-0" ref={scrollRef}>
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h3 className="text-sm font-bold text-white flex items-center gap-2">

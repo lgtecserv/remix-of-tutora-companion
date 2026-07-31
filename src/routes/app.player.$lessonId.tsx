@@ -173,7 +173,7 @@ function CoursePlayer() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#070709] text-neutral-100 rounded-2xl border border-neutral-800/60 shadow-2xl overflow-hidden flex flex-col">
+    <div className="min-h-[100dvh] w-full min-w-0 max-w-full bg-[#070709] text-neutral-100 rounded-2xl border border-neutral-800/60 shadow-2xl overflow-hidden flex flex-col">
       {/* Top Header Cinema Bar */}
       <div className="bg-[#0c0c0e] border-b border-neutral-800/80 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -202,9 +202,9 @@ function CoursePlayer() {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_360px] p-3 md:p-6 flex-1">
+      <div className="grid gap-6 lg:grid-cols-[1fr_360px] p-3 md:p-6 flex-1 w-full min-w-0">
         {/* Main Stream Area */}
-        <div className="space-y-6">
+        <div className="space-y-6 w-full min-w-0">
           {current ? (
             <div className="space-y-4">
               <LessonPlayer
@@ -262,9 +262,9 @@ function CoursePlayer() {
 
           {/* Interactive Netflix Tabs */}
           {current && (
-            <div className="bg-[#0c0c0e] border border-neutral-800/60 rounded-2xl overflow-hidden shadow-xl">
+            <div className="bg-[#0c0c0e] border border-neutral-800/60 rounded-2xl overflow-hidden shadow-xl w-full min-w-0">
               {/* Tab Header */}
-              <div className="flex border-b border-neutral-800/80 bg-neutral-900/40 p-2 gap-2 overflow-x-auto hide-scrollbar">
+              <div className="flex border-b border-neutral-800/80 bg-neutral-900/40 p-2 gap-2 overflow-x-auto hide-scrollbar w-full min-w-0">
                 <button 
                   onClick={() => setActiveTab("about")} 
                   className={`flex items-center gap-2 px-4 py-3 text-sm font-semibold rounded-xl transition-all whitespace-nowrap shrink-0 ${
