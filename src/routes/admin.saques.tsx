@@ -26,14 +26,17 @@ function AdminWithdrawals() {
           profiles:tutor_id(full_name, email, phone)
         `)
         .order("created_at", { ascending: false });
+        
       if (error) throw error;
-      return data;
+      
+      // As novas colunas payment_method e payment_number já vêm da tabela tutor_withdrawals.
+      return data || [];
     },
   });
 
   const processMutation = useMutation({
     mutationFn: async ({ id, status, tutorId, amount }: { id: string, status: "completed" | "rejected", tutorId: string, amount: number }) => {
-      // Begin transaction-like approach (Since we don't have rpc transactions set up for this yet)
+      // Begin transaction-like approach
       
       // Update withdrawal status
       const { error: wError } = await supabase
@@ -64,7 +67,7 @@ function AdminWithdrawals() {
       return true;
     },
     onSuccess: (_, variables) => {
-      toast.success(variables.status === "completed" ? "Saque aprovado e saldo deduzido." : "Saque rejeitado.");
+      toast.success(variables.status === "completed" ? "Saque marcado como enviado e saldo deduzido!" : "Saque rejeitado.");
       qc.invalidateQueries({ queryKey: ["admin-withdrawals"] });
       setSelectedWithdrawal(null);
       setActionType(null);
@@ -75,7 +78,7 @@ function AdminWithdrawals() {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-foreground">Gestão de Saques</h1>
-      <p className="text-muted-foreground">Efetue o pagamento manual (via M-Pesa/e-Mola/Banco) e depois aprove aqui.</p>
+      <p className="text-muted-foreground">Efetue o pagamento manual (via M-Pesa/e-Mola) usando o número indicado e depois aprove aqui.</p>
 
       {isLoading ? (
         <p className="text-muted-foreground">A carregar...</p>
@@ -86,62 +89,74 @@ function AdminWithdrawals() {
               <tr>
                 <th className="px-4 py-3">Data</th>
                 <th className="px-4 py-3">Tutor</th>
-                <th className="px-4 py-3">Telefone</th>
-                <th className="px-4 py-3">Valor (MT)</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Ações</th>
+                <th className="px-4 py-3">Método Solicitado</th>
+                <th className="px-4 py-3">Número a Pagar</th>
+                <th className="px-4 py-3 text-right">Valor (MT)</th>
+                <th className="px-4 py-3 text-center">Status</th>
+                <th className="px-4 py-3 text-right">Ações</th>
               </tr>
             </thead>
-            <tbody>
-              {(withdrawals ?? []).map((w: any) => (
-                <tr key={w.id} className="border-t border-border">
-                  <td className="px-4 py-3 text-muted-foreground">
-                    {new Date(w.created_at).toLocaleDateString()}
-                  </td>
-                  <td className="px-4 py-3 font-medium">
-                    {w.profiles?.full_name || w.profiles?.email}
-                  </td>
-                  <td className="px-4 py-3 font-mono">
-                    {w.profiles?.phone || "Não definido"}
-                  </td>
-                  <td className="px-4 py-3 font-bold text-primary">
-                    {w.amount}
+            <tbody className="divide-y divide-border">
+              {withdrawals?.map((w) => (
+                <tr key={w.id} className="hover:bg-muted/50 transition-colors">
+                  <td className="px-4 py-3">{new Date(w.created_at).toLocaleDateString()}</td>
+                  <td className="px-4 py-3">
+                    <p className="font-medium text-foreground">{w.profiles?.full_name || "Desconhecido"}</p>
+                    <p className="text-xs text-muted-foreground">{w.profiles?.email}</p>
                   </td>
                   <td className="px-4 py-3">
-                    {w.status === "completed" && <span className="text-green-500 font-semibold">Concluído</span>}
-                    {w.status === "pending" && <span className="text-orange-500 font-semibold">Pendente</span>}
-                    {w.status === "rejected" && <span className="text-red-500 font-semibold">Rejeitado</span>}
+                    <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
+                      {w.payment_method || "N/D"}
+                    </span>
                   </td>
-                  <td className="px-4 py-3">
-                    {w.status === "pending" && (
-                      <div className="flex gap-2">
+                  <td className="px-4 py-3 font-mono text-muted-foreground">
+                    {w.payment_number || "N/D"}
+                  </td>
+                  <td className="px-4 py-3 text-right font-medium">
+                    {Number(w.amount).toLocaleString('pt-PT')}
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                      w.status === 'completed' ? 'bg-green-500/10 text-green-600' :
+                      w.status === 'rejected' ? 'bg-red-500/10 text-red-600' :
+                      'bg-orange-500/10 text-orange-600'
+                    }`}>
+                      {w.status === 'completed' ? 'Pago' : w.status === 'rejected' ? 'Rejeitado' : 'Pendente'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    {w.status === 'pending' ? (
+                      <div className="flex items-center justify-end gap-2">
                         <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="text-green-600 hover:bg-green-50 hover:text-green-700"
-                          onClick={() => { setSelectedWithdrawal(w); setActionType("approve"); }}
-                          title="Aprovar Pagamento"
+                          size="sm" 
+                          variant="outline" 
+                          className="h-8 border-green-500/20 text-green-600 hover:bg-green-500/10 hover:text-green-700"
+                          onClick={() => { setSelectedWithdrawal(w); setActionType('approve'); }}
                         >
-                          <CheckCircle className="h-4 w-4" />
+                          <CheckCircle className="mr-1 h-4 w-4" /> ENVIADO
                         </Button>
                         <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="text-red-600 hover:bg-red-50 hover:text-red-700"
-                          onClick={() => { setSelectedWithdrawal(w); setActionType("reject"); }}
-                          title="Rejeitar Pagamento"
+                          size="sm" 
+                          variant="outline" 
+                          className="h-8 border-red-500/20 text-red-600 hover:bg-red-500/10 hover:text-red-700"
+                          onClick={() => { setSelectedWithdrawal(w); setActionType('reject'); }}
                         >
                           <XCircle className="h-4 w-4" />
                         </Button>
                       </div>
+                    ) : (
+                      <span className="text-xs text-muted-foreground italic">
+                        {w.status === 'completed' ? 'Finalizado' : 'Cancelado'}
+                      </span>
                     )}
                   </td>
                 </tr>
               ))}
+              
               {withdrawals?.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
-                    Nenhum saque encontrado.
+                  <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
+                    Nenhum pedido de saque encontrado.
                   </td>
                 </tr>
               )}
@@ -150,46 +165,45 @@ function AdminWithdrawals() {
         </div>
       )}
 
-      {selectedWithdrawal && actionType && (
-        <Dialog open onOpenChange={(open) => !open && setSelectedWithdrawal(null)}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                {actionType === "approve" ? "Aprovar Saque" : "Rejeitar Saque"}
-              </DialogTitle>
-              <DialogDescription>
-                {actionType === "approve" 
-                  ? "Certifique-se de que já efetuou a transferência do valor para o tutor antes de aprovar. Esta ação irá descontar o valor da carteira do tutor."
-                  : "Tem a certeza que deseja rejeitar este pedido de saque? O saldo do tutor não será alterado."
-                }
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 pt-4">
-              <div className="bg-muted p-4 rounded-xl space-y-2">
-                <p className="text-sm"><strong>Tutor:</strong> {selectedWithdrawal.profiles?.full_name}</p>
-                <p className="text-sm"><strong>Telefone (M-Pesa/e-Mola):</strong> {selectedWithdrawal.profiles?.phone}</p>
-                <p className="text-sm"><strong>Valor a transferir:</strong> <span className="font-bold text-lg text-primary">{selectedWithdrawal.amount} MT</span></p>
-              </div>
-
-              <div className="flex gap-3 pt-4">
-                <Button variant="outline" className="flex-1" onClick={() => setSelectedWithdrawal(null)}>Cancelar</Button>
-                <Button 
-                  className={`flex-1 text-white ${actionType === "approve" ? "bg-green-600 hover:bg-green-700" : "bg-red-600 hover:bg-red-700"}`}
-                  onClick={() => processMutation.mutate({ 
-                    id: selectedWithdrawal.id, 
-                    status: actionType === "approve" ? "completed" : "rejected",
-                    tutorId: selectedWithdrawal.tutor_id,
-                    amount: selectedWithdrawal.amount
-                  })}
-                  disabled={processMutation.isPending}
-                >
-                  {processMutation.isPending ? "A processar..." : actionType === "approve" ? "Confirmar Pagamento Realizado" : "Rejeitar Saque"}
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
+      {/* Confirmation Dialog */}
+      <Dialog open={!!selectedWithdrawal} onOpenChange={(open) => !open && setSelectedWithdrawal(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {actionType === 'approve' ? 'Confirmar Pagamento' : 'Rejeitar Saque'}
+            </DialogTitle>
+            <DialogDescription>
+              {actionType === 'approve' ? (
+                <>
+                  Confirma que já transferiu <strong>{selectedWithdrawal?.amount} MT</strong> via {selectedWithdrawal?.payment_method} para o número <strong>{selectedWithdrawal?.payment_number}</strong>? 
+                  <br/><br/>
+                  Ao clicar em Enviar, este valor será descontado automaticamente do saldo do tutor.
+                </>
+              ) : (
+                'Tem certeza que deseja rejeitar este saque? O tutor poderá solicitar novamente mais tarde.'
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-3 mt-4">
+            <Button variant="ghost" onClick={() => setSelectedWithdrawal(null)} disabled={processMutation.isPending}>
+              Cancelar
+            </Button>
+            <Button 
+              variant={actionType === 'approve' ? 'default' : 'destructive'}
+              className={actionType === 'approve' ? 'bg-green-600 hover:bg-green-700' : ''}
+              disabled={processMutation.isPending}
+              onClick={() => processMutation.mutate({
+                id: selectedWithdrawal.id,
+                status: actionType === 'approve' ? 'completed' : 'rejected',
+                tutorId: selectedWithdrawal.tutor_id,
+                amount: selectedWithdrawal.amount
+              })}
+            >
+              {processMutation.isPending ? 'A Processar...' : actionType === 'approve' ? 'Sim, já enviei' : 'Rejeitar'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

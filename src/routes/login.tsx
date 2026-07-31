@@ -20,17 +20,23 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const navigate = useNavigate();
-  const { user, isAdmin, loading: authLoading } = useAuth();
+  const { user, isAdmin, isTutorPending, isTutorApproved, isTutorRejected, loading: authLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // If already logged in, redirect immediately
+  // If already logged in, redirect immediately to prevent showing login form flash
   useEffect(() => {
     if (!authLoading && user) {
-      navigate({ to: isAdmin ? "/admin" : "/app" });
+      if (isAdmin) {
+        navigate({ to: "/admin" });
+      } else if (isTutorPending || isTutorApproved || isTutorRejected) {
+        navigate({ to: "/tutor-panel" });
+      } else {
+        navigate({ to: "/app" });
+      }
     }
-  }, [authLoading, user, isAdmin, navigate]);
+  }, [user, isAdmin, isTutorPending, isTutorApproved, isTutorRejected, authLoading, navigate]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +51,20 @@ function LoginPage() {
         .select("role")
         .eq("user_id", data.user.id);
       const hasAdmin = rolesData?.some((r) => r.role === "admin");
-      navigate({ to: hasAdmin ? "/admin" : "/app" });
+      
+      const { data: appData } = await supabase
+        .from("tutor_applications")
+        .select("status")
+        .eq("user_id", data.user.id)
+        .maybeSingle();
+
+      if (hasAdmin) {
+        navigate({ to: "/admin" });
+      } else if (appData && (appData.status === "pending" || appData.status === "paid" || appData.status === "rejected")) {
+        navigate({ to: "/tutor-panel" });
+      } else {
+        navigate({ to: "/app" });
+      }
     }
   };
 

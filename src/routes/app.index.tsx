@@ -124,17 +124,17 @@ function StudentDashboard() {
               <Sparkles className="h-5 w-5 text-orange-500" />
               <h2 className="text-lg font-black text-foreground">Recomendados</h2>
             </div>
-            <div className="flex gap-4 overflow-x-auto px-5 pb-6 hide-scrollbar snap-x">
+            <div className="grid grid-cols-2 gap-4 px-5 pb-6">
               {recs.map((c, i) => (
-                <motion.div key={c.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 + i * 0.1 }} className="snap-start shrink-0 w-[240px]">
-                  <Link to="/app/curso/$slug" params={{ slug: safeSlug(c.slug, c.id) }} className="overflow-hidden rounded-3xl border border-white/10 bg-card/80 backdrop-blur-sm shadow-xl block transition-transform active:scale-95">
-                    <div className="relative h-32 overflow-hidden">
+                <motion.div key={c.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 + i * 0.1 }} className="w-full">
+                  <Link to="/app/curso/$slug" params={{ slug: safeSlug(c.slug, c.id) }} className="flex flex-col h-full overflow-hidden rounded-3xl border border-white/10 bg-card/80 backdrop-blur-sm shadow-xl transition-transform active:scale-95">
+                    <div className="relative h-28 sm:h-36 overflow-hidden shrink-0">
                       {c.cover_url ? <img src={c.cover_url} alt={c.title} className="h-full w-full object-cover" /> : <div className="h-full w-full bg-muted" />}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                     </div>
-                    <div className="p-4">
+                    <div className="p-3 sm:p-4 flex flex-col flex-1">
                       <div className="text-[10px] uppercase font-bold tracking-widest text-primary mb-1 line-clamp-1">{c.category ?? "Curso"}</div>
-                      <div className="text-sm font-bold text-foreground line-clamp-2 leading-tight">{c.title}</div>
+                      <div className="text-xs sm:text-sm font-bold text-foreground line-clamp-3 leading-tight">{c.title}</div>
                     </div>
                   </Link>
                 </motion.div>

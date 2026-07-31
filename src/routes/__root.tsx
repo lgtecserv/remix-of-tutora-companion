@@ -113,12 +113,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     scripts: [
       {
-        type: "text/javascript",
-        src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4326906377405532",
-        crossOrigin: "anonymous",
-        async: true,
-      },
-      {
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
@@ -182,7 +176,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body suppressHydrationWarning>
+      <body className="overflow-x-hidden max-w-[100vw]" suppressHydrationWarning>
         {children}
         <Scripts />
       </body>
@@ -206,6 +200,17 @@ function RootComponent() {
     });
     return () => sub.subscription.unsubscribe();
   }, [router, queryClient]);
+
+  // Load AdSense script on client-side only to avoid SSR hydration mismatch
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (document.querySelector('script[src*="adsbygoogle"]')) return;
+    const script = document.createElement('script');
+    script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4326906377405532';
+    script.async = true;
+    script.crossOrigin = 'anonymous';
+    document.head.appendChild(script);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

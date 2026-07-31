@@ -10,6 +10,11 @@ interface AuthContextValue {
   loading: boolean;
   roles: Role[];
   isAdmin: boolean;
+  isTutorPending: boolean;
+  isTutorApproved: boolean;
+  isTutorRejected: boolean;
+  tutorRejectionReason: string | null;
+  tutorSubmissionCount: number;
   signOut: () => Promise<void>;
 }
 
@@ -19,6 +24,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [roles, setRoles] = useState<Role[]>([]);
+  const [isTutorPending, setIsTutorPending] = useState(false);
+  const [isTutorApproved, setIsTutorApproved] = useState(false);
+  const [isTutorRejected, setIsTutorRejected] = useState(false);
+  const [tutorRejectionReason, setTutorRejectionReason] = useState<string | null>(null);
+  const [tutorSubmissionCount, setTutorSubmissionCount] = useState(1);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -45,16 +55,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     };
 
+    const loadTutorStatus = async (userId: string) => {
+      try {
+        const { data, error } = await supabase
+          .from("tutor_applications")
+          .select("status, rejection_reason, submission_count")
+          .eq("user_id", userId)
+          .maybeSingle();
+        if (error || !data) return { pending: false, approved: false, rejected: false, reason: null, count: 1 };
+        return {
+          pending: data.status === "pending",
+          approved: data.status === "paid",
+          rejected: data.status === "rejected",
+          reason: data.rejection_reason || null,
+          count: data.submission_count || 1
+        };
+      } catch {
+        return { pending: false, approved: false, rejected: false, reason: null, count: 1 };
+      }
+    };
+
     const handleSession = async (s: Session | null) => {
       if (!isMounted) return;
       setSession(s);
       setUser(s?.user ?? null);
       if (s?.user) {
-        const r = await loadRoles(s.user.id);
+        const [r, tutorStatus] = await Promise.all([
+          loadRoles(s.user.id),
+          loadTutorStatus(s.user.id)
+        ]);
         if (!isMounted) return;
         setRoles(r);
+        setIsTutorPending(tutorStatus.pending);
+        setIsTutorApproved(tutorStatus.approved);
+        setIsTutorRejected(tutorStatus.rejected);
+        setTutorRejectionReason(tutorStatus.reason);
+        setTutorSubmissionCount(tutorStatus.count);
       } else {
         setRoles([]);
+        setIsTutorPending(false);
+        setIsTutorApproved(false);
+        setIsTutorRejected(false);
+        setTutorRejectionReason(null);
+        setTutorSubmissionCount(1);
       }
       finish();
     };
@@ -94,6 +137,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loading,
     roles,
     isAdmin: roles.includes("admin"),
+    isTutorPending,
+    isTutorApproved,
+    isTutorRejected,
+    tutorRejectionReason,
+    tutorSubmissionCount,
     signOut: async () => {
       await supabase.auth.signOut();
     },

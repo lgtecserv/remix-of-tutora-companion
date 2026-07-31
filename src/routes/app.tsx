@@ -66,7 +66,7 @@ function GlobalBanner() {
 }
 
 function AppLayout() {
-  const { user, loading, isAdmin, signOut } = useAuth();
+  const { user, loading, isAdmin, isTutorPending, isTutorApproved, isTutorRejected, signOut } = useAuth();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { theme, setTheme } = useTheme();
@@ -84,7 +84,8 @@ function AppLayout() {
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
     if (!loading && user && isAdmin) navigate({ to: "/admin" });
-  }, [loading, user, isAdmin, navigate]);
+    if (!loading && user && !isAdmin && (isTutorPending || isTutorApproved || isTutorRejected)) navigate({ to: "/tutor-panel" });
+  }, [loading, user, isAdmin, isTutorPending, isTutorApproved, isTutorRejected, navigate]);
 
   if (loading) {
     return <div suppressHydrationWarning className="flex min-h-screen items-center justify-center text-muted-foreground">A carregar...</div>;
@@ -107,8 +108,8 @@ function AppLayout() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <div className="flex flex-1 pb-20 md:pb-0 relative">
+    <div className="flex flex-col min-h-screen bg-background max-w-[100vw] overflow-x-hidden">
+      <div className="flex flex-1 pb-20 md:pb-0 relative flex-col md:flex-row">
         {/* Mobile Top Bar */}
         <header className="md:hidden sticky top-0 left-0 right-0 h-16 z-40 flex items-center justify-between border-b border-border bg-card/75 backdrop-blur-xl px-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)] w-full">
           <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-12 w-auto object-contain invert dark:invert-0 hue-rotate-180 dark:hue-rotate-0" /></Link>
@@ -222,7 +223,7 @@ function AppLayout() {
           </div>
         </aside>
 
-        <main className="flex-1 overflow-x-hidden p-4 md:p-10 pb-8 flex flex-col">
+        <main className="flex-1 overflow-x-hidden p-4 md:p-10 pb-20 flex flex-col min-w-0">
           <GlobalBanner />
           <RouteErrorBoundary>
             <AnimatePresence mode="wait">
@@ -232,7 +233,7 @@ function AppLayout() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
-                className="flex-1 flex flex-col"
+                className="flex-1 flex flex-col min-w-0"
               >
                 <Outlet />
               </motion.div>

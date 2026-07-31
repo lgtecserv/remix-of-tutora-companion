@@ -54,6 +54,7 @@ function AdminLayout() {
     { to: "/admin/analytics", label: "Analytics", icon: BarChart3 },
     { to: "/admin/mapas-mentais", label: "Mapas Mentais", icon: Network },
     { to: "/admin/pagamentos", label: "Pagamentos", icon: DollarSign },
+    { to: "/admin/forum", label: "Comunidade", icon: Users },
     { to: "/admin/comunidade", label: "Moderação", icon: ShieldCheck },
     { to: "/admin/tutores", label: "Tutores", icon: Users },
     { to: "/admin/saques", label: "Saques", icon: DollarSign },
@@ -61,7 +62,7 @@ function AdminLayout() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-muted flex-col md:flex-row pt-16 md:pt-0">
+    <div className="flex min-h-screen bg-muted flex-col md:flex-row pt-16 md:pt-0 max-w-[100vw] overflow-x-hidden">
       {/* Mobile Top Bar */}
       <header className="md:hidden fixed top-0 left-0 right-0 h-16 z-40 flex items-center justify-between border-b border-border bg-card/75 backdrop-blur-xl px-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
         <Link to="/"><img src={logoImg} alt="Imersão Completa" className="h-16 w-auto object-contain invert dark:invert-0 hue-rotate-180 dark:hue-rotate-0" /></Link>
@@ -151,7 +152,7 @@ function AdminLayout() {
           </button>
         </div>
       </aside>
-      <main className="flex-1 overflow-x-hidden overflow-y-auto p-0 md:p-0 flex flex-col">
+      <main className="flex-1 overflow-x-hidden overflow-y-auto p-0 md:p-0 flex flex-col min-w-0">
         <AnimatePresence mode="wait">
           <motion.div
             key={pathname}
@@ -159,7 +160,7 @@ function AdminLayout() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className={pathname.includes("/admin/mapas-mentais/") ? "flex-1 flex flex-col h-[calc(100vh-64px)] md:h-screen" : "p-6 md:p-10"}
+            className={pathname.includes("/admin/mapas-mentais/") ? "flex-1 flex flex-col h-[calc(100vh-64px)] md:h-screen min-w-0" : "p-4 md:p-10 flex-1 flex flex-col min-w-0"}
           >
             <Outlet />
           </motion.div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { createCheckoutSession } from "@/actions/checkout";
@@ -7,7 +7,7 @@ import { uploadPaymentReceipt } from "@/actions/uploadReceipt";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import { Smartphone, Building2, CreditCard, Upload, CheckCircle2, Copy, ArrowLeft } from "lucide-react";
+import { Upload, CheckCircle2, Copy, ArrowLeft } from "lucide-react";
 
 interface PaymentDialogProps {
   open: boolean;
@@ -21,25 +21,19 @@ interface PaymentDialogProps {
   onSuccess?: () => void;
 }
 
-type Step = "choose-method" | "processing" | "manual-instructions" | "upload-receipt" | "done";
+type Step = "processing" | "manual-instructions" | "upload-receipt" | "done";
 
-const PAYMENT_METHODS = [
-  { id: "zumbopay" as const, label: "Pagamento Automático", icon: CreditCard, color: "text-emerald-500", description: "Pagar via M-Pesa, e-Mola ou Cartão pelo ZumboPay. Acesso imediato." },
-  { id: "manual" as const, label: "Pagamento Manual", icon: Upload, color: "text-blue-500", description: "Transferência ou depósito direto. Requer envio de comprovativo." },
-];
 
 export function PaymentDialog({ open, onOpenChange, courseId, itemId, type = "course", courseTitle, price, userId, onSuccess }: PaymentDialogProps) {
   const qc = useQueryClient();
-  const [step, setStep] = useState<Step>("choose-method");
-  const [selectedMethod, setSelectedMethod] = useState<"zumbopay" | "manual" | "mpesa" | "emola" | "transferencia" | null>(null);
+  const [step, setStep] = useState<Step>("processing");
   const [paymentRef, setPaymentRef] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
   const resetState = () => {
-    setStep("choose-method");
-    setSelectedMethod(null);
+    setStep("processing");
     setPaymentRef(null);
     setLoading(false);
     setReceiptFile(null);
@@ -51,41 +45,33 @@ export function PaymentDialog({ open, onOpenChange, courseId, itemId, type = "co
     onOpenChange(val);
   };
 
-  const handleSelectMethod = async (methodId: "zumbopay" | "manual") => {
-    setSelectedMethod(methodId);
-    setStep("processing");
-    setLoading(true);
+  // Auto-start manual payment flow when dialog opens
+  useEffect(() => {
+    if (!open) return;
+    
+    const initPayment = async () => {
+      setStep("processing");
+      setLoading(true);
+      try {
+        let result;
+        if (type === "ebook") {
+          result = await createEbookCheckoutSession({ data: { ebookId: (itemId || courseId)!, method: "transferencia" } });
+        } else {
+          result = await createCheckoutSession({ data: { courseId: (courseId || itemId)!, method: "transferencia" } });
+        }
 
-    try {
-      // "zumbopay" means we want the gateway. "manual" defaults to "transferencia" in the backend.
-      const apiMethod = methodId === "zumbopay" ? "credit_card" : "transferencia";
-      
-      let result;
-      if (type === "ebook") {
-        result = await createEbookCheckoutSession({ data: { ebookId: (itemId || courseId)!, method: apiMethod } });
-      } else {
-        result = await createCheckoutSession({ data: { courseId: (courseId || itemId)!, method: apiMethod } });
+        setPaymentRef(result.reference);
+        setStep("manual-instructions");
+      } catch (err: any) {
+        toast.error(err.message || "Erro ao processar o pagamento.");
+        handleOpenChange(false);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      if (methodId === "zumbopay" && result.checkoutUrl) {
-        // Redirect to ZumboPay
-        window.location.href = result.checkoutUrl;
-        return;
-      }
-
-      // If manual or if ZumboPay fell back to manual
-      if (result.fallbackReason) {
-        toast.error("ZumboPay indisponível: " + result.fallbackReason);
-      }
-      setPaymentRef(result.reference);
-      setStep("manual-instructions");
-    } catch (err: any) {
-      toast.error(err.message || "Erro ao processar o pagamento.");
-      setStep("choose-method");
-    } finally {
-      setLoading(false);
-    }
-  };
+    initPayment();
+  }, [open]);
 
   const handleUploadReceipt = async () => {
     if (!receiptFile || !paymentRef) return;
@@ -133,14 +119,13 @@ export function PaymentDialog({ open, onOpenChange, courseId, itemId, type = "co
       <DialogContent className="bg-card border-border sm:max-w-md" aria-describedby="payment-dialog-desc">
         <DialogHeader>
           <DialogTitle className="text-foreground text-lg">
-            {step === "choose-method" && "Escolha o método de pagamento"}
             {step === "processing" && "A processar..."}
             {step === "manual-instructions" && "Instruções de Pagamento"}
             {step === "upload-receipt" && "Enviar Comprovativo"}
             {step === "done" && "Comprovativo Enviado!"}
           </DialogTitle>
           <DialogDescription id="payment-dialog-desc">
-            {step === "choose-method" && `${courseTitle} — ${formattedPrice} MT`}
+            {step === "processing" && `${courseTitle} — ${formattedPrice} MT`}
             {step === "manual-instructions" && "Siga as instruções abaixo para completar o pagamento"}
             {step === "upload-receipt" && "Anexe a captura de ecrã ou foto do comprovativo"}
             {step === "done" && "O administrador irá rever o seu pagamento em breve"}
@@ -148,29 +133,7 @@ export function PaymentDialog({ open, onOpenChange, courseId, itemId, type = "co
         </DialogHeader>
 
         <div className="py-2">
-          {/* STEP 1: Choose method */}
-          {step === "choose-method" && (
-            <div className="space-y-3">
-              {PAYMENT_METHODS.map((m) => (
-                <button
-                  key={m.id}
-                  onClick={() => handleSelectMethod(m.id)}
-                  className="w-full flex items-center gap-4 p-4 rounded-xl border border-border bg-background hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
-                >
-                  <div className={`h-12 w-12 rounded-xl bg-muted flex items-center justify-center ${m.color} group-hover:scale-110 transition-transform`}>
-                    <m.icon className="h-6 w-6" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-semibold text-foreground">{m.label}</div>
-                    <div className="text-xs text-muted-foreground">{m.description}</div>
-                  </div>
-                  <div className="text-sm font-bold text-primary">{formattedPrice} MT</div>
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* STEP 2: Processing */}
+          {/* STEP 1: Processing */}
           {step === "processing" && (
             <div className="flex flex-col items-center justify-center py-10 gap-4">
               <div className="h-10 w-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -178,8 +141,8 @@ export function PaymentDialog({ open, onOpenChange, courseId, itemId, type = "co
             </div>
           )}
 
-          {/* STEP 3: Manual instructions */}
-          {step === "manual-instructions" && selectedMethod && (
+          {/* STEP 2: Manual instructions */}
+          {step === "manual-instructions" && (
             <div className="space-y-5">
               <div className="rounded-xl bg-primary/5 border border-primary/20 p-4 space-y-3">
                 <h4 className="font-semibold text-foreground text-sm">Dados para pagamento:</h4>
@@ -238,18 +201,13 @@ export function PaymentDialog({ open, onOpenChange, courseId, itemId, type = "co
                 </p>
               </div>
 
-              <div className="flex gap-3">
-                <Button variant="outline" className="flex-1" onClick={() => setStep("choose-method")}>
-                  <ArrowLeft className="h-4 w-4 mr-2" /> Voltar
-                </Button>
-                <Button className="flex-1" onClick={() => setStep("upload-receipt")}>
-                  <Upload className="h-4 w-4 mr-2" /> Enviar Comprovativo
-                </Button>
-              </div>
+              <Button className="w-full" onClick={() => setStep("upload-receipt")}>
+                <Upload className="h-4 w-4 mr-2" /> Enviar Comprovativo
+              </Button>
             </div>
           )}
 
-          {/* STEP 4: Upload receipt */}
+          {/* STEP 3: Upload receipt */}
           {step === "upload-receipt" && (
             <div className="space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -276,7 +234,7 @@ export function PaymentDialog({ open, onOpenChange, courseId, itemId, type = "co
             </div>
           )}
 
-          {/* STEP 5: Done */}
+          {/* STEP 4: Done */}
           {step === "done" && (
             <div className="flex flex-col items-center justify-center py-8 gap-4 text-center">
               <div className="h-16 w-16 rounded-full bg-emerald-500/10 flex items-center justify-center">
@@ -298,3 +256,4 @@ export function PaymentDialog({ open, onOpenChange, courseId, itemId, type = "co
     </Dialog>
   );
 }
+

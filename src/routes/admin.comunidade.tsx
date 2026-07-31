@@ -156,7 +156,7 @@ function AdminComunidade() {
   });
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="p-4 md:p-8 max-w-5xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight">Gestão da Comunidade</h1>
         <p className="text-muted-foreground mt-2">Central de moderação e administração do fórum dos alunos.</p>

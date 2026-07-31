@@ -1,23 +1,25 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Plus, Network, ExternalLink, MoreVertical, Trash2, BookOpen } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { useAuth } from "@/lib/auth";
 
-export const Route = createFileRoute("/admin/mapas-mentais/")({
-  component: MapasMentaisIndex,
+export const Route = createFileRoute("/tutor-panel/mapas-mentais/")({
+  component: TutorMapasMentaisIndex,
 });
 
-function MapasMentaisIndex() {
+function TutorMapasMentaisIndex() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+
   const { data: mapas, isLoading } = useQuery({
-    queryKey: ["mind-maps"],
+    queryKey: ["tutor-mind-maps", user?.id],
+    enabled: !!user?.id,
     queryFn: async () => {
       const { data, error } = await (supabase
         .from("mind_maps" as any)
@@ -25,25 +27,28 @@ function MapasMentaisIndex() {
           *,
           courses ( title )
         `)
+        .eq("user_id", user!.id)
         .order("created_at", { ascending: false }) as any);
-      
+
       if (error) throw error;
       return data as any[];
     },
   });
 
   async function handleCriarMapa() {
+    if (!user) return;
+
     const defaultNodes = [
       { id: "1", type: "input", position: { x: 250, y: 150 }, data: { label: "Nova Ideia" } }
     ];
-    
+
     const { data, error } = await (supabase
       .from("mind_maps" as any)
       .insert({
         title: "Novo Mapa Mental",
         nodes: defaultNodes,
         edges: [],
-        user_id: user?.id
+        user_id: user.id
       })
       .select()
       .single() as any);
@@ -55,30 +60,30 @@ function MapasMentaisIndex() {
     }
 
     toast.success("Mapa criado!");
-    queryClient.invalidateQueries({ queryKey: ["mind-maps"] });
-    navigate({ to: `/admin/mapas-mentais/${data.id}` as any });
+    queryClient.invalidateQueries({ queryKey: ["tutor-mind-maps"] });
+    navigate({ to: `/tutor-panel/mapas-mentais/${data.id}` as any });
   }
 
   async function handleDelete(id: string) {
     if (!confirm("Tem a certeza que quer apagar este mapa mental? O ficheiro em PDF já gerado e enviado não será apagado.")) return;
 
-    const { error } = await (supabase.from("mind_maps" as any).delete().eq("id", id) as any);
+    const { error } = await (supabase.from("mind_maps" as any).delete().eq("id", id).eq("user_id", user?.id) as any);
     if (error) {
       toast.error("Erro ao apagar");
     } else {
       toast.success("Apagado com sucesso");
-      queryClient.invalidateQueries({ queryKey: ["mind-maps"] });
+      queryClient.invalidateQueries({ queryKey: ["tutor-mind-maps"] });
     }
   }
 
   if (isLoading) return <div className="p-8 text-muted-foreground animate-pulse">A carregar mapas mentais...</div>;
 
   return (
-    <div className="p-4 md:p-8 space-y-6">
+    <div className="space-y-6 max-w-6xl mx-auto">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Mapas Mentais</h1>
-          <p className="text-muted-foreground mt-1">Organize as suas aulas e crie PDFs dinâmicos</p>
+          <p className="text-muted-foreground mt-1">Organize as suas aulas e crie PDFs dinâmicos para os seus alunos</p>
         </div>
         <Button onClick={handleCriarMapa} className="gap-2">
           <Plus className="h-4 w-4" /> Criar Mapa
@@ -86,7 +91,7 @@ function MapasMentaisIndex() {
       </div>
 
       {!mapas?.length ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center bg-card rounded-lg border border-border border-dashed">
+        <div className="flex flex-col items-center justify-center py-24 text-center bg-card rounded-lg border border-border border-dashed shadow-sm">
           <Network className="h-16 w-16 text-muted-foreground/30 mb-4" />
           <h3 className="text-xl font-medium text-foreground">Ainda não tem mapas mentais</h3>
           <p className="text-muted-foreground mt-2 mb-6 max-w-sm">Use o mapa mental para estruturar as suas ideias ou dar aulas em ecrã inteiro.</p>
@@ -95,7 +100,7 @@ function MapasMentaisIndex() {
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {mapas.map((mapa) => (
-            <Card key={mapa.id} className="flex flex-col">
+            <Card key={mapa.id} className="flex flex-col shadow-sm hover:shadow-md transition-shadow">
               <CardHeader className="pb-4">
                 <div className="flex items-start justify-between">
                   <div>
@@ -134,7 +139,7 @@ function MapasMentaisIndex() {
               </CardContent>
               <CardFooter className="pt-0 border-t border-border/50 bg-muted/20">
                 <Button asChild variant="ghost" className="w-full mt-4 justify-between text-primary hover:text-primary">
-                  <Link to={`/admin/mapas-mentais/${mapa.id}` as any}>
+                  <Link to={`/tutor-panel/mapas-mentais/${mapa.id}` as any}>
                     Abrir Editor
                     <ExternalLink className="h-4 w-4 ml-2 opacity-50" />
                   </Link>
