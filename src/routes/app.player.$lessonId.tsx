@@ -173,7 +173,7 @@ function CoursePlayer() {
   }
 
   return (
-    <div className="min-h-screen bg-[#070709] text-neutral-100 rounded-2xl border border-neutral-800/60 shadow-2xl overflow-hidden flex flex-col">
+    <div className="min-h-[100dvh] bg-[#070709] text-neutral-100 rounded-2xl border border-neutral-800/60 shadow-2xl overflow-hidden flex flex-col">
       {/* Top Header Cinema Bar */}
       <div className="bg-[#0c0c0e] border-b border-neutral-800/80 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0 flex-1">
